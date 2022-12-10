@@ -26,7 +26,7 @@ namespace DrawingRegisterWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Projects",
+                name: "Project",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -39,9 +39,9 @@ namespace DrawingRegisterWeb.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.PrimaryKey("PK_Project", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Projects_ProjectState_ProjectStateId",
+                        name: "FK_Project_ProjectState_ProjectStateId",
                         column: x => x.ProjectStateId,
                         principalTable: "ProjectState",
                         principalColumn: "Id",
@@ -49,8 +49,8 @@ namespace DrawingRegisterWeb.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Projects_ProjectStateId",
-                table: "Projects",
+                name: "IX_Project_ProjectStateId",
+                table: "Project",
                 column: "ProjectStateId");
         }
 
@@ -58,7 +58,7 @@ namespace DrawingRegisterWeb.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "Project");
 
             migrationBuilder.DropTable(
                 name: "ProjectState");

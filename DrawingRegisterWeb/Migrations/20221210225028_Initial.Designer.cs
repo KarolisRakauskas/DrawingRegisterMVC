@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20221210221719_Initial")]
+    [Migration("20221210225028_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -54,7 +54,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasIndex("ProjectStateId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectState", b =>

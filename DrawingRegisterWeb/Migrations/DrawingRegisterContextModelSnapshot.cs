@@ -51,7 +51,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasIndex("ProjectStateId");
 
-                    b.ToTable("Projects");
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectState", b =>
