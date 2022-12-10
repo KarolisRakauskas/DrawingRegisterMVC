@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20221210191200_AddProjectModel")]
-    partial class AddProjectModel
+    [Migration("20221210221719_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace DrawingRegisterWeb.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectModel", b =>
+            modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -47,9 +47,46 @@ namespace DrawingRegisterWeb.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ProjectStateId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ProjectStateId");
+
                     b.ToTable("Projects");
+                });
+
+            modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProjectState");
+                });
+
+            modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
+                {
+                    b.HasOne("DrawingRegisterWeb.Models.ProjectState", "ProjectState")
+                        .WithMany()
+                        .HasForeignKey("ProjectStateId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProjectState");
                 });
 #pragma warning restore 612, 618
         }

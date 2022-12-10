@@ -1,11 +1,11 @@
-﻿using DrawingRegisterWeb.Class;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DrawingRegisterWeb.Models
 {
-	public class ProjectModel
+	public class Project
 	{
 		[Key]
 		public int Id { get; set; }
@@ -19,5 +19,11 @@ namespace DrawingRegisterWeb.Models
 		[Required]
 		[DisplayName("Deadline Date")]
 		public DateTime DeadlineDate { get; set; }
+		[Required]
+		[DisplayName("Project State")]
+		public int ProjectStateId { get; set; }
+		[ForeignKey("ProjectStateId")]
+		[ValidateNever]
+		public ProjectState ProjectState { get; set; } = null!;
 	}
 }

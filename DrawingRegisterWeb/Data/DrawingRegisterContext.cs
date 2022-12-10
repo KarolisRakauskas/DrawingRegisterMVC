@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using DrawingRegisterWeb.Models;
 
 namespace DrawingRegisterWeb.Data
 {
@@ -9,6 +10,8 @@ namespace DrawingRegisterWeb.Data
 		{
 		}
 
-		public DbSet<DrawingRegisterWeb.Models.ProjectModel> Projects { get; set; }
+		public DbSet<Project> Project { get; set; }
+
+		public DbSet<ProjectState> ProjectState { get; set; }
 	}
 }
