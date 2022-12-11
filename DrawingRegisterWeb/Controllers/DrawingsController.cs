@@ -1,93 +1,125 @@
 ﻿using DrawingRegisterWeb.Data;
+using DrawingRegisterWeb.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using NuGet.Packaging.Signing;
 
 namespace DrawingRegisterWeb.Controllers
 {
-    public class DrawingsController : Controller
-    {
-        private readonly DrawingRegisterContext _context;
+	public class DrawingsController : Controller
+	{
+		private readonly DrawingRegisterContext _context;
+		private readonly IWebHostEnvironment _hostEnvironment;
 
-        public DrawingsController(DrawingRegisterContext context)
-        {
-            _context = context;
-        }
+		public DrawingsController(DrawingRegisterContext context, IWebHostEnvironment hostEnvironment)
+		{
+			_context = context;
+			_hostEnvironment = hostEnvironment;
+		}
 
-        // GET: DrawingsController
-        public async Task<IActionResult> Index()
-        {
-            var drawingRegisterContext = _context.Drawing.Include(p => p.File);
-            return View(await drawingRegisterContext.ToListAsync());
-        }
+		// GET: DrawingsController
+		public async Task<IActionResult> Index()
+		{
+			var drawingRegisterContext = _context.Drawing.Include(p => p.File);
+			return View(await drawingRegisterContext.ToListAsync());
+		}
 
-        // GET: DrawingsController/Details
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
+		// GET: DrawingsController/Create
+		public ActionResult Create()
+		{
+			return View();
+		}
 
-        // GET: DrawingsController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
+		// POST: DrawingsController/Create
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public ActionResult Create (Models.File File, Drawing Drawing, IFormFile? uploadFile)
+		{
+			string wwwRootPath = _hostEnvironment.WebRootPath;
+			var uploads = Path.Combine(wwwRootPath, @"Files\Drawings");
 
-        // POST: DrawingsController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+			if (uploadFile != null)
+			{
+				File.FileName = Path.GetFileNameWithoutExtension(uploadFile.FileName).ToString();
+				File.FileExtension = Path.GetExtension(uploadFile.FileName);
 
-        // GET: DrawingsController/Edit
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
+				using (var fileStream = new FileStream(Path.Combine(uploads, uploadFile.FileName), FileMode.Create))
+				{
+					uploadFile.CopyTo(fileStream);
+				}
 
-        // POST: DrawingsController/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+				File.FileUrl = @"\Files\Drawings\" + uploadFile.FileName;
 
-        // GET: DrawingsController/Delete
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
+				_context.Add(File);
+				_context.SaveChanges();
 
-        // POST: DrawingsController/Delete
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-    }
+				Drawing.DrawingNumber = File.FileName;
+				Drawing.FileId = File.Id;
+
+				_context.Add(Drawing);
+				_context.SaveChanges();
+
+				return RedirectToAction(nameof(Index));
+			}
+
+			return View();
+		}
+
+		// GET: Projects/Delete
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (id == null || _context.Drawing == null)
+			{
+				return NotFound();
+			}
+
+			var drawing = await _context.Drawing
+				.Include(p => p.File)
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (drawing == null)
+			{
+				return NotFound();
+			}
+
+			return View(drawing);
+		}
+
+		// POST: Projects/Delete/5
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(int id)
+		{
+			if (_context.Drawing == null || _context.File == null)
+			{
+				return Problem("Entity set 'DrawingRegisterContext.Drawing'  is null.");
+			}
+			var drawing = await _context.Drawing.FindAsync(id);
+			var file = await _context.File.FindAsync(drawing.FileId);
+
+			if (drawing != null || file != null)
+			{
+				_context.Drawing.Remove(drawing);
+
+				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, file.FileUrl.TrimStart('\\'));
+
+				if (System.IO.File.Exists(oldFilePath))
+				{
+					System.IO.File.Delete(oldFilePath);
+				}
+
+				_context.File.Remove(file);
+
+			}
+
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+		}
+
+		private bool DrawingExists(int drawingid)
+		{
+			return _context.Drawing.Any(e => e.Id == drawingid);
+		}
+	}
 }

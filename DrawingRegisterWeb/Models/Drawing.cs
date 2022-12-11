@@ -12,7 +12,7 @@ namespace DrawingRegisterWeb.Models
         [DisplayName("Drawing Number")]
         public string DrawingNumber { get; set; } = null!;
         [Required]
-        public DateTime Date { get; set; }
+        public DateTime Date { get; set; } = DateTime.Now;
         [Required]
         public int FileId { get; set; }
         [ForeignKey("FileId")]
