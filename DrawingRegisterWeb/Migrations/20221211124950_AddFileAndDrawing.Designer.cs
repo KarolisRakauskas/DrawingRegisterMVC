@@ -4,6 +4,7 @@ using DrawingRegisterWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    partial class DrawingRegisterContextModelSnapshot : ModelSnapshot
+    [Migration("20221211124950_AddFileAndDrawing")]
+    partial class AddFileAndDrawing
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -4,6 +4,7 @@ using DrawingRegisterWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    partial class DrawingRegisterContextModelSnapshot : ModelSnapshot
+    [Migration("20221211122730_UpdateProjectModel")]
+    partial class UpdateProjectModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,57 +24,6 @@ namespace DrawingRegisterWeb.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.Drawing", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DrawingNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("FileId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FileId");
-
-                    b.ToTable("Drawing");
-                });
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.File", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FileExtension")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FileUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Revision")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("File");
-                });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
                 {
@@ -128,17 +80,6 @@ namespace DrawingRegisterWeb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ProjectState");
-                });
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.Drawing", b =>
-                {
-                    b.HasOne("DrawingRegisterWeb.Models.File", "File")
-                        .WithMany()
-                        .HasForeignKey("FileId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("File");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>

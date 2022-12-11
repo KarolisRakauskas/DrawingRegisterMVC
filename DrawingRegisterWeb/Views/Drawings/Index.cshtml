@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DrawingRegisterWeb.Models.ProjectState>
+﻿@model IEnumerable<DrawingRegisterWeb.Models.Drawing>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.DrawingNumber)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.File)
             </th>
             <th></th>
         </tr>
@@ -25,10 +28,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @item.Name
+                @Html.DisplayFor(modelItem => item.DrawingNumber)
             </td>
             <td>
-                @item.Description
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.File.FileUrl)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

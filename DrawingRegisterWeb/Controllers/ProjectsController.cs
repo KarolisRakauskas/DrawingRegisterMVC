@@ -26,7 +26,7 @@ namespace DrawingRegisterWeb.Controllers
             return View(await drawingRegisterContext.ToListAsync());
         }
 
-        // GET: Projects/Details/5
+        // GET: Projects/Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Project == null)
@@ -57,7 +57,7 @@ namespace DrawingRegisterWeb.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProjcetNubmer,Name,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,ProjcetNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace DrawingRegisterWeb.Controllers
             return View(project);
     }
 
-        // GET: Projects/Edit/5
+        // GET: Projects/Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Project == null)
@@ -86,12 +86,12 @@ namespace DrawingRegisterWeb.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
+        // POST: Projects/Edit
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjcetNubmer,Name,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjcetNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
         {
             if (id != project.Id)
             {
@@ -122,7 +122,7 @@ namespace DrawingRegisterWeb.Controllers
             return View(project);
         }
 
-        // GET: Projects/Delete/5
+        // GET: Projects/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Project == null)

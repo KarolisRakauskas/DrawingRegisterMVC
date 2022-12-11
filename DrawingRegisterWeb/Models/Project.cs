@@ -14,6 +14,8 @@ namespace DrawingRegisterWeb.Models
 		public string ProjcetNubmer { get; set; } = null!;
 		[Required]
 		public string Name { get; set; } = null!;
+		[Required]
+		public string Description { get; set; } = null!;
 		[DisplayName("Create Date")]
 		public DateTime CreateDate { get; set; } = DateTime.Now;
 		[Required]
