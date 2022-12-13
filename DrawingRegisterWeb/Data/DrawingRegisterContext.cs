@@ -15,5 +15,6 @@ namespace DrawingRegisterWeb.Data
 		public DbSet<ProjectState> ProjectState { get; set; }
 		public DbSet<Models.File> File { get; set; }
 		public DbSet<Drawing> Drawing { get; set; }
+		public DbSet<ProjectItem> ProjectItem { get; set; }
 	}
 }

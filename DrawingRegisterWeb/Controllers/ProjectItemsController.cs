@@ -10,94 +10,90 @@ using DrawingRegisterWeb.Models;
 
 namespace DrawingRegisterWeb.Controllers
 {
-    [ModelBinder]
-    public class ProjectsController : Controller
+    public class ProjectItemsController : Controller
     {
         private readonly DrawingRegisterContext _context;
 
-        public ProjectsController(DrawingRegisterContext context)
+        public ProjectItemsController(DrawingRegisterContext context)
         {
             _context = context;
         }
 
-        // GET: Projects
+        // GET: ProjectItems
         public async Task<IActionResult> Index()
         {
-            var drawingRegisterContext = _context.Project.Include(p => p.ProjectState);
+            var drawingRegisterContext = _context.ProjectItem.Include(p => p.Project);
             return View(await drawingRegisterContext.ToListAsync());
         }
 
-        // GET: Projects/Details/5
+        // GET: ProjectItems/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Project == null)
+            if (id == null || _context.ProjectItem == null)
             {
                 return NotFound();
             }
 
-            var project = await _context.Project
-                .Include(p => p.ProjectState)
+            var projectItem = await _context.ProjectItem
+                .Include(p => p.Project)
                 .FirstOrDefaultAsync(m => m.Id == id);
-
-            project.ProjectItems = _context.ProjectItem.ToList();
-
-            if (project == null)
+            if (projectItem == null)
             {
                 return NotFound();
             }
 
-            return View(project);
+            return View(projectItem);
         }
 
-        // GET: Projects/Create
+        // GET: ProjectItems/Create
         public IActionResult Create()
         {
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name");
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "ProjcetNubmer");
             return View();
         }
 
-        // POST: Projects/Create
+        // POST: ProjectItems/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProjcetNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Number,Name,Description,ProjectId")] ProjectItem projectItem)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(project);
+                _context.Add(projectItem);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
-            return View(project);
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "ProjcetNubmer", projectItem.ProjectId);
+            return View(projectItem);
         }
 
-        // GET: Projects/Edit/5
+        // GET: ProjectItems/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Project == null)
+            if (id == null || _context.ProjectItem == null)
             {
                 return NotFound();
             }
 
-            var project = await _context.Project.FindAsync(id);
-            if (project == null)
+            var projectItem = await _context.ProjectItem.FindAsync(id);
+            if (projectItem == null)
             {
                 return NotFound();
             }
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
-            return View(project);
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "ProjcetNubmer", projectItem.ProjectId);
+            return View(projectItem);
         }
 
-        // POST: Projects/Edit/5
+        // POST: ProjectItems/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjcetNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Number,Name,Description,ProjectId")] ProjectItem projectItem)
         {
-            if (id != project.Id)
+            if (id != projectItem.Id)
             {
                 return NotFound();
             }
@@ -106,12 +102,12 @@ namespace DrawingRegisterWeb.Controllers
             {
                 try
                 {
-                    _context.Update(project);
+                    _context.Update(projectItem);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProjectExists(project.Id))
+                    if (!ProjectItemExists(projectItem.Id))
                     {
                         return NotFound();
                     }
@@ -122,51 +118,51 @@ namespace DrawingRegisterWeb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
-            return View(project);
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "ProjcetNubmer", projectItem.ProjectId);
+            return View(projectItem);
         }
 
-        // GET: Projects/Delete/5
+        // GET: ProjectItems/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Project == null)
+            if (id == null || _context.ProjectItem == null)
             {
                 return NotFound();
             }
 
-            var project = await _context.Project
-                .Include(p => p.ProjectState)
+            var projectItem = await _context.ProjectItem
+                .Include(p => p.Project)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (project == null)
+            if (projectItem == null)
             {
                 return NotFound();
             }
 
-            return View(project);
+            return View(projectItem);
         }
 
-        // POST: Projects/Delete/5
+        // POST: ProjectItems/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Project == null)
+            if (_context.ProjectItem == null)
             {
-                return Problem("Entity set 'DrawingRegisterContext.Project'  is null.");
+                return Problem("Entity set 'DrawingRegisterContext.ProjectItem'  is null.");
             }
-            var project = await _context.Project.FindAsync(id);
-            if (project != null)
+            var projectItem = await _context.ProjectItem.FindAsync(id);
+            if (projectItem != null)
             {
-                _context.Project.Remove(project);
+                _context.ProjectItem.Remove(projectItem);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ProjectExists(int id)
+        private bool ProjectItemExists(int id)
         {
-            return _context.Project.Any(e => e.Id == id);
+            return _context.ProjectItem.Any(e => e.Id == id);
         }
     }
 }

@@ -27,5 +27,7 @@ namespace DrawingRegisterWeb.Models
 		[ForeignKey("ProjectStateId")]
 		[ValidateNever]
 		public ProjectState ProjectState { get; set; } = null!;
+		[ValidateNever]
+		public virtual IList<ProjectItem> ProjectItems { get; set; }
 	}
 }

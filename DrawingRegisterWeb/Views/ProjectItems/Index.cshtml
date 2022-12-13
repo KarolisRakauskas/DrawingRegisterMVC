@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DrawingRegisterWeb.Models.Project>
+﻿@model IEnumerable<DrawingRegisterWeb.Models.ProjectItem>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,7 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProjcetNubmer)
+                @Html.DisplayNameFor(model => model.Number)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Name)
@@ -22,13 +22,7 @@
                 @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CreateDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeadlineDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProjectState)
+                @Html.DisplayNameFor(model => model.Project)
             </th>
             <th></th>
         </tr>
@@ -37,7 +31,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjcetNubmer)
+                @Html.DisplayFor(modelItem => item.Number)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Name)
@@ -46,13 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeadlineDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProjectState.Name)
+               @Html.DisplayFor(modelItem => item.Project.ProjcetNubmer)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

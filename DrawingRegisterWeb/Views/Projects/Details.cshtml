@@ -1,4 +1,5 @@
 ﻿@model DrawingRegisterWeb.Models.Project
+@*@Model.ProjectItems.All(i => i.ProjectId == i.Id);*@
 
 @{
     ViewData["Title"] = "Details";
@@ -44,7 +45,7 @@
             @Html.DisplayNameFor(model => model.ProjectState)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProjectState.Name)
+            @Html.DisplayFor(model => model.ProjectState.Description)
         </dd>
     </dl>
 </div>
@@ -52,3 +53,34 @@
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Item Number
+            </th>
+            <th>
+                Item Description
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(var i = 0; i < Model.ProjectItems.Count(); i++)
+        {
+            if(Model.ProjectItems[i].ProjectId == Model.Id)
+            {
+                <tr>
+                     <td>
+                        @Model.ProjectItems[i].Name
+                     </td>
+                     <td>
+                        @Model.ProjectItems[i].Number
+                     </td>
+                 </tr>             
+            }
+        }
+    </tbody>
+</table>

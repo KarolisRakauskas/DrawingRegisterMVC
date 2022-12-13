@@ -4,6 +4,7 @@ using DrawingRegisterWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    partial class DrawingRegisterContextModelSnapshot : ModelSnapshot
+    [Migration("20221213202440_AddProjectItemUpdateProject")]
+    partial class AddProjectItemUpdateProject
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,7 +47,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasIndex("FileId");
 
-                    b.ToTable("Drawing", (string)null);
+                    b.ToTable("Drawing");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.File", b =>
@@ -70,7 +73,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("File", (string)null);
+                    b.ToTable("File");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
@@ -106,7 +109,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasIndex("ProjectStateId");
 
-                    b.ToTable("Project", (string)null);
+                    b.ToTable("Project");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectItem", b =>
@@ -136,7 +139,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasIndex("ProjectId");
 
-                    b.ToTable("ProjectItem", (string)null);
+                    b.ToTable("ProjectItem");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectState", b =>
@@ -157,7 +160,7 @@ namespace DrawingRegisterWeb.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProjectState", (string)null);
+                    b.ToTable("ProjectState");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Drawing", b =>
