@@ -11,23 +11,25 @@ namespace DrawingRegisterWeb.Models
 		public int Id { get; set; }
 		[Required]
 		[DisplayName("Project Number")]
-		public string ProjcetNubmer { get; set; } = null!;
+		public string? ProjectNubmer { get; set; }
 		[Required]
-		public string Name { get; set; } = null!;
+		public string? Name { get; set; }
 		[Required]
-		public string Description { get; set; } = null!;
+		public string? Description { get; set; }
 		[DisplayName("Create Date")]
+		[DataType(DataType.Date)]
 		public DateTime CreateDate { get; set; } = DateTime.Now;
 		[Required]
 		[DisplayName("Deadline Date")]
+		[DataType(DataType.Date)]
 		public DateTime DeadlineDate { get; set; }
 		[Required]
 		[DisplayName("Project State")]
 		public int ProjectStateId { get; set; }
 		[ForeignKey("ProjectStateId")]
 		[ValidateNever]
-		public ProjectState ProjectState { get; set; } = null!;
+		public ProjectState? ProjectState { get; set; }
 		[ValidateNever]
-		public virtual IList<ProjectItem> ProjectItems { get; set; }
+		public IList<ProjectItem>? ProjectItems { get; set; }
 	}
 }

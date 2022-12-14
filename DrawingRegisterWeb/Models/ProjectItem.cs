@@ -11,17 +11,19 @@ namespace DrawingRegisterWeb.Models
         public int Id { get; set; }
         [Required]
         [DisplayName("Item Number")]
-        public string Number { get; set; } = null!;
+        public string? Number { get; set; }
         [Required]
-        public string Name { get; set; } = null!;
+        public string? Name { get; set; }
         [Required]
         [DisplayName("Item Description")]
-        public string Description { get; set; } = null!;
+        public string? Description { get; set; }
         [Required]
         [ValidateNever]
         public int ProjectId { get; set; }
         [ForeignKey("ProjectId")]
         [ValidateNever]
-        public Project Project { get; set; }
+        public Project? Project { get; set; }
+        [ValidateNever]
+        public IList<Drawing>? Drawings { get; set; }
     }
 }

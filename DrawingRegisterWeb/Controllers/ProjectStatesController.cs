@@ -25,24 +25,6 @@ namespace DrawingRegisterWeb.Controllers
             return View(await _context.ProjectState.ToListAsync());
         }
 
-        // GET: ProjectStates/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.ProjectState == null)
-            {
-                return NotFound();
-            }
-
-            var projectState = await _context.ProjectState
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectState == null)
-            {
-                return NotFound();
-            }
-
-            return View(projectState);
-        }
-
         // GET: ProjectStates/Create
         public IActionResult Create()
         {
@@ -50,11 +32,9 @@ namespace DrawingRegisterWeb.Controllers
         }
 
         // POST: ProjectStates/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description")] ProjectState projectState)
+        public async Task<IActionResult> Create(ProjectState projectState)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +45,7 @@ namespace DrawingRegisterWeb.Controllers
             return View(projectState);
         }
 
-        // GET: ProjectStates/Edit/5
+        // GET: ProjectStates/Edit
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.ProjectState == null)
@@ -81,12 +61,10 @@ namespace DrawingRegisterWeb.Controllers
             return View(projectState);
         }
 
-        // POST: ProjectStates/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: ProjectStates/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] ProjectState projectState)
+        public async Task<IActionResult> Edit(int id, ProjectState projectState)
         {
             if (id != projectState.Id)
             {
@@ -116,7 +94,7 @@ namespace DrawingRegisterWeb.Controllers
             return View(projectState);
         }
 
-        // GET: ProjectStates/Delete/5
+        // GET: ProjectStates/Delete
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.ProjectState == null)
@@ -141,7 +119,7 @@ namespace DrawingRegisterWeb.Controllers
         {
             if (_context.ProjectState == null)
             {
-                return Problem("Entity set 'DrawingRegisterContext.ProjectState'  is null.");
+                return Problem("Entity set is null.");
             }
             var projectState = await _context.ProjectState.FindAsync(id);
             if (projectState != null)
