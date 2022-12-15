@@ -11,11 +11,11 @@ namespace DrawingRegisterWeb.Models
 		public int Id { get; set; }
 		[Required]
 		[DisplayName("Project Number")]
-		public string? ProjectNubmer { get; set; }
+		public string ProjectNubmer { get; set; } = null!;
 		[Required]
-		public string? Name { get; set; }
+		public string Name { get; set; } = null!;
 		[Required]
-		public string? Description { get; set; }
+		public string Description { get; set; } = null!;
 		[DisplayName("Create Date")]
 		[DataType(DataType.Date)]
 		public DateTime CreateDate { get; set; } = DateTime.Now;
@@ -30,6 +30,6 @@ namespace DrawingRegisterWeb.Models
 		[ValidateNever]
 		public ProjectState? ProjectState { get; set; }
 		[ValidateNever]
-		public IList<ProjectItem>? ProjectItems { get; set; }
+		public IEnumerable<ProjectItem>? ProjectItems { get; set; }
 	}
 }

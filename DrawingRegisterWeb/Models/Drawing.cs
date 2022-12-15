@@ -11,20 +11,20 @@ namespace DrawingRegisterWeb.Models
 		public int Id { get; set; }
 		[Required]
 		[DisplayName("Drawing Number")]
-		public string? DrawingNumber { get; set; }
+		public string DrawingNumber { get; set; } = null!;
 		[Required]
 		[DataType(DataType.Date)]
 		[DisplayName("Create Date")]
 		public DateTime CreateDate { get; set; } = DateTime.Now;
 		public string? Revision { get; set; }
 		[Required]
-		public string? FileUrl { get; set; }
+		public string FileUrl { get; set; } = null!;
 		[Required]
 		[ValidateNever]
 		public int ProjectItemId { get; set; }
 		[Required]
 		[ValidateNever]
 		[ForeignKey("ProjectItemId")]
-		public ProjectItem? ProjectItem { get; set; }
+		public ProjectItem ProjectItem { get; set; } = null!;
 	}
 }
