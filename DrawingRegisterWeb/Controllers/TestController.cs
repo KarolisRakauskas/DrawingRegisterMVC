@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 
-namespace DrawingRegisterWeb.Views
+namespace DrawingRegisterWeb.Controllers
 {
     public class TestController : Controller
     {
@@ -48,7 +48,7 @@ namespace DrawingRegisterWeb.Views
         // GET: Test/Create
         public IActionResult Create()
         {
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Description");
+            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace DrawingRegisterWeb.Views
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,DeadlineDate,ProjectStateId")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace DrawingRegisterWeb.Views
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Description", project.ProjectStateId);
+            ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
             return View(project);
         }
 
@@ -155,14 +155,14 @@ namespace DrawingRegisterWeb.Views
             {
                 _context.Project.Remove(project);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProjectExists(int id)
         {
-          return _context.Project.Any(e => e.Id == id);
+            return _context.Project.Any(e => e.Id == id);
         }
     }
 }

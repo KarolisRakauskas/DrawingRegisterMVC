@@ -27,12 +27,12 @@ public static class SeedData
 			new ProjectState
 			{
 				Name = "Suspended",
-				Description = "The project has been temporarily removed from the active list."
+				Description = "The project has been removed from the active list."
 			},
 			new ProjectState
 			{
 				Name = "Canceled",
-				Description = "The project has been permanently removed from the active list, but project data is still available to team members."
+				Description = "The project has been removed from the active list, but project data is still available to team members."
 			},
 			new ProjectState
 			{

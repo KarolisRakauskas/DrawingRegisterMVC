@@ -1,0 +1,113 @@
+﻿@model DrawingRegisterWeb.ViewModels.Project_ProjectItemVM
+
+@{
+    ViewData["Title"] = "Project Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Project</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.ProjectNubmer)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.ProjectNubmer)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.Description)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.CreateDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.CreateDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.DeadlineDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.DeadlineDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Project!.ProjectState)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Project!.ProjectState!.Name)
+        </dd>
+    </dl>
+</div>
+<div class="mt-3 mb-3">
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+</div>
+<hr />
+
+<ul class="nav nav-tabs" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active" data-bs-toggle="tab" href="#projectItems" aria-selected="true" role="tab">Project Items</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" data-bs-toggle="tab" href="#documentation" aria-selected="false" role="tab" tabindex="-1">Documentation</a>
+  </li>
+  <li class="nav-item" role="presentation">
+    <a class="nav-link" data-bs-toggle="tab" href="#layout" aria-selected="false" role="tab" tabindex="-1">Layout</a>
+  </li>
+</ul>
+
+<div id="myTabContent" class="tab-content">
+
+  <div class="tab-pane fade active show" id="projectItems" role="tabpanel">
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectItems![0].Number)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.ProjectItems![0].Name)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+                @foreach (var item in Model.ProjectItems!)
+                {
+                <tr>
+                    <td>
+                        @item.Number
+                    </td>
+                    <td>
+                        @item.Name
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <a asp-action="Edit" asp-route-id="" class="btn btn-primary">Edit</a>
+                            <a asp-action="Delete" asp-route-id="" class="btn btn-warning">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                }
+        </tbody>
+    </table>
+  </div>
+
+  <div class="tab-pane fade" id="documentation" role="tabpanel">
+    <p>List of Documents</p>
+  </div>
+
+  <div class="tab-pane fade" id="layout" role="tabpanel">
+    <p>List of Layouts</p>
+  </div>
+
+</div>
