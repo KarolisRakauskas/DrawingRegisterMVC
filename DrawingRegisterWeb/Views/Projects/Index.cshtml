@@ -25,7 +25,6 @@
 			<th>
 				@Html.DisplayNameFor(model => model.Projects![0].ProjectNubmer), @Html.DisplayNameFor(model => model.Projects![0].Name)
 			</th>
-			<th></th>
 			<th>
 				@Html.DisplayNameFor(model => model.Projects![0].CreateDate)
 			</th>
@@ -45,9 +44,6 @@
 				@item.ProjectNubmer @item.Name
 			</td>
 			<td>
-				<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
-			</td>
-			<td>
 				@item.CreateDate.ToShortDateString()
 			</td>
 			<td>
@@ -57,10 +53,7 @@
 				@item.ProjectState?.Name
 			</td>
 			<td>
-				<div class="btn-group" role="group">
-					<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
-					<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-warning">Delete</a>
-				</div>
+				<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
 			</td>
 		</tr>
 }

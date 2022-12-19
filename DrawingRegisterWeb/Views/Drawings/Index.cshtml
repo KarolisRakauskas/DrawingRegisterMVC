@@ -1,0 +1,69 @@
+﻿@model DrawingRegisterWeb.ViewModels.DrawingVM
+
+@{
+    ViewData["Title"] = "Drawings";
+}
+
+<h1>Drawing's list</h1>
+
+<div class="alert alert-dismissible alert-info mt-3">
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  The best practice is to create new Drawings directly from the <a  asp-controller="Projects" asp-action="Index">Project</a>. 
+  This way ensures that the project and the drawings are always connected.
+</div>
+
+<form asp-controller="Drawings" asp-action="Index" method="get" class="d-flex mt-3">
+        <select asp-for="Projects" asp-items="Model.ProjectSelectList" class="form-select me-sm-2">
+            <option value="">All</option>
+        </select>
+
+        <input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Drawings![0].DrawingNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Drawings![0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Drawings![0].Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Drawings![0].Project)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Drawings![0].CreateDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Drawings!) {
+        <tr>
+            <td>
+               @Html.DisplayFor(modelItem => item.DrawingNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @item.Project.ProjectNubmer @item.Project.Name
+            </td>
+            <td>
+                @item.CreateDate.ToShortDateString()
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20221214221751_Initial")]
+    [Migration("20221218214519_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -33,26 +33,23 @@ namespace DrawingRegisterWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("DrawingNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FileUrl")
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ProjectItemId")
+                    b.Property<int>("ProjectId")
                         .HasColumnType("int");
-
-                    b.Property<string>("Revision")
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProjectItemId");
+                    b.HasIndex("ProjectId");
 
                     b.ToTable("Drawing");
                 });
@@ -93,36 +90,6 @@ namespace DrawingRegisterWeb.Migrations
                     b.ToTable("Project");
                 });
 
-            modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ProjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProjectId");
-
-                    b.ToTable("ProjectItem");
-                });
-
             modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectState", b =>
                 {
                     b.Property<int>("Id")
@@ -146,13 +113,13 @@ namespace DrawingRegisterWeb.Migrations
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Drawing", b =>
                 {
-                    b.HasOne("DrawingRegisterWeb.Models.ProjectItem", "ProjectItem")
-                        .WithMany("Drawings")
-                        .HasForeignKey("ProjectItemId")
+                    b.HasOne("DrawingRegisterWeb.Models.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("ProjectItem");
+                    b.Navigation("Project");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
@@ -164,27 +131,6 @@ namespace DrawingRegisterWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("ProjectState");
-                });
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectItem", b =>
-                {
-                    b.HasOne("DrawingRegisterWeb.Models.Project", "Project")
-                        .WithMany("ProjectItems")
-                        .HasForeignKey("ProjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Project");
-                });
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.Project", b =>
-                {
-                    b.Navigation("ProjectItems");
-                });
-
-            modelBuilder.Entity("DrawingRegisterWeb.Models.ProjectItem", b =>
-                {
-                    b.Navigation("Drawings");
                 });
 #pragma warning restore 612, 618
         }

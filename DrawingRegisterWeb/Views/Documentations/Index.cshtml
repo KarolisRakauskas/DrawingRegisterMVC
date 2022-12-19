@@ -1,0 +1,72 @@
+﻿@model DrawingRegisterWeb.ViewModels.DocumentationVM
+
+@{
+	ViewData["Title"] = "Documentations";
+}
+
+<h1>Documentation list</h1>
+
+<div class="alert alert-dismissible alert-info mt-3">
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  The best practice is to create new Documentation directly from the <a  asp-controller="Projects" asp-action="Index">Project</a>. 
+  This way ensures that the project and the documentation are always connected.
+</div>
+
+<form asp-controller="Documentations" asp-action="Index" method="get" class="d-flex mt-3">
+		<select asp-for="Projects" asp-items="Model.ProjectSelectList" class="form-select me-sm-2">
+			<option value="">All</option>
+		</select>
+
+		<input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
+		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<table class="table table-striped mt-3">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Documentations![0].FileName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Documentations![0].FileType)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Documentations![0].Project)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Documentations![0].CreateDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Documentations![0].Revision)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+@foreach (var item in Model.Documentations!) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.FileName)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.FileType)
+			</td>
+			<td>
+				@item.Project.ProjectNubmer @item.Project.Name
+			</td>
+			<td>
+				@item.CreateDate.ToShortDateString()
+			</td>
+			<td>
+				@item.Revision
+			</td>
+			<td>
+				<div class="btn-group" role="group"> 
+					<a class="btn btn-primary">Open <i class="bi bi-cloud-arrow-down-fill"></i></a>
+					<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+				</div>
+			</td>
+		</tr>
+}
+	</tbody>
+</table>
