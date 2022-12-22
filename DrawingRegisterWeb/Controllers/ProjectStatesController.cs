@@ -10,130 +10,155 @@ using DrawingRegisterWeb.Models;
 
 namespace DrawingRegisterWeb.Controllers
 {
-    public class ProjectStatesController : Controller
-    {
-        private readonly DrawingRegisterContext _context;
+	public class ProjectStatesController : Controller
+	{
+		private readonly DrawingRegisterContext _context;
 
-        public ProjectStatesController(DrawingRegisterContext context)
-        {
-            _context = context;
-        }
+		public ProjectStatesController(DrawingRegisterContext context)
+		{
+			_context = context;
+		}
 
-        // GET: ProjectStates
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.ProjectState.ToListAsync());
-        }
+		// GET: ProjectStates
+		public async Task<IActionResult> Index(string sortOrder)
+		{
 
-        // GET: ProjectStates/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+			ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
+			ViewData["DescriptionSortParm"] = sortOrder == "Description" ? "description_desc" : "Description";
 
-        // POST: ProjectStates/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ProjectState projectState)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(projectState);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(projectState);
-        }
+			var projectStates = from p in _context.ProjectState select p;
 
-        // GET: ProjectStates/Edit
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.ProjectState == null)
-            {
-                return NotFound();
-            }
+			switch (sortOrder)
+			{
+				case "Name":
+					projectStates = projectStates.OrderBy(p => p.Name);
+					break;
+				case "name_desc":
+					projectStates = projectStates.OrderByDescending(p => p.Name);
+					break;
+				case "Description":
+					projectStates = projectStates.OrderBy(p => p.Description);
+					break;
+				case "description_desc":
+					projectStates = projectStates.OrderByDescending(p => p.Description);
+					break;
+				default:
+					projectStates = projectStates.OrderBy(p => p.Id);
+					break;
+			}
 
-            var projectState = await _context.ProjectState.FindAsync(id);
-            if (projectState == null)
-            {
-                return NotFound();
-            }
-            return View(projectState);
-        }
+			return View(await projectStates.ToListAsync());
+		}
 
-        // POST: ProjectStates/Edit
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, ProjectState projectState)
-        {
-            if (id != projectState.Id)
-            {
-                return NotFound();
-            }
+		// GET: ProjectStates/Create
+		public IActionResult Create()
+		{
+			return View();
+		}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(projectState);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ProjectStateExists(projectState.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(projectState);
-        }
+		// POST: ProjectStates/Create
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Create(ProjectState projectState)
+		{
+			if (ModelState.IsValid)
+			{
+				_context.Add(projectState);
+				await _context.SaveChangesAsync();
+				return RedirectToAction(nameof(Index));
+			}
+			return View(projectState);
+		}
 
-        // GET: ProjectStates/Delete
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.ProjectState == null)
-            {
-                return NotFound();
-            }
+		// GET: ProjectStates/Edit
+		public async Task<IActionResult> Edit(int? id)
+		{
+			if (id == null || _context.ProjectState == null)
+			{
+				return NotFound();
+			}
 
-            var projectState = await _context.ProjectState
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (projectState == null)
-            {
-                return NotFound();
-            }
+			var projectState = await _context.ProjectState.FindAsync(id);
+			if (projectState == null)
+			{
+				return NotFound();
+			}
+			return View(projectState);
+		}
 
-            return View(projectState);
-        }
+		// POST: ProjectStates/Edit
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, ProjectState projectState)
+		{
+			if (id != projectState.Id)
+			{
+				return NotFound();
+			}
 
-        // POST: ProjectStates/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.ProjectState == null)
-            {
-                return Problem("Entity set is null.");
-            }
-            var projectState = await _context.ProjectState.FindAsync(id);
-            if (projectState != null)
-            {
-                _context.ProjectState.Remove(projectState);
-            }
+			if (ModelState.IsValid)
+			{
+				try
+				{
+					_context.Update(projectState);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!ProjectStateExists(projectState.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+				return RedirectToAction(nameof(Index));
+			}
+			return View(projectState);
+		}
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
+		// GET: ProjectStates/Delete
+		public async Task<IActionResult> Delete(int? id)
+		{
+			if (id == null || _context.ProjectState == null)
+			{
+				return NotFound();
+			}
 
-        private bool ProjectStateExists(int id)
-        {
-            return _context.ProjectState.Any(e => e.Id == id);
-        }
-    }
+			var projectState = await _context.ProjectState
+				.FirstOrDefaultAsync(m => m.Id == id);
+			if (projectState == null)
+			{
+				return NotFound();
+			}
+
+			return View(projectState);
+		}
+
+		// POST: ProjectStates/Delete/5
+		[HttpPost, ActionName("Delete")]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> DeleteConfirmed(int id)
+		{
+			if (_context.ProjectState == null)
+			{
+				return Problem("Entity set is null.");
+			}
+			var projectState = await _context.ProjectState.FindAsync(id);
+			if (projectState != null)
+			{
+				_context.ProjectState.Remove(projectState);
+			}
+
+			await _context.SaveChangesAsync();
+			return RedirectToAction(nameof(Index));
+		}
+
+		private bool ProjectStateExists(int id)
+		{
+			return _context.ProjectState.Any(e => e.Id == id);
+		}
+	}
 }

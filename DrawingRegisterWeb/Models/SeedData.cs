@@ -30,13 +30,13 @@ public static class SeedData
 				{
 					Name = "Canceled",
 					Description = "The project has been canceled, but project data is still available to team members."+
-					" Team members can read drawings, documentation and layouts."
+					" Team members can only read drawings, documentation and layouts."
 				},
 				new ProjectState
 				{
 					Name = "Completed",
 					Description = "The project set to Completed."+
-					" Team members can read drawings, documentation and layouts."
+					" Team members can only read drawings, documentation and layouts."
 				},
 				new ProjectState
 				{

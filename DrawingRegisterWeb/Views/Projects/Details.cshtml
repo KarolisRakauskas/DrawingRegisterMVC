@@ -4,7 +4,7 @@
     ViewData["Title"] = "Project Details";
 }
 
-<h1>Details</h1>
+<h1 class="text-primary">Details</h1>
 
 <div>
     <h4>Project</h4>
@@ -48,11 +48,13 @@
         </dd>
     </dl>
 </div>
+
 <div class="btn-group" role="group">
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    <a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-primary">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-danger">Delete</a>
+    <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
+    <a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-outline-danger">Delete</a>
 </div>
+
 <hr />
 
 <ul class="nav nav-tabs" role="tablist">
@@ -70,6 +72,13 @@
 <div id="myTabContent" class="tab-content">
 
   <div class="tab-pane fade active show" id="drawings" role="tabpanel">
+
+    @using (Html.BeginForm("Create", "Drawings"))
+    {
+       <input type="text" name="idData" value="@Model.Project!.Id" hidden/>
+       <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
+    }
+
     <table class="table table-striped mt-3">
         <thead>
             <tr>
@@ -88,20 +97,22 @@
         <tbody>
                 @foreach (var item in Model.Drawings!)
                 {
-                <tr>
-                    <td>
-                        @item.DrawingNumber
-                    </td>
-                    <td>
-                        @item.Name
-                    </td>
-                    <td>
-                        @item.Description
-                    </td>
-                    <td>
-                        <a asp-controller="Drawings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            @item.DrawingNumber
+                        </td>
+                        <td>
+                            @item.Name
+                        </td>
+                        <td>
+                            @item.Description
+                        </td>
+                        <td>
+                            <a asp-controller="Drawings" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary"> 
+                                <i class="bi bi-folder2-open"></i> Open
+                            </a>
+                        </td>
+                    </tr>
                 }
         </tbody>
     </table>
@@ -173,23 +184,23 @@
         <tbody>
                 @foreach (var item in Model.Layouts!)
                 {
-                        <tr>
-                            <td>
-                            @item.FileName
-                            </td>
-                            <td>
-                            @item.FileType
-                            </td>
-                            <td>
-                            @item.Revision
-                            </td>
-                            <td>
-                            @item.CreateDate
-                            </td>
-                            <td>
-                                <a asp-controller="Layouts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td>
+                        @item.FileName
+                        </td>
+                        <td>
+                        @item.FileType
+                        </td>
+                        <td>
+                        @item.Revision
+                        </td>
+                        <td>
+                        @item.CreateDate
+                        </td>
+                        <td>
+                            <a asp-controller="Layouts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
+                        </td>
+                    </tr>
                 }
         </tbody>
     </table>

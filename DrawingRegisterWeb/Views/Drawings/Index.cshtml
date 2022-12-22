@@ -4,7 +4,7 @@
     ViewData["Title"] = "Drawings";
 }
 
-<h1>Drawing's list</h1>
+<h1 class="text-primary">Drawings</h1>
 
 <div class="alert alert-dismissible alert-info mt-3">
   <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -12,7 +12,7 @@
   This way ensures that the project and the drawings are always connected.
 </div>
 
-<form asp-controller="Drawings" asp-action="Index" method="get" class="d-flex mt-3">
+<form asp-controller="Drawings" asp-action="Index" method="get" class="d-flex mt-3 text-secondary">
         <select asp-for="Projects" asp-items="Model.ProjectSelectList" class="form-select me-sm-2">
             <option value="">All</option>
         </select>
@@ -43,27 +43,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Drawings!) {
-        <tr>
-            <td>
-               @Html.DisplayFor(modelItem => item.DrawingNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @item.Project.ProjectNubmer @item.Project.Name
-            </td>
-            <td>
-                @item.CreateDate.ToShortDateString()
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Drawings!) 
+        {
+            <tr>
+                <td>
+                   @Html.DisplayFor(modelItem => item.DrawingNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @item.Project.ProjectNubmer @item.Project.Name
+                </td>
+                <td>
+                    @item.CreateDate.ToShortDateString()
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary"> 
+                        <i class="bi bi-folder2-open"></i> Open
+                    </a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

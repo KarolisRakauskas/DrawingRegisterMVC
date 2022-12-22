@@ -1,17 +1,22 @@
-﻿@model ProjectState
+﻿@model DrawingRegisterWeb.Models.Drawing
 
 @{
-    ViewData["Title"] = "Create Custom Project State";
+    ViewData["Title"] = "Create";
 }
 
-<h1 class="text-primary">Create New Custom Project State</h1>
-<hr />
+<h1 class="text-primary">Create</h1>
 
+<h4>Drawing</h4>
+<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
-
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="DrawingNumber" class="control-label"></label>
+                <input asp-for="DrawingNumber" class="form-control" />
+                <span asp-validation-for="DrawingNumber" class="text-danger"></span>
+            </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -22,14 +27,20 @@
                 <textarea asp-for="Description" rows="3" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-
+            <div class="form-group" hidden>
+                <label asp-for="ProjectId" class="control-label"></label>
+                <select asp-for="ProjectId" class ="form-control" value="ProjectId" asp-items="ViewBag.ProjectId"></select>
+            </div>
             <div class="btn-group mt-3" role="group">
                 <input type="submit" value="Create" class="btn btn-outline-primary"/>
-                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+                <a class="btn btn-outline-secondary" asp-controller="Projects" asp-action="Details" asp-route-id="@ViewBag.ProjectRouteId">Back to Project</a>
             </div>
-
         </form>
     </div>
+</div>
+
+<div>
+    
 </div>
 
 @section Scripts {

@@ -4,7 +4,7 @@
     ViewData["Title"] = "Create Project";
 }
 
-<h1>Create</h1>
+<h1 class="text-primary">Create</h1>
 
 <h4>Project</h4>
 <hr />
@@ -37,8 +37,8 @@
                 <select asp-for="ProjectStateId" class ="form-control" asp-items="ViewBag.ProjectStateId"></select>
             </div>
             <div class="btn-group mt-3" role="group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
-                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Create" class="btn btn-outline-primary"/>
+                <a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
             </div>
         </form>
     </div>

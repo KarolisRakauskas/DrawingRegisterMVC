@@ -4,14 +4,16 @@
 	ViewData["Title"] = "Projects";
 }
 
-<h1 class="mb-3">Projects</h1>
+<h1 class="mb-3 text-primary">Projects</h1>
 
 <p>
-	<a asp-action="Create" class="btn btn-primary mb-3">Create New</a>
+	<a asp-action="Create" class="btn btn-primary mb-3">
+		Create New Project
+	</a>
 </p>
 
 <form asp-controller="Projects" asp-action="Index" method="get" class="d-flex">
-		<select asp-for="States" asp-items="Model.ProjectStates" class="form-select me-sm-2">
+		<select asp-for="States" asp-items="Model.ProjectStates" class="text-secondary form-select me-sm-2">
 			<option value="">All</option>
 		</select>
 
@@ -38,7 +40,8 @@
 		</tr>
 	</thead>
 	<tbody>
-@foreach (var item in Model.Projects!) {
+	@foreach (var item in Model.Projects!) 
+	{
 		<tr>
 			<td>
 				@item.ProjectNubmer @item.Name
@@ -50,12 +53,14 @@
 				@item.DeadlineDate.ToShortDateString()
 			</td>
 			<td>
-				@item.ProjectState?.Name
+				@item.ProjectState!.Name
 			</td>
 			<td>
-				<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
+					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary"> 
+						<i class="bi bi-folder2-open"></i> Open
+					</a>
 			</td>
 		</tr>
-}
+	}
 	</tbody>
 </table>
