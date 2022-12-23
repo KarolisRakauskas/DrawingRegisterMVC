@@ -18,6 +18,8 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\Files\Drawings\" />
+    <Folder Include="wwwroot\Files\Documentation\" />
+    <Folder Include="wwwroot\Files\Layouts\" />
   </ItemGroup>
 
 </Project>

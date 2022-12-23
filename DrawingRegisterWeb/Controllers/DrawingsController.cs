@@ -86,24 +86,58 @@ namespace DrawingRegisterWeb.Controllers
         }
 
         // GET: Drawings/Edit
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return View();
+            if (id == null || _context.Drawing == null)
+            {
+                return NotFound();
+            }
+
+            var drawing = await _context.Drawing.FindAsync(id);
+
+            if(drawing == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Name", drawing.ProjectId);
+            return View(drawing);
         }
 
         // POST: Drawings/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, Drawing drawing)
         {
-            try
+            if( id != drawing.Id)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                try
+                {
+                    _context.Update(drawing);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DrawingExists(drawing.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Details), new { id });
             }
+
+            ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Name", drawing.ProjectId);
+            return View(drawing);
+
         }
 
         // GET: Drawings/Delete

@@ -53,7 +53,22 @@
 				@item.DeadlineDate.ToShortDateString()
 			</td>
 			<td>
-				@item.ProjectState!.Name
+					@switch (item.ProjectState!.Name)
+					{
+						case "Defined":
+							<span class="badge bg-info">@item.ProjectState!.Name</span>
+							break;
+						case "Canceled":
+							<span class="badge bg-danger">@item.ProjectState!.Name</span>
+							break;
+						case "Completed":
+							<span class="badge bg-success">@item.ProjectState!.Name</span>
+							break;
+						default:
+							<span class="badge bg-primary">@item.ProjectState!.Name</span>
+							break;
+					}
+					
 			</td>
 			<td>
 					<a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary"> 
