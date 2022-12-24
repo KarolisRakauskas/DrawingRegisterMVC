@@ -21,20 +21,24 @@
 		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 </form>
 
-<table class="table table-striped mt-3">
+<table class="table table-striped mt-3 user-select-none " id="sortTable">
 	<thead>
 		<tr>
-			<th>
+			<th onclick="sortTable(0)">
 				@Html.DisplayNameFor(model => model.Projects![0].ProjectNubmer), @Html.DisplayNameFor(model => model.Projects![0].Name)
+				<i class="sortIcon bi"></i>
 			</th>
-			<th>
+			<th onclick="sortTable(1)">
 				@Html.DisplayNameFor(model => model.Projects![0].CreateDate)
+				<i class="sortIcon bi"></i>
 			</th>
-			<th>
+			<th onclick="sortTable(2)">
 				@Html.DisplayNameFor(model => model.Projects![0].DeadlineDate)
+				<i class="sortIcon bi"></i>
 			</th>
-			<th>
+			<th onclick="sortTable(3)">
 				@Html.DisplayNameFor(model => model.Projects![0].ProjectState)
+				<i class="sortIcon bi"></i>
 			</th>
 			<th></th>
 		</tr>
@@ -47,10 +51,10 @@
 				@item.ProjectNubmer @item.Name
 			</td>
 			<td>
-				@item.CreateDate.ToShortDateString()
+				@item.CreateDate.ToString("yyyy/MM/dd")
 			</td>
 			<td>
-				@item.DeadlineDate.ToShortDateString()
+				@item.DeadlineDate.ToString("yyyy/MM/dd")
 			</td>
 			<td>
 					@switch (item.ProjectState!.Name)
