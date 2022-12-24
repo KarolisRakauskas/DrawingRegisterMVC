@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
+using DrawingRegisterWeb.ViewModels;
 
 namespace DrawingRegisterWeb.Controllers
 {
@@ -20,34 +21,45 @@ namespace DrawingRegisterWeb.Controllers
 		}
 
 		// GET: ProjectStates
-		public async Task<IActionResult> Index(string sortOrder)
+		public async Task<IActionResult> Index(string search, string states)
 		{
-
-			ViewData["NameSortParm"] = sortOrder == "Name" ? "name_desc" : "Name";
-			ViewData["DescriptionSortParm"] = sortOrder == "Description" ? "description_desc" : "Description";
 
 			var projectStates = from p in _context.ProjectState select p;
 
-			switch (sortOrder)
+			if (search != null)
 			{
-				case "Name":
-					projectStates = projectStates.OrderBy(p => p.Name);
-					break;
-				case "name_desc":
-					projectStates = projectStates.OrderByDescending(p => p.Name);
-					break;
-				case "Description":
-					projectStates = projectStates.OrderBy(p => p.Description);
-					break;
-				case "description_desc":
-					projectStates = projectStates.OrderByDescending(p => p.Description);
-					break;
-				default:
-					projectStates = projectStates.OrderBy(p => p.Id);
-					break;
+				projectStates = projectStates.Where(p =>
+				p.Name.Contains(search) ||
+				p.Description.Contains(search));
 			}
 
-			return View(await projectStates.ToListAsync());
+			if (states != null)
+			{
+				if (states == "Standard")
+				{
+					projectStates = projectStates.Where(
+						p => p.Name == "Defined" ||
+						p.Name == "Running" ||
+						p.Name == "Canceled" ||
+						p.Name == "Completed"
+						);
+				} else if (states == "Custom")
+				{
+					projectStates = projectStates.Where(
+						p => p.Name != "Defined" &&
+						p.Name != "Running" &&
+						p.Name != "Canceled" &&
+						p.Name != "Completed"
+						);
+				}
+			}
+
+			var projectStateVM = new ProjectStateVM
+			{
+				ProjectStates = await projectStates.OrderBy(p => p.Id).ToListAsync()
+			};
+
+			return View(projectStateVM);
 		}
 
 		// GET: ProjectStates/Create

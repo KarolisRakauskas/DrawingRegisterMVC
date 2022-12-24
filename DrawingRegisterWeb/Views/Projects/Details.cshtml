@@ -79,17 +79,20 @@
        <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
     }
 
-    <table class="table table-striped mt-3">
+    <table class="table table-striped mt-3" id="sortTable">
         <thead>
-            <tr>
-                <th>
+            <tr class="user-select-none">
+                <th onclick="sortTable(0)">
                     @Html.DisplayNameFor(model => model.Drawings![0].DrawingNumber)
+                    <i class="sortIcon bi"></i>
                 </th>
-                <th>
+                <th onclick="sortTable(1)">
                     @Html.DisplayNameFor(model => model.Drawings![0].Name)
+                    <i class="sortIcon bi"></i>
                 </th>
-                <th>
-                        @Html.DisplayNameFor(model => model.Drawings![0].Description)
+                <th onclick="sortTable(2)">
+                    @Html.DisplayNameFor(model => model.Drawings![0].Description)
+                    <i class="sortIcon bi"></i>
                 </th>
                 <th></th>
             </tr>

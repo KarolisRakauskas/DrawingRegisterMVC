@@ -55,3 +55,4 @@ function sortTable(n) {
         icon.getElementsByTagName("I")[n].classList.add("bi-caret-down-fill");
     }
 }
+

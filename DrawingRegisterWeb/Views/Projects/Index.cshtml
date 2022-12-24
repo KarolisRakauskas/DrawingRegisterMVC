@@ -21,9 +21,9 @@
 		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 </form>
 
-<table class="table table-striped mt-3 user-select-none " id="sortTable">
+<table class="table table-striped mt-3" id="sortTable">
 	<thead>
-		<tr>
+		<tr class="user-select-none">
 			<th onclick="sortTable(0)">
 				@Html.DisplayNameFor(model => model.Projects![0].ProjectNubmer), @Html.DisplayNameFor(model => model.Projects![0].Name)
 				<i class="sortIcon bi"></i>
@@ -60,16 +60,16 @@
 					@switch (item.ProjectState!.Name)
 					{
 						case "Defined":
-							<span class="badge bg-info">@item.ProjectState!.Name</span>
+							<span class="text-info">@item.ProjectState!.Name</span>
 							break;
 						case "Canceled":
-							<span class="badge bg-danger">@item.ProjectState!.Name</span>
+							<span class="text-danger">@item.ProjectState!.Name</span>
 							break;
 						case "Completed":
-							<span class="badge bg-success">@item.ProjectState!.Name</span>
+							<span class="text-success">@item.ProjectState!.Name</span>
 							break;
 						default:
-							<span class="badge bg-primary">@item.ProjectState!.Name</span>
+							<span class="text-primary">@item.ProjectState!.Name</span>
 							break;
 					}
 					

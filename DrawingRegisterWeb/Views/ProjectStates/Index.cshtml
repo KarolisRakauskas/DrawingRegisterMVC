@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ProjectState>
+﻿@model DrawingRegisterWeb.ViewModels.ProjectStateVM
 
 @{
 	ViewData["Title"] = "Project States";
@@ -23,21 +23,34 @@
 	</a>
 </p>
 
-<table class="table table-striped">
+<form asp-controller="ProjectStates" asp-action="Index" method="get" class="d-flex">
+		<select asp-for="States" class="text-secondary form-select me-sm-2">
+			<option value="">All</option>
+			<option value="Standard">Standard States</option>
+			<option value="Custom">Custom States</option>
+		</select>
+
+		<input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
+		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+</form>
+
+<table class="table table-striped" id="sortTable">
 	<thead>
-		<tr>
-			<th>
-				<a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]">@Html.DisplayNameFor(model => model.Name)</a>
+		<tr class="user-select-none">
+			<th onclick="sortTable(0)">
+				@Html.DisplayNameFor(model => model.ProjectStates![0].Name)
+				<i class="sortIcon bi"></i>
 			</th>
-			<th>
-				<a asp-action="Index" asp-route-sortOrder="@ViewData["DescriptionSortParm"]">@Html.DisplayNameFor(model => model.Description)</a>
+			<th onclick="sortTable(1)">
+				@Html.DisplayNameFor(model => model.ProjectStates![0].Description)
+				<i class="sortIcon bi"></i>
 			</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-	@foreach (var item in Model) 
-	{
+		@foreach (var item in Model.ProjectStates!)
+		{
 		<tr>
 			<td>
 				@item.Name
@@ -70,7 +83,7 @@
 					}
 			</td>
 		</tr>
-	}
+		}
 	</tbody>
 </table>
 
