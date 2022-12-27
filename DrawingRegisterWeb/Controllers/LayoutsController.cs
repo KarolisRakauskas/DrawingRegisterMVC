@@ -26,9 +26,9 @@ namespace DrawingRegisterWeb.Controllers
 			if (search != null)
 			{
 				layout = layout.Where(l =>
-				l.FileName.Contains(search) ||
-				l.FileType.Contains(search) ||
-				l.Project.Name.Contains(search));
+				l.FileName!.Contains(search) ||
+				l.FileType!.Contains(search) ||
+				l.Project!.Name.Contains(search));
 			}
 
 			if (projects != null)

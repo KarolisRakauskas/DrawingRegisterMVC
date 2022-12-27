@@ -11,12 +11,12 @@ namespace DrawingRegisterWeb.Models
 		public int Id { get; set; }
 		[Required]
 		public string FileUrl { get; set; } = null!;
-		[Required]
+
 		[DisplayName("File Name")]
-		public string FileName { get; set; } = null!;
-		[Required]
+		public string? FileName { get; set; }
+
 		[DisplayName("File Type")]
-		public string FileType { get; set; } = null!;
+		public string? FileType { get; set; }
 		public string? Revision { get; set; }
 		[Required]
 		[DataType(DataType.Date)]
