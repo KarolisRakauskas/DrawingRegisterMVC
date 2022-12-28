@@ -10,7 +10,6 @@ namespace DrawingRegisterWeb.ViewModels
         public SelectList? ProjectStates { get; set; }
         public List<Drawing>? Drawings { get; set; }
         public List<Documentation>? Documentations { get; set; }
-        public Documentation? Documentation { get; set; }
         public List<Layout>? Layouts { get; set; }
         public string? Search { get; set; }
         public string? States { get; set;}

@@ -1,53 +1,166 @@
-﻿@model DrawingRegisterWeb.Models.Drawing
+﻿@model DrawingRegisterWeb.ViewModels.DrawingVM
 
 @{
-    ViewData["Title"] = "Details";
+	ViewData["Title"] = "Details";
 }
 
 <h1 class="text-primary">Details</h1>
 
 <div>
-    <h4>Drawing</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DrawingNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DrawingNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Project)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Project.Description)
-        </dd>
-    </dl>
+	<h4>Drawing</h4>
+	<hr />
+	<dl class="row">
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Drawing!.DrawingNumber)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Drawing!.DrawingNumber)
+		</dd>
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Drawing!.Name)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Drawing!.Name)
+		</dd>
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Drawing!.Description)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Drawing!.Description)
+		</dd>
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Drawing!.CreateDate)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Drawing!.CreateDate)
+		</dd>
+		<dt class = "col-sm-2">
+			@Html.DisplayNameFor(model => model.Drawing!.Project)
+		</dt>
+		<dd class = "col-sm-10">
+			@Html.DisplayFor(model => model.Drawing!.Project.Description)
+		</dd>
+	</dl>
 </div>
 
 <div class="btn-group" role="group">
-    <a asp-controller="Projects" asp-action="Details" asp-route-id="@Model?.ProjectId" class="btn btn-outline-secondary">Go to Project</a>
-    <a asp-action="Index" class="btn btn-outline-secondary">Go to Drawings</a>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-outline-primary">Edit</a>
-    <a asp-action="Delete" asp-route-id="@Model?.Id" class="btn btn-outline-danger">Delete</a>
+	<a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Drawing!.ProjectId" class="btn btn-outline-secondary">Go to Project</a>
+	<a asp-action="Index" class="btn btn-outline-secondary">Go to Drawings List</a>
+	<a asp-action="Edit" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-primary">Edit</a>
+	<a asp-action="Delete" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-danger">Delete</a>
 </div>
 
 <hr />
+
+<h5>Drawing Files</h5>
+
+<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
+	   <div class="col-8">
+			<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
+			<input id="inputFile" type="file" name="files" class="form-control" multiple/>
+	   </div> 
+	   <button id="submitFile" type="submit" class="btn btn-primary col-4">Upload</button >
+</form>
+
+<table class="table table-striped mt-3" id="sortTable">
+	<thead>
+		<tr class="user-select-none">
+			<th onclick="sortTable(0)">
+					@Html.DisplayNameFor(model => model.DrawingFiles![0].FileName)
+					<i class="sortIcon bi"></i>
+			</th>
+			<th onclick="sortTable(1)">
+					@Html.DisplayNameFor(model => model.DrawingFiles![0].FileType)
+					<i class="sortIcon bi"></i>
+			</th>
+			<th onclick="sortTable(2)">
+					@Html.DisplayNameFor(model => model.DrawingFiles![0].Revision)
+					<i class="sortIcon bi"></i>
+			</th>
+			<th onclick="sortTable(3)">
+					@Html.DisplayNameFor(model => model.DrawingFiles![0].CreateDate)
+					<i class="sortIcon bi"></i>
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+			@foreach (var item in Model.DrawingFiles!)
+			{
+				<tr>
+					<td>
+						@item.FileName
+					</td>
+					<td>
+						@item.FileType
+					</td>
+					<td>
+						@item.Revision
+					</td>
+					<td>
+						@item.CreateDate.ToString("yyyy/MM/dd")
+					</td>
+					<td>
+						<div class="btn btn-group">							
+							@if (item.FileType == "pdf")
+							{
+								<a	href="@item.FileUrl"
+									target="_blank"
+									class="btn btn-outline-primary"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Open" 
+									aria-describedby="tooltip716761"> 
+										<i class="bi bi-search"></i>
+								</a>
+							}
+							<a	href="@item.FileUrl"
+								class="btn btn-outline-primary"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Download" 
+								aria-describedby="tooltip716761"
+								download="@item.FileName.@item.FileType"> 
+									<i class="bi bi-cloud-download"></i>
+							</a>
+							<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
+								class="btn btn-outline-primary"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Edit" 
+								aria-describedby="tooltip716761"> 
+									<i class="bi bi-pencil-square"></i>
+							</a>
+							<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
+								class="btn btn-outline-danger"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Delete" 
+								aria-describedby="tooltip716761"> 
+								<i class="bi bi-trash"></i>
+							</a>
+						</div>
+					</td>
+				</tr>
+			}
+	</tbody>
+</table>
+
+@section Scripts
+{
+	<script>
+		//Disable and enebable file upload box submit button
+		const submitfile = document.getElementById('submitFile');
+		const inputFile = document.getElementById('inputFile');
+
+		submitfile.disabled = true;
+		inputFile.addEventListener("change", function(){
+			if (inputFile.value == "") {
+				submitfile.disabled = true;
+			}
+			else {
+				submitfile.disabled = false;
+			}
+		});
+	</script>
+}

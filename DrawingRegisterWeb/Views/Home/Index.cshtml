@@ -11,3 +11,60 @@
 	</p>
 	<hr class="my-4">
 </div>
+
+<div class="jumbotron mt-5">
+	<h2 class="display-5 text-center mb-5 text-primary">Manage your Projects with embedded State features</h2>
+
+	<p class="lead text-secondary">&emsp; You can control how accessible the project is for team members. Each project state will 
+		have different functions to create, read, update and delete drawings, documentation and layouts.
+	</p>
+
+	<table class="table table-hover mt-3 user-select-none">
+		<thead>
+			<tr>
+				<th>Project</th>
+				<th>ProjectState</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr data-bs-container="body" 
+			data-bs-toggle="popover" 
+			data-bs-placement="top" 
+			data-bs-content="The project has been created but the plan has not yet been initiated and team members have no access to the project." 
+			data-bs-original-title="Defined">
+				<td>0001 Trivial Notation Example</td>
+				<td><span class="text-info">Defined</span></td>
+			</tr>
+			<tr data-bs-container="body" 
+			data-bs-toggle="popover" 
+			data-bs-placement="top" 
+			data-bs-content="The project has been started and is accessible by team members. Team members can create, read, update and delete drawings, documentation and layouts." 
+			data-bs-original-title="Running">
+				<td>0002 Trivial Notation Example</td>
+				<td><span class="text-primary">Running</span></td>
+			</tr>
+			<tr data-bs-container="body" 
+			data-bs-toggle="popover" 
+			data-bs-placement="top" 
+			data-bs-content="The project set to Completed. Team members can only read drawings, documentation and layouts." 
+			data-bs-original-title="Completed">
+				<td>DR-001 Meaningful Notation Example</td>
+				<td><span class="text-success">Completed</span></td>
+			</tr>
+			<tr data-bs-container="body" 
+			data-bs-toggle="popover" 
+			data-bs-placement="top" 
+			data-bs-content="The project has been canceled, but project data is still available to team members. Team members can only read drawings, documentation and layouts." 
+			data-bs-original-title="Canceled">
+				<td>DR-002 Meaningful Notation Example</td>
+				<td><span class="text-danger">Canceled</span></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<p class="lead text-secondary mt-3">&emsp;In all project statuses, the administrator will always have complete access to create, read, 
+		update and delete functions.
+	</p>
+
+	<hr class="my-4">
+</div>

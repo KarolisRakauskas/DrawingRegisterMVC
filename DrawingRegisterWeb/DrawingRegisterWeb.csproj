@@ -20,6 +20,7 @@
     <Folder Include="wwwroot\Files\Drawings\" />
     <Folder Include="wwwroot\Files\Documentation\" />
     <Folder Include="wwwroot\Files\Layouts\" />
+    <Folder Include="wwwroot\Files\Images\" />
   </ItemGroup>
 
 </Project>

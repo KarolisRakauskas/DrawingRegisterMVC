@@ -61,6 +61,11 @@ $(document).ready(function () {
 	$('[data-bs-toggle="tooltip"]').tooltip();
 });
 
+// Get Popover function popover
+$(document).ready(function () {
+	$('[data-bs-toggle="popover"]').popover();
+});
+
 
 /*
 	SORT TALBE ONLY FOR DOCUMENTATION TOGLE TAB !!!

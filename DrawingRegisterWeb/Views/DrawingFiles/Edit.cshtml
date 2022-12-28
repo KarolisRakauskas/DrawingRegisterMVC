@@ -1,0 +1,69 @@
+﻿@model DrawingRegisterWeb.Models.DrawingFile
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1 class="text-primary">Edit</h1>
+
+<h4>Drawing File</h4>
+<hr />
+<div class="row">
+    <div class="col-6">
+        @if (Model.FileType == "pdf")
+        {
+            <embed class="shadow-sm w-100 vh-100" src="@Model.FileUrl"/>
+        }
+        else
+        {
+            <a class="btn btn-outline-secondary mt-3 btn-lg" href="@Model.FileUrl" download="@Model.FileName.@Model.FileType">
+                <i class="bi bi-cloud-download"></i> Download @Model.FileName.@Model.FileType
+            </a>   
+        }
+    </div>
+    <div class="col-6">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group" hidden>
+                <label asp-for="FileUrl" class="control-label"></label>
+                <input asp-for="FileUrl" class="form-control" />
+                <span asp-validation-for="FileUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FileName" class="control-label"></label>
+                <input asp-for="FileName" class="form-control" />
+                <span asp-validation-for="FileName" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="FileType" class="control-label"></label>
+                <input asp-for="FileType" class="form-control" />
+                <span asp-validation-for="FileType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Revision" class="control-label"></label>
+                <input asp-for="Revision" class="form-control" />
+                <span asp-validation-for="Revision" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CreateDate" class="control-label"></label>
+                <input asp-for="CreateDate" class="form-control" />
+                <span asp-validation-for="CreateDate" class="text-danger"></span>
+            </div>
+            <div class="form-group" hidden>
+                <label asp-for="DrawingId" class="control-label"></label>
+                <select asp-for="DrawingId" class="form-control" asp-items="ViewBag.DrawingId"></select>
+                <span asp-validation-for="DrawingId" class="text-danger"></span>
+            </div>
+            <div class="btn-group mt-3" role="group">
+                <input type="submit" value="Save" class="btn btn-outline-primary" />
+                <a asp-controller="Drawings" asp-action="Details" asp-route-id="@Model.DrawingId" class="btn btn-outline-secondary">Go to List</a>
+                <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-outline-danger">Delete</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
