@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20221227111251_Initial")]
-    partial class Initial
+    [Migration("20221227201120_Ininital")]
+    partial class Ininital
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,11 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")
@@ -110,6 +112,7 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")
@@ -138,9 +141,11 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")

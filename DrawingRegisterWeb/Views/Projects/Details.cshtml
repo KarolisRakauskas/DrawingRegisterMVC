@@ -59,13 +59,13 @@
 
 <ul class="nav nav-tabs" role="tablist">
   <li class="nav-item" role="presentation">
-	<a class="nav-link active" data-bs-toggle="tab" href="#drawings" aria-selected="true" role="tab">Drawings</a>
+	<a class="nav-link active" data-bs-toggle="tab" href="#drawings" data-target="#drawings" aria-selected="true" role="tab">Drawings</a>
   </li>
   <li class="nav-item" role="presentation">
-	<a class="nav-link" data-bs-toggle="tab" href="#documentations" aria-selected="false" role="tab" tabindex="-1">Documentations</a>
+	<a class="nav-link" data-bs-toggle="tab" href="#documentations" data-target="#documentations" aria-selected="false" role="tab" tabindex="-1">Documentations</a>
   </li>
   <li class="nav-item" role="presentation">
-	<a class="nav-link" data-bs-toggle="tab" href="#layouts" aria-selected="false" role="tab" tabindex="-1">Layouts</a>
+	<a class="nav-link" data-bs-toggle="tab" href="#layouts" data-target="#layouts" aria-selected="false" role="tab" tabindex="-1">Layouts</a>
   </li>
 </ul>
 
@@ -126,25 +126,29 @@
 	<form asp-controller="Documentations" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
 	   <div class="col-8">
 			<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
-			<input type="file" name="files" class="form-control" multiple/>
+			<input id="inputDocumentationFile" type="file" name="files" class="form-control" multiple/>
 	   </div> 
-	   <button type="submit" class="btn btn-primary col-4">Upload</button >
+	   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
 	</form>
 
-	<table class="table table-striped mt-3">
+	<table class="table table-striped mt-3" id="sortTableDoc">
 		<thead>
-			<tr>
-				<th>
+			<tr class="user-select-none">
+				<th onclick="sortTableDoc(0)">
 						@Html.DisplayNameFor(model => model.Documentations![0].FileName)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableDoc(1)">
 						@Html.DisplayNameFor(model => model.Documentations![0].FileType)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableDoc(2)">
 						@Html.DisplayNameFor(model => model.Documentations![0].Revision)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableDoc(3)">
 						@Html.DisplayNameFor(model => model.Documentations![0].CreateDate)
+						<i class="sortIcon bi"></i>
 				</th>
 				<th></th>
 			</tr>
@@ -166,7 +170,6 @@
 							@item.CreateDate.ToString("yyyy/MM/dd")
 						</td>
 						<td>
-
 							<div class="btn btn-group">							
 								@if (item.FileType == "pdf")
 								{
@@ -215,26 +218,32 @@
 
   <div class="tab-pane fade" id="layouts" role="tabpanel">
 
-	@using (Html.BeginForm("Create", "Layouts"))
-	{
-	   <input type="text" name="idData" value="@Model.Project!.Id" hidden/>
-	   <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Documentation</button >
-	}
+	<form asp-controller="Layouts" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
+	   <div class="col-8">
+			<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+			<input id="inputLayoutFile" type="file" name="files" class="form-control" multiple/>
+	   </div> 
+	   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
+	</form>
 
-	<table class="table table-striped mt-3">
+	<table class="table table-striped mt-3" id="sortTableLay">
 		<thead>
-			<tr>
-				<th>
+			<tr class="user-select-none">
+				<th onclick="sortTableLay(0)">
 						@Html.DisplayNameFor(model => model.Layouts![0].FileName)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableLay(1)">
 						@Html.DisplayNameFor(model => model.Layouts![0].FileType)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableLay(2)">
 						@Html.DisplayNameFor(model => model.Layouts![0].Revision)
+						<i class="sortIcon bi"></i>
 				</th>
-				<th>
+				<th onclick="sortTableLay(3)">
 						@Html.DisplayNameFor(model => model.Layouts![0].CreateDate)
+						<i class="sortIcon bi"></i>
 				</th>
 				<th></th>
 			</tr>
@@ -253,10 +262,48 @@
 						@item.Revision
 						</td>
 						<td>
-						@item.CreateDate
+						@item.CreateDate.ToString("yyyy/MM/dd")
 						</td>
 						<td>
-							<a asp-controller="Layouts" asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Preview</a>
+							<div class="btn btn-group">							
+								@if (item.FileType == "pdf")
+								{
+									<a	href="@item.FileUrl"
+									target="_blank"
+									class="btn btn-outline-primary"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Open" 
+									aria-describedby="tooltip716761"> 
+											<i class="bi bi-search"></i>
+									</a>
+								}
+								<a	href="@item.FileUrl"
+								class="btn btn-outline-primary"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Download" 
+								aria-describedby="tooltip716761"
+								download="@item.FileName.@item.FileType"> 
+										<i class="bi bi-cloud-download"></i>
+								</a>
+								<a asp-controller="Layouts" asp-action="Edit" asp-route-id="@item.Id"
+								class="btn btn-outline-primary"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Edit" 
+								aria-describedby="tooltip716761"> 
+										<i class="bi bi-pencil-square"></i>
+								</a>
+								<a asp-controller="Layouts" asp-action="Delete" asp-route-id="@item.Id"
+								class="btn btn-outline-danger"
+								data-bs-toggle="tooltip" 
+								data-bs-placement="bottom" 
+								data-bs-original-title="Delete" 
+								aria-describedby="tooltip716761"> 
+									<i class="bi bi-trash"></i>
+								</a>
+							</div>
 						</td>
 					</tr>
 				}
@@ -267,10 +314,46 @@
 </div>
 
 
-@section Scripts{
-		<script>
-			$(document).ready(function(){
-			  $('[data-bs-toggle="tooltip"]').tooltip();
+@section Scripts
+{
+	<script>
+		//Disable and enebable documentation file upload box submit button
+		const submitDocumentation = document.getElementById('submitDocumentationFile');
+		const documentationFile = document.getElementById('inputDocumentationFile');
+
+		submitDocumentation.disabled = true;
+		documentationFile.addEventListener("change", function(){
+			if (documentationFile.value == "") {
+				submitDocumentation.disabled = true;
+			}
+			else {
+				submitDocumentation.disabled = false;
+			}
+		});
+
+		//Disable and enebable Layout file upload box submit button
+		const submitLayout = document.getElementById('submitLayoutFile');
+		const layoutFile = document.getElementById('inputLayoutFile');
+
+		submitLayout.disabled = true;
+		layoutFile.addEventListener("change", function(){
+			if (layoutFile.value == "") {
+				submitLayout.disabled = true;
+			}
+			else {
+				submitLayout.disabled = false;
+			}
+		});
+
+		//Save Last Opened nav-tab in local Storage
+		$(function() { 
+			$('.nav-tabs a').on('show.bs.tab', function () {
+				localStorage.setItem('lastTab', $(this).attr('href'));
 			});
-		</script>
+			var lastTab = localStorage.getItem('lastTab');
+			if (lastTab) {
+				$('[href="' + lastTab + '"]').tab('show');
+			}
+		});
+	</script>
 }

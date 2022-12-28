@@ -102,15 +102,14 @@ namespace DrawingRegisterWeb.Controllers
 				return NotFound();
 			}
 
-			var drawing = await _context.Documentation.FindAsync(id);
+			var documentation = await _context.Documentation.FindAsync(id);
 
-			if (drawing == null)
+			if (documentation == null)
 			{
 				return NotFound();
 			}
-
-			ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Name", drawing.ProjectId);
-			return View(drawing);
+			ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Name", documentation.ProjectId);
+			return View(documentation);
 		}
 
 		// POST: Documentations/Edit
@@ -143,7 +142,6 @@ namespace DrawingRegisterWeb.Controllers
 				}
 				return RedirectToAction("Details", "Projects", new { id = documentation.ProjectId });
 			}
-
 			ViewData["ProjectId"] = new SelectList(_context.Project, "Id", "Name", documentation.ProjectId);
 			return View(documentation);
 

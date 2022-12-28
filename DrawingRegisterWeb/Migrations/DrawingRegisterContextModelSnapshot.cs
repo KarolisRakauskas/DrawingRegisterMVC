@@ -34,9 +34,11 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")
@@ -107,6 +109,7 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")
@@ -135,9 +138,11 @@ namespace DrawingRegisterWeb.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FileName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FileUrl")
