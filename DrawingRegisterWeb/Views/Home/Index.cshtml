@@ -2,7 +2,7 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<div class="jumbotron">
+<div class="mt-5 jumbotron">
 	<h1 class="display-3 text-center mb-5 text-primary">Keeping Drawings Up To Date!</h1>
 	<p class="lead text-secondary">&emsp; A drawing register is a controlled list of drawings that also provides a standardised way of 
 		tracking the addition of revisions and changes to an existing document. The list usually includes information 
@@ -13,58 +13,161 @@
 </div>
 
 <div class="jumbotron mt-5">
-	<h2 class="display-5 text-center mb-5 text-primary">Manage your Projects with embedded State features</h2>
+	<h2 class="display-5 text-center mb-5 text-secondary">Manage your Projects with embedded State features</h2>
 
 	<p class="lead text-secondary">&emsp; You can control how accessible the project is for team members. Each project state will 
 		have different functions to create, read, update and delete drawings, documentation and layouts.
 	</p>
+	<div class="row">
+		<div class="col-4"></div>
+		<div class="col-4">
+			<table class="table table-hover mt-3 user-select-none text-center">
+				<thead>
+					<tr>
+						<th>Project</th>
+						<th>ProjectState</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr data-bs-container="body" 
+					data-bs-toggle="popover" 
+					data-bs-placement="top" 
+					data-bs-content="The project has been created but the plan has not yet been initiated and team members have no access to the project." 
+					data-bs-original-title="Defined">
+						<td>0001</td>
+						<td><span class="text-info">Defined</span></td>
+					</tr>
+					<tr data-bs-container="body" 
+					data-bs-toggle="popover" 
+					data-bs-placement="right" 
+					data-bs-content="The project has been started and is accessible by team members. Team members can create, read, update and delete drawings, documentation and layouts." 
+					data-bs-original-title="Running">
+						<td>0002</td>
+						<td><span class="text-primary">Running</span></td>
+					</tr>
+					<tr data-bs-container="body" 
+					data-bs-toggle="popover" 
+					data-bs-placement="left" 
+					data-bs-content="The project set to Completed. Team members can only read drawings, documentation and layouts." 
+					data-bs-original-title="Completed">
+						<td>0003</td>
+						<td><span class="text-success">Completed</span></td>
+					</tr>
+					<tr data-bs-container="body" 
+					data-bs-toggle="popover" 
+					data-bs-placement="bottom" 
+					data-bs-content="The project has been canceled, but project data is still available to team members. Team members can only read drawings, documentation and layouts." 
+					data-bs-original-title="Canceled">
+						<td>0004</td>
+						<td><span class="text-danger">Canceled</span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="col-4"></div>
+	</div>
 
-	<table class="table table-hover mt-3 user-select-none">
-		<thead>
-			<tr>
-				<th>Project</th>
-				<th>ProjectState</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr data-bs-container="body" 
-			data-bs-toggle="popover" 
-			data-bs-placement="top" 
-			data-bs-content="The project has been created but the plan has not yet been initiated and team members have no access to the project." 
-			data-bs-original-title="Defined">
-				<td>0001 Trivial Notation Example</td>
-				<td><span class="text-info">Defined</span></td>
-			</tr>
-			<tr data-bs-container="body" 
-			data-bs-toggle="popover" 
-			data-bs-placement="top" 
-			data-bs-content="The project has been started and is accessible by team members. Team members can create, read, update and delete drawings, documentation and layouts." 
-			data-bs-original-title="Running">
-				<td>0002 Trivial Notation Example</td>
-				<td><span class="text-primary">Running</span></td>
-			</tr>
-			<tr data-bs-container="body" 
-			data-bs-toggle="popover" 
-			data-bs-placement="top" 
-			data-bs-content="The project set to Completed. Team members can only read drawings, documentation and layouts." 
-			data-bs-original-title="Completed">
-				<td>DR-001 Meaningful Notation Example</td>
-				<td><span class="text-success">Completed</span></td>
-			</tr>
-			<tr data-bs-container="body" 
-			data-bs-toggle="popover" 
-			data-bs-placement="top" 
-			data-bs-content="The project has been canceled, but project data is still available to team members. Team members can only read drawings, documentation and layouts." 
-			data-bs-original-title="Canceled">
-				<td>DR-002 Meaningful Notation Example</td>
-				<td><span class="text-danger">Canceled</span></td>
-			</tr>
-		</tbody>
-	</table>
 
-	<p class="lead text-secondary mt-3">&emsp;In all project statuses, the administrator will always have complete access to create, read, 
+	<p class="lead text-secondary mt-3 text-center">In all project statuses, the administrator will always have complete access to create, read, 
 		update and delete functions.
 	</p>
 
 	<hr class="my-4">
 </div>
+
+<div class="mt-5 d-flex flex-wrap justify-content-around">
+	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+		<div class="card-header">
+			<i class="bi bi-sunglasses h1"></i>
+		</div>
+		<div class="card-body">
+			<h4 class="card-title">Login & Explore</h4>
+			<p class="card-text">
+				Don't want to register? Login as spectator and explore! Seeded data will show you all features in no time.
+			</p>
+			<p class="card-text">
+				<strong>Spectators can't Create, Update and Delete</strong>
+			</p>
+			<hr />
+			<p class="card-text">
+				Email:<br />spectator@email.com<br />
+				Password:<br />spectator2022
+			</p>
+		</div>
+	</div>
+
+	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+		<div class="card-header">
+			<i class="bi bi-book-fill h1"></i>
+		</div>
+		<div class="card-body">
+			<h4 class="card-title">Register & Create</h4>
+			<p class="card-text">
+				Register account and test application without any limitations! Separate documents into projects, add new 
+				members to your register and more!
+			</p>
+		</div>
+	</div>
+
+	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
+		<div class="card-header">
+			<i class="bi bi-bar-chart-line-fill h1"></i>
+		</div>
+		<div class="card-body">
+			<h4 class="card-title">My Progress</h4>
+			<p class="card-text">
+				Track your progress with built-in application graphics.
+			</p>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	
+	<script type="module">
+
+	import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
+	import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/loaders/GLTFLoader.js';
+	import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js';
+
+	const renderer = new THREE.WebGLRenderer();
+	const scene = new THREE.Scene();
+	const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight);
+	let mesh;
+	const controls = new OrbitControls(camera, renderer.domElement);
+
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	scene.background = new THREE.Color(0xeff5555);
+	scene.add(new THREE.HemisphereLight(0xffffcc, 0x333399, 1.0));
+	camera.position.set(-2, 2, 10);
+
+	new GLTFLoader().load('~/Files/SeededData/0001.glb', ({ scene: model }, animations) => {
+	  scene.add(model);
+
+	  model.scale.setScalar(2.0);
+
+	  camera.lookAt(model.position);
+
+	  controls.target.copy(model.position);
+
+	  mesh = model;
+	});
+
+	const animate = () => {
+	  if (mesh) {
+		mesh.rotateY(Math.PI / 360);
+	  }
+
+	  renderer.render(scene, camera);
+
+	  controls.update();
+
+	  requestAnimationFrame(animate);
+	};
+
+	animate();
+
+	document.body.appendChild(renderer.domElement);
+
+	</script>
+}
