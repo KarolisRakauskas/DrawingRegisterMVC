@@ -1,4 +1,6 @@
-﻿using DrawingRegisterWeb.Data;
+﻿using Aspose.Pdf;
+using Aspose.Pdf.Devices;
+using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -35,7 +37,7 @@ namespace DrawingRegisterWeb.Controllers
 
 					string fileName = Guid.NewGuid().ToString();
 					var uploads = Path.Combine(wwwRootPath, @"Files\Drawings");
-					var extension = Path.GetExtension(file.FileName);
+					var extension = Path.GetExtension(file.FileName).ToLower();
 
 					var drawingFile = new DrawingFile()
 					{
@@ -49,6 +51,22 @@ namespace DrawingRegisterWeb.Controllers
 					using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 					{
 						file.CopyTo(fileStream);
+					}
+
+					if(drawingFile.FileType.ToLower() == "pdf")
+					{
+						var pdfDocument = new Document(Path.Combine(uploads, fileName + extension));
+						int pageIndex = 1;
+						var page = pdfDocument.Pages[pageIndex];
+
+						using (FileStream imageStream = new FileStream(Path.Combine(uploads,fileName + ".jpg"), FileMode.Create))
+						{
+
+							var resolution = new Resolution(300);
+							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+							jpegDevice.Process(page, imageStream);
+							imageStream.Close();
+						}
 					}
 
 					_context.Add(drawingFile);
@@ -151,10 +169,14 @@ namespace DrawingRegisterWeb.Controllers
 				_context.DrawingFile.Remove(drawingFile);
 
 				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, drawingFile.FileUrl.TrimStart('\\'));
+				int oldFileEndIndex = oldFilePath.LastIndexOf(".");
+				string thumbanilUrl = oldFilePath.Substring(0, oldFileEndIndex);
+				thumbanilUrl += ".jpg";
 
-				if (System.IO.File.Exists(oldFilePath))
+				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
 				{
-					System.IO.File.Delete(oldFilePath);
+						System.IO.File.Delete(oldFilePath);
+						System.IO.File.Delete(thumbanilUrl);
 				}
 
 				_context.DrawingFile.Remove(drawingFile);

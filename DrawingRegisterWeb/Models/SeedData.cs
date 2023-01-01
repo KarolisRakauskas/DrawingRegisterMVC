@@ -61,106 +61,41 @@ public static class SeedData
 				new Project
 				{
 					ProjectNubmer = "0001",
-					Name = "Project 1 (Trivial Notation Example)",
-					Description = testDescription,
+					Name = "Roller Conveyor System",
+					Description = $"{testDescription}(Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 1, 1),
 					DeadlineDate = new DateTime(2023, 3, 1),
-					ProjectStateId = stateRunning!.Id
+					ProjectStateId = stateCompleted!.Id
 				},
 				new Project
 				{
 					ProjectNubmer = "0002",
-					Name = "Project 2 (Trivial Notation Example)",
-					Description = testDescription,
+					Name = "Project for Defined State Testing",
+					Description = $"{testDescription}(Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 3, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateRunning!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "0003",
-					Name = "Project 3 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2023, 3, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateCompleted!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "0004",
-					Name = "Project 4 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2023, 5, 1),
 					DeadlineDate = new DateTime(2023, 5, 1),
 					ProjectStateId = stateDefined!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "0005",
-					Name = "Project 5 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2023, 3, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateCanceled!.Id
-				},
-
-				//Meaningful Notation Example
+				}
+				/*TODO
 				new Project
 				{
 					ProjectNubmer = "DR-001",
-					Name = "Project 5 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2023, 1, 1),
-					DeadlineDate = new DateTime(2023, 3, 1),
-					ProjectStateId = stateRunning!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "DR-002",
-					Name = "Project 6 (Meaningful Notation Example)",
+					Name = "Roller Conveyor System",
 					Description = testDescription,
 					CreateDate = new DateTime(2023, 3, 1),
 					DeadlineDate = new DateTime(2023, 5, 1),
 					ProjectStateId = stateRunning!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "DR-003",
-					Name = "Project 7 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2023, 3, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateCompleted!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "DR-004",
-					Name = "Project 8 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2022, 5, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateDefined!.Id
-				},
-				new Project
-				{
-					ProjectNubmer = "DR-005",
-					Name = "Project 9 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = new DateTime(2022, 3, 1),
-					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateCanceled!.Id
 				}
+				*/
 				);
 
 			context.SaveChanges();
 
 			var project = from p in context.Project select p;
 			var project0001 = project.FirstOrDefault(p => p.ProjectNubmer == "0001");
-			var project0002 = project.FirstOrDefault(p => p.ProjectNubmer == "0002");
-			var project0003 = project.FirstOrDefault(p => p.ProjectNubmer == "0003");
+			/*TODO
 			var projectDR001 = project.FirstOrDefault(p => p.ProjectNubmer == "DR-001");
-			var projectDR002 = project.FirstOrDefault(p => p.ProjectNubmer == "DR-002");
-			var projectDR003 = project.FirstOrDefault(p => p.ProjectNubmer == "DR-003");
+			*/
 
 
 			context.AddRange(
@@ -169,204 +104,237 @@ public static class SeedData
 				new Drawing
 				{
 					DrawingNumber = "1-00000001",
-					Name = "Test Drawings 1 (Trivial Notation Example)",
-					Description = testDescription,
+					Name = "Roller Conveyor W1000 L3000",
+					Description = "Driven Roller Conveyor, Width - 1000 mm, Length - 3000 mm. Rollers pattern every 200 mm.",
 					CreateDate = project0001!.CreateDate,
 					ProjectId = project0001.Id
 				},
 				new Drawing
 				{
 					DrawingNumber = "1-00001001",
-					Name = "Test Drawings 2 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0001!.CreateDate,
+					Name = "Roller Guide L3000",
+					Description = "Product support guide for conveyor 1-00000001. Full Length - 3000 mm.",
+					CreateDate = new DateTime(2023, 2, 1),
 					ProjectId = project0001.Id
 				},
 				new Drawing
 				{
 					DrawingNumber = "1-00002001",
-					Name = "Test Drawings 3 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0001!.CreateDate,
+					Name = "Adjustable leg",
+					Description = "Adjustable leg for conveyor 1-00000001.",
+					CreateDate = new DateTime(2023, 2, 10),
+					ProjectId = project0001.Id
+				}
+				);
+
+			context.SaveChanges();
+
+			var drawings = from d in context.Drawing select d;
+			var drawing00000001 = drawings.FirstOrDefault(d => d.DrawingNumber == "1-00000001");
+			var drawing00001001 = drawings.FirstOrDefault(d => d.DrawingNumber == "1-00001001");
+			var drawing00002001 = drawings.FirstOrDefault(d => d.DrawingNumber == "1-00002001");
+
+			context.DrawingFile.AddRange(
+
+				//1-00000001
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/1-00000001.pdf",
+					FileName = "1-00000001",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002.dxf",
+					FileName = "2-00000002",
+					FileType = "dxf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002.pdf",
+					FileName = "2-00000002",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000003.dxf",
+					FileName = "2-00000003",
+					FileType = "dxf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000003.pdf",
+					FileName = "2-00000003",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004.dxf",
+					FileName = "2-00000004",
+					FileType = "dxf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004.pdf",
+					FileName = "2-00000004",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000005.pdf",
+					FileName = "2-00000005",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00000001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+
+				//1-00001001
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/1-00001001.pdf",
+					FileName = "1-00001001",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001002.dxf",
+					FileName = "2-00001002",
+					FileType = "dxf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001002.pdf",
+					FileName = "2-00001002",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001003.pdf",
+					FileName = "2-00001003",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001003.step",
+					FileName = "2-00001003",
+					FileType = "step",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001004.dxf",
+					FileName = "2-00001004",
+					FileType = "dxf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001004.pdf",
+					FileName = "2-00001004",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+
+				//1-00002001
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00002001/1-00002001.pdf",
+					FileName = "1-00002001",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00002001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00002001/2-00002002.pdf",
+					FileName = "2-00002002",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00002001!.Id
+				}
+				);
+
+			context.Layout.AddRange(
+				new Layout
+				{
+					FileUrl = "/Files/SeededData/Layout/0001-Layout.pdf",
+					FileName = "0001-Layout",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00002001!.CreateDate,
 					ProjectId = project0001.Id
 				},
-				new Drawing
+				new Layout
 				{
-					DrawingNumber = "1-00003001",
-					Name = "Test Drawings 4 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0001!.CreateDate,
+					FileUrl = "/Files/SeededData/Layout/0001-Layout.dwg",
+					FileName = "0001-Layout",
+					FileType = "dwg",
+					Revision = null,
+					CreateDate = drawing00002001!.CreateDate,
+					ProjectId = project0001.Id
+				}
+				);
+
+			context.Documentation.AddRange(
+				new Documentation
+				{
+					FileUrl = "/Files/SeededData/Documentation/Roller Conveyor System Passport.pdf",
+					FileName = "Roller Conveyor System Passport",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = drawing00002001!.CreateDate,
 					ProjectId = project0001.Id
 				},
-
-				//ProjectNubmer = "0002"
-				new Drawing
+				new Documentation
 				{
-					DrawingNumber = "1-00004001",
-					Name = "Test Drawings 1 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0002!.CreateDate,
-					ProjectId = project0002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00005001",
-					Name = "Test Drawings 2 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0002!.CreateDate,
-					ProjectId = project0002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00006001",
-					Name = "Test Drawings 3 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0002!.CreateDate,
-					ProjectId = project0002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00007001",
-					Name = "Test Drawings 4 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0002!.CreateDate,
-					ProjectId = project0002.Id
-				},
-
-				//ProjectNubmer = "0003"
-				new Drawing
-				{
-					DrawingNumber = "1-00008001",
-					Name = "Test Drawings 1 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0003!.CreateDate,
-					ProjectId = project0003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00009001",
-					Name = "Test Drawings 2 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0003!.CreateDate,
-					ProjectId = project0003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00010001",
-					Name = "Test Drawings 3 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0003!.CreateDate,
-					ProjectId = project0003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "1-00011001",
-					Name = "Test Drawings 4 (Trivial Notation Example)",
-					Description = testDescription,
-					CreateDate = project0003!.CreateDate,
-					ProjectId = project0003.Id
-				},
-
-				//ProjectNubmer = "DR-001"
-				new Drawing
-				{
-					DrawingNumber = "DR-001 01 01.00.00.000",
-					Name = "Test Drawings 1 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR001!.CreateDate,
-					ProjectId = projectDR001.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-001 02 01.00.00.000",
-					Name = "Test Drawings 2 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR001!.CreateDate,
-					ProjectId = projectDR001.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-001 03 01.00.00.000",
-					Name = "Test Drawings 3 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR001!.CreateDate,
-					ProjectId = projectDR001.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-001 04 01.00.00.000",
-					Name = "Test Drawings 4 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR001!.CreateDate,
-					ProjectId = projectDR001.Id
-				},
-
-				//ProjectNubmer = "DR-002"
-				new Drawing
-				{
-					DrawingNumber = "DR-002 01 01.00.00.000",
-					Name = "Test Drawings 1 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR002!.CreateDate,
-					ProjectId = projectDR002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-002 02 01.00.00.000",
-					Name = "Test Drawings 2 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR002!.CreateDate,
-					ProjectId = projectDR002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-002 03 01.00.00.000",
-					Name = "Test Drawings 3 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR002!.CreateDate,
-					ProjectId = projectDR002.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-002 04 01.00.00.000",
-					Name = "Test Drawings 4 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR002!.CreateDate,
-					ProjectId = projectDR002.Id
-				},
-
-				//ProjectNubmer = "DR-003"
-				new Drawing
-				{
-					DrawingNumber = "DR-003 01 01.00.00.000",
-					Name = "Test Drawings 1 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR003!.CreateDate,
-					ProjectId = projectDR003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-003 02 01.00.00.000",
-					Name = "Test Drawings 2 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR003!.CreateDate,
-					ProjectId = projectDR003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-003 03 01.00.00.000",
-					Name = "Test Drawings 3 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR003!.CreateDate,
-					ProjectId = projectDR003.Id
-				},
-				new Drawing
-				{
-					DrawingNumber = "DR-003 04 01.00.00.000",
-					Name = "Test Drawings 4 (Meaningful Notation Example)",
-					Description = testDescription,
-					CreateDate = projectDR003!.CreateDate,
-					ProjectId = projectDR003.Id
+					FileUrl = "/Files/SeededData/Documentation/Conveyor System Task.pdf",
+					FileName = "Conveyor System Task",
+					FileType = "pdf",
+					Revision = null,
+					CreateDate = project0001!.CreateDate,
+					ProjectId = project0001.Id
 				}
 				);
 

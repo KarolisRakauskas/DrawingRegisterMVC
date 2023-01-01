@@ -48,7 +48,11 @@
 		</tr>
 	</thead>
 	<tbody>
-@foreach (var item in Model.Documentations!) {
+	@foreach (var item in Model.Documentations!) {
+		int docFileUrlendIndex = item.FileUrl.LastIndexOf(".");
+		string docThumbanilUrl = item.FileUrl.Substring(0, docFileUrlendIndex);
+		docThumbanilUrl += ".jpg";
+
 		<tr>
 			<td>
 				@Html.DisplayFor(modelItem => item.FileName)
@@ -71,16 +75,16 @@
 					{
 						<a	href="@item.FileUrl"
 						target="_blank"
-						class="btn btn-outline-primary"
+						class="btn btn-outline-primary btn-lg p-0 overflow-hidden"
 						data-bs-toggle="tooltip" 
 						data-bs-placement="bottom" 
 						data-bs-original-title="Open" 
 						aria-describedby="tooltip716761"> 
-							<i class="bi bi-search"></i>
+							<img src="@docThumbanilUrl" alt="Thumbanil" width="48" height="48" style="vertical-align:middle"/>
 						</a>
 					}
 					<a	href="@item.FileUrl"
-					class="btn btn-outline-primary"
+					class="btn btn-outline-primary btn-lg"
 					data-bs-toggle="tooltip" 
 					data-bs-placement="bottom" 
 					data-bs-original-title="Download" 
@@ -89,7 +93,7 @@
 							<i class="bi bi-cloud-download"></i>
 					</a>
 					<a asp-controller="Documentations" asp-action="Edit" asp-route-id="@item.Id"
-					class="btn btn-outline-primary"
+					class="btn btn-outline-primary btn-lg"
 					data-bs-toggle="tooltip" 
 					data-bs-placement="bottom" 
 					data-bs-original-title="Edit" 
@@ -97,7 +101,7 @@
 							<i class="bi bi-pencil-square"></i>
 					</a>
 					<a asp-controller="Documentations" asp-action="Delete" asp-route-id="@item.Id"
-					class="btn btn-outline-danger"
+					class="btn btn-outline-danger btn-lg"
 					data-bs-toggle="tooltip" 
 					data-bs-placement="bottom" 
 					data-bs-original-title="Delete" 
@@ -107,6 +111,6 @@
 				</div>
 			</td>
 		</tr>
-}
+	}
 	</tbody>
 </table>

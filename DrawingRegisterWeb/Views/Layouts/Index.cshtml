@@ -50,6 +50,10 @@
 	<tbody>
 		@foreach (var item in Model.Layouts!)
 		{
+			int layFileUrlendIndex = item.FileUrl.LastIndexOf(".");
+			string layThumbanilUrl = item.FileUrl.Substring(0, layFileUrlendIndex);
+			layThumbanilUrl += ".jpg";
+
 			<tr>
 				<td>
 					@Html.DisplayFor(modelItem => item.FileName)
@@ -70,39 +74,39 @@
 					<div class="btn btn-group">							
 						@if (item.FileType == "pdf")
 						{
-								<a	href="@item.FileUrl"
-						target="_blank"
-						class="btn btn-outline-primary"
-						data-bs-toggle="tooltip" 
-						data-bs-placement="bottom" 
-						data-bs-original-title="Open" 
-						aria-describedby="tooltip716761"> 
-									<i class="bi bi-search"></i>
-								</a>
+						<a	href="@item.FileUrl"
+							target="_blank"
+							class="btn btn-outline-primary btn-lg p-0 overflow-hidden"
+							data-bs-toggle="tooltip" 
+							data-bs-placement="bottom" 
+							data-bs-original-title="Open" 
+							aria-describedby="tooltip716761"> 
+								<img src="@layThumbanilUrl" alt="Thumbanil" width="48" height="48" style="vertical-align:middle"/>
+						</a>
 						}
 						<a	href="@item.FileUrl"
-					class="btn btn-outline-primary"
-					data-bs-toggle="tooltip" 
-					data-bs-placement="bottom" 
-					data-bs-original-title="Download" 
-					aria-describedby="tooltip716761"
-					download="@item.FileName.@item.FileType"> 
+							class="btn btn-outline-primary btn-lg"
+							data-bs-toggle="tooltip" 
+							data-bs-placement="bottom" 
+							data-bs-original-title="Download" 
+							aria-describedby="tooltip716761"
+							download="@item.FileName.@item.FileType"> 
 								<i class="bi bi-cloud-download"></i>
 						</a>
 						<a asp-controller="Layouts" asp-action="Edit" asp-route-id="@item.Id"
-					class="btn btn-outline-primary"
-					data-bs-toggle="tooltip" 
-					data-bs-placement="bottom" 
-					data-bs-original-title="Edit" 
-					aria-describedby="tooltip716761"> 
+							class="btn btn-outline-primary btn-lg"
+							data-bs-toggle="tooltip" 
+							data-bs-placement="bottom" 
+							data-bs-original-title="Edit" 
+							aria-describedby="tooltip716761"> 
 								<i class="bi bi-pencil-square"></i>
 						</a>
 						<a asp-controller="Layouts" asp-action="Delete" asp-route-id="@item.Id"
-					class="btn btn-outline-danger"
-					data-bs-toggle="tooltip" 
-					data-bs-placement="bottom" 
-					data-bs-original-title="Delete" 
-					aria-describedby="tooltip716761"> 
+							class="btn btn-outline-danger btn-lg"
+							data-bs-toggle="tooltip" 
+							data-bs-placement="bottom" 
+							data-bs-original-title="Delete" 
+							aria-describedby="tooltip716761"> 
 							<i class="bi bi-trash"></i>
 						</a>
 					</div>

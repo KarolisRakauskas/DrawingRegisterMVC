@@ -87,6 +87,10 @@
 	<tbody>
 			@foreach (var item in Model.DrawingFiles!)
 			{
+				int fileUrlendIndex = item.FileUrl.LastIndexOf(".");
+				string thumbanilUrl = item.FileUrl.Substring(0, fileUrlendIndex);
+				thumbanilUrl += ".jpg";
+
 				<tr>
 					<td>
 						@item.FileName
@@ -102,20 +106,20 @@
 					</td>
 					<td>
 						<div class="btn btn-group">							
-							@if (item.FileType == "pdf")
+							@if (item.FileType.ToLower() == "pdf")
 							{
 								<a	href="@item.FileUrl"
 									target="_blank"
-									class="btn btn-outline-primary"
+									class="btn btn-outline-primary btn-lg p-0 overflow-hidden"
 									data-bs-toggle="tooltip" 
 									data-bs-placement="bottom" 
 									data-bs-original-title="Open" 
-									aria-describedby="tooltip716761"> 
-										<i class="bi bi-search"></i>
+									aria-describedby="tooltip716761">
+										<img src="@thumbanilUrl" alt="Thumbanil" width="48" height="48" style="vertical-align:middle"/>
 								</a>
 							}
 							<a	href="@item.FileUrl"
-								class="btn btn-outline-primary"
+								class="btn btn-outline-primary btn-lg"
 								data-bs-toggle="tooltip" 
 								data-bs-placement="bottom" 
 								data-bs-original-title="Download" 
@@ -124,7 +128,7 @@
 									<i class="bi bi-cloud-download"></i>
 							</a>
 							<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
-								class="btn btn-outline-primary"
+								class="btn btn-outline-primary btn-lg"
 								data-bs-toggle="tooltip" 
 								data-bs-placement="bottom" 
 								data-bs-original-title="Edit" 
@@ -132,7 +136,7 @@
 									<i class="bi bi-pencil-square"></i>
 							</a>
 							<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
-								class="btn btn-outline-danger"
+								class="btn btn-outline-danger btn-lg"
 								data-bs-toggle="tooltip" 
 								data-bs-placement="bottom" 
 								data-bs-original-title="Delete" 
