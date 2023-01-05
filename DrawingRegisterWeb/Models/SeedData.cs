@@ -61,20 +61,22 @@ public static class SeedData
 				new Project
 				{
 					ProjectNubmer = "0001",
-					Name = "Roller Conveyor System",
+					Name = "Roller Conveyor System (Example)",
 					Description = $"{testDescription}(Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 1, 1),
 					DeadlineDate = new DateTime(2023, 3, 1),
-					ProjectStateId = stateCompleted!.Id
+					ProjectStateId = stateRunning!.Id,
+					ModelUrl = "/Files/SeededData/0001.html"
 				},
 				new Project
 				{
 					ProjectNubmer = "0002",
-					Name = "Project for Defined State Testing",
+					Name = "Project for Defined State (Example)",
 					Description = $"{testDescription}(Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 3, 1),
 					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = stateDefined!.Id
+					ProjectStateId = stateDefined!.Id,
+					ModelUrl = null
 				}
 				/*TODO
 				new Project
@@ -166,6 +168,42 @@ public static class SeedData
 				},
 				new DrawingFile
 				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002_A.dxf",
+					FileName = "2-00000002_A",
+					FileType = "dxf",
+					Revision = "A",
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002_A.pdf",
+					FileName = "2-00000002_A",
+					FileType = "pdf",
+					Revision = "A",
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002_B.dxf",
+					FileName = "2-00000002_B",
+					FileType = "dxf",
+					Revision = "B",
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000002_B.pdf",
+					FileName = "2-00000002_B",
+					FileType = "pdf",
+					Revision = "B",
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
 					FileUrl = "/Files/SeededData/1-00000001/2-00000003.dxf",
 					FileName = "2-00000003",
 					FileType = "dxf",
@@ -202,6 +240,42 @@ public static class SeedData
 				},
 				new DrawingFile
 				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004_A.dxf",
+					FileName = "2-00000004_A",
+					FileType = "dxf",
+					Revision = "A",
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004_A.pdf",
+					FileName = "2-00000004_A",
+					FileType = "pdf",
+					Revision = "A",
+					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004_B.dxf",
+					FileName = "2-00000004_B",
+					FileType = "dxf",
+					Revision = "B",
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00000001/2-00000004_B.pdf",
+					FileName = "2-00000004_B",
+					FileType = "pdf",
+					Revision = "B",
+					CreateDate = drawing00002001!.CreateDate,
+					DrawingId = drawing00000001!.Id
+				},
+				new DrawingFile
+				{
 					FileUrl = "/Files/SeededData/1-00000001/2-00000005.pdf",
 					FileName = "2-00000005",
 					FileType = "pdf",
@@ -218,6 +292,15 @@ public static class SeedData
 					FileType = "pdf",
 					Revision = null,
 					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/1-00001001_A.pdf",
+					FileName = "1-00001001_A",
+					FileType = "pdf",
+					Revision = "A",
+					CreateDate = new DateTime(2023, 2, 3),
 					DrawingId = drawing00001001!.Id
 				},
 				new DrawingFile
@@ -272,6 +355,24 @@ public static class SeedData
 					FileType = "pdf",
 					Revision = null,
 					CreateDate = drawing00001001!.CreateDate,
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001004_A.dxf",
+					FileName = "2-00001004_A",
+					FileType = "dxf",
+					Revision = "A",
+					CreateDate = new DateTime(2023, 2, 3),
+					DrawingId = drawing00001001!.Id
+				},
+				new DrawingFile
+				{
+					FileUrl = "/Files/SeededData/1-00001001/2-00001004_A.pdf",
+					FileName = "2-00001004_A",
+					FileType = "pdf",
+					Revision = "A",
+					CreateDate = new DateTime(2023, 2, 3),
 					DrawingId = drawing00001001!.Id
 				},
 

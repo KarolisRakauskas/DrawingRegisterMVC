@@ -1,4 +1,5 @@
-﻿using DrawingRegisterWeb.Data;
+﻿using Aspose.Pdf.Devices;
+using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace DrawingRegisterWeb.Controllers
 	public class ProjectsController : Controller
 	{
 		private readonly DrawingRegisterContext _context;
+		private readonly IWebHostEnvironment _hostEnvironment;
 
-		public ProjectsController(DrawingRegisterContext context)
+		public ProjectsController(DrawingRegisterContext context, IWebHostEnvironment hostEnvironment)
 		{
 			_context = context;
+			_hostEnvironment = hostEnvironment;
 		}
 
 		//GET: Projects
@@ -175,7 +178,7 @@ namespace DrawingRegisterWeb.Controllers
 		{
 			if (_context.Project == null)
 			{
-				return Problem("Entity set 'DrawingRegisterContext.Project'  is null.");
+				return Problem("Entity set 'DrawingRegisterContext.Project' is null.");
 			}
 			var project = await _context.Project.FindAsync(id);
 			if (project != null)
@@ -185,6 +188,40 @@ namespace DrawingRegisterWeb.Controllers
 
 			await _context.SaveChangesAsync();
 			return RedirectToAction(nameof(Index));
+		}
+
+		// POST: Project/Upload
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Upload(int id, IFormFile file)
+		{
+			var project = await _context.Project.FindAsync(id);
+
+			if (id != project!.Id)
+			{
+				return NotFound();
+			}
+
+			string wwwRootPath = _hostEnvironment.WebRootPath;
+
+			string fileName = Guid.NewGuid().ToString();
+			var uploads = Path.Combine(wwwRootPath, @"Files\3DModels");
+			var extension = Path.GetExtension(file.FileName)!.ToLower();
+
+			using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
+			{
+				file.CopyTo(fileStream);
+			}
+
+			project.ModelUrl = @"\Files\3DModels\" + fileName + extension;
+
+			_context.Update(project);
+			_context.SaveChanges();
+
+			//TODO Edit not updated instantly
+
+			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+			return RedirectToAction("Edit", "Projects", new { id = project.Id });
 		}
 
 		private bool ProjectExists(int id)

@@ -29,5 +29,6 @@ namespace DrawingRegisterWeb.Models
 		[ForeignKey("ProjectStateId")]
 		[ValidateNever]
 		public ProjectState? ProjectState { get; set; }
+		public string? ModelUrl { get; set; }
 	}
 }

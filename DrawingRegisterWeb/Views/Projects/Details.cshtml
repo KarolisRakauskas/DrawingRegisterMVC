@@ -9,6 +9,7 @@
 <div>
 	<h4>Project</h4>
 	<hr />
+
 	<dl class="row">
 		<dt class = "col-sm-2">
 			@Html.DisplayNameFor(model => model.Project!.ProjectNubmer)
@@ -47,12 +48,16 @@
 			@Html.DisplayFor(model => model.Project!.ProjectState!.Name)
 		</dd>
 	</dl>
-</div>
 
-<div class="btn-group" role="group">
-	<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
-	<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
-	<a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-outline-danger">Delete</a>
+	<div class="btn-group" role="group">
+		<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+		@if (Model.Project!.ModelUrl != null)
+		{
+			<a	href="@Model.Project.ModelUrl" target="_blank" class="btn btn-outline-primary">Open 3D Model</a>
+		}
+		<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
+		<a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-outline-danger">Delete</a>
+	</div>
 </div>
 
 <hr />
@@ -79,7 +84,7 @@
 	   <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
 	}
 
-	<table class="table table-striped mt-3" id="sortTable">
+	<table class="table table-striped mt-3" id="sortTable" style="vertical-align: middle">
 		<thead>
 			<tr class="user-select-none">
 				<th onclick="sortTable(0)">
@@ -131,7 +136,7 @@
 	   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
 	</form>
 
-	<table class="table table-striped mt-3" id="sortTableDoc">
+	<table class="table table-striped mt-3" id="sortTableDoc" style="vertical-align: middle">
 		<thead>
 			<tr class="user-select-none">
 				<th onclick="sortTableDoc(0)">
@@ -229,7 +234,7 @@
 	   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
 	</form>
 
-	<table class="table table-striped mt-3" id="sortTableLay">
+	<table class="table table-striped mt-3" id="sortTableLay" style="vertical-align: middle">
 		<thead>
 			<tr class="user-select-none">
 				<th onclick="sortTableLay(0)">
@@ -352,12 +357,12 @@
 			}
 		});
 
-		//Save Last Opened nav-tab in local Storage
+		//Save Last Opened nav-tab in Session Storage
 		$(function() { 
 			$('.nav-tabs a').on('show.bs.tab', function () {
-				localStorage.setItem('lastTab', $(this).attr('href'));
+				sessionStorage.setItem('lastTab', $(this).attr('href'));
 			});
-			var lastTab = localStorage.getItem('lastTab');
+			var lastTab = sessionStorage.getItem('lastTab');
 			if (lastTab) {
 				$('[href="' + lastTab + '"]').tab('show');
 			}

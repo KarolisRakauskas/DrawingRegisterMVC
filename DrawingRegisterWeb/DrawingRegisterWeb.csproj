@@ -22,7 +22,7 @@
     <Folder Include="wwwroot\Files\Documentation\" />
     <Folder Include="wwwroot\Files\Layouts\" />
     <Folder Include="wwwroot\Files\Images\" />
-    <Folder Include="wwwroot\Files\SeededData\" />
+    <Folder Include="wwwroot\Files\3DModels\" />
   </ItemGroup>
 
 </Project>

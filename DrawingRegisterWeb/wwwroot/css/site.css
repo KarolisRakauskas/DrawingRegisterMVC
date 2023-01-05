@@ -16,3 +16,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+#backgroundImg {
+    position:relative;
+    background-image: url('../Assets/image-engineering-bg.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 20em;
+}

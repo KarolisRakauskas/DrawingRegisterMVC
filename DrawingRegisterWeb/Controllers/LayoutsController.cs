@@ -1,4 +1,6 @@
-﻿using DrawingRegisterWeb.Data;
+﻿using Aspose.Pdf;
+using Aspose.Pdf.Devices;
+using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -78,6 +80,22 @@ namespace DrawingRegisterWeb.Controllers
 					using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 					{
 						file.CopyTo(fileStream);
+					}
+
+					if (layout.FileType.ToLower() == "pdf")
+					{
+						var pdfDocument = new Document(Path.Combine(uploads, fileName + extension));
+						int pageIndex = 1;
+						var page = pdfDocument.Pages[pageIndex];
+
+						using (FileStream imageStream = new FileStream(Path.Combine(uploads, fileName + ".jpg"), FileMode.Create))
+						{
+
+							var resolution = new Resolution(300);
+							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+							jpegDevice.Process(page, imageStream);
+							imageStream.Close();
+						}
 					}
 
 					_context.Add(layout);
@@ -169,7 +187,7 @@ namespace DrawingRegisterWeb.Controllers
 		{
 			if (_context.Layout == null)
 			{
-				return Problem("Entity set 'LayoutRegisterContext.Documentation'  is null.");
+				return Problem("Entity set 'DrawingRegisterContext.Layout'  is null.");
 			}
 
 			var layout = await _context.Layout.FindAsync(id);
@@ -180,10 +198,14 @@ namespace DrawingRegisterWeb.Controllers
 				_context.Layout.Remove(layout);
 
 				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, layout.FileUrl.TrimStart('\\'));
+				int oldFileEndIndex = oldFilePath.LastIndexOf(".");
+				string thumbanilUrl = oldFilePath.Substring(0, oldFileEndIndex);
+				thumbanilUrl += ".jpg";
 
-				if (System.IO.File.Exists(oldFilePath))
+				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
 				{
 					System.IO.File.Delete(oldFilePath);
+					System.IO.File.Delete(thumbanilUrl);
 				}
 
 				_context.Layout.Remove(layout);

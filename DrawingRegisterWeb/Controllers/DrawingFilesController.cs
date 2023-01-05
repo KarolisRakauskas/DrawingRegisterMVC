@@ -37,16 +37,23 @@ namespace DrawingRegisterWeb.Controllers
 
 					string fileName = Guid.NewGuid().ToString();
 					var uploads = Path.Combine(wwwRootPath, @"Files\Drawings");
-					var extension = Path.GetExtension(file.FileName).ToLower();
+					var extension = Path.GetExtension(file.FileName)!.ToLower();
 
 					var drawingFile = new DrawingFile()
 					{
 						DrawingId = drawing!.Id,
 						CreateDate = DateTime.Now,
-						FileName = Path.GetFileNameWithoutExtension(file.FileName).ToString(),
-						FileType = Path.GetExtension(file.FileName).ToString().Remove(0, 1),
+						FileName = Path.GetFileNameWithoutExtension(file.FileName)!,
+						FileType = Path.GetExtension(file.FileName)!.Remove(0, 1),
 						FileUrl = @"\Files\Drawings\" + fileName + extension
 					};
+
+					if (file.FileName != null && file.FileName.Contains("_"))
+					{
+						int fileNameEndIndex = drawingFile.FileName.LastIndexOf("_");
+						drawingFile.Revision = Path.GetFileNameWithoutExtension(file.FileName)!.Substring(fileNameEndIndex+1);
+						
+					}
 
 					using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 					{

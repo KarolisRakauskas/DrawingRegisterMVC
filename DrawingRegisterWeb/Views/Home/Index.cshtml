@@ -2,15 +2,17 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<div class="mt-5 jumbotron">
-	<h1 class="display-3 text-center mb-5 text-primary">Keeping Drawings Up To Date!</h1>
-	<p class="lead text-secondary">&emsp; A drawing register is a controlled list of drawings that also provides a standardised way of 
-		tracking the addition of revisions and changes to an existing document. The list usually includes information 
-		such as drawing number, revision and date. This Drawing Register enables the easy identification of the latest 
-		revision of each drawing and captures key drawing information.
-	</p>
-	<hr class="my-4">
+<div id="backgroundImg" class="mt-5 jumbotron mb-0">
+	<h1 class="display-1 text-primary text-center p-3">Keeping Drawings Up To Date!</h1>
+
+	
 </div>
+
+<hr>	
+	<p class="lead text-secondary text-center">&emsp; A drawing register is a controlled list of drawings that also provides a standardised way of 
+	tracking the addition of revisions and changes to an existing document.
+	</p>
+<hr>
 
 <div class="jumbotron mt-5">
 	<h2 class="display-5 text-center mb-5 text-secondary">Manage your Projects with embedded State features</h2>
@@ -19,52 +21,45 @@
 		have different functions to create, read, update and delete drawings, documentation and layouts.
 	</p>
 	<div class="row">
-		<div class="col-4"></div>
-		<div class="col-4">
+		<div class="container text-center" style="width:20em">
 			<table class="table table-hover mt-3 user-select-none text-center">
 				<thead>
 					<tr>
-						<th>Project</th>
 						<th>ProjectState</th>
 					</tr>
 				</thead>
-				<tbody>
+				<tbody class="table-primary" style="border: 2px solid white;">
 					<tr data-bs-container="body" 
 					data-bs-toggle="popover" 
 					data-bs-placement="top" 
 					data-bs-content="The project has been created but the plan has not yet been initiated and team members have no access to the project." 
 					data-bs-original-title="Defined">
-						<td>0001</td>
-						<td><span class="text-info">Defined</span></td>
+						<td style="border: 2px solid white;"><span class="text-info">Defined</span></td>
 					</tr>
 					<tr data-bs-container="body" 
 					data-bs-toggle="popover" 
 					data-bs-placement="right" 
 					data-bs-content="The project has been started and is accessible by team members. Team members can create, read, update and delete drawings, documentation and layouts." 
 					data-bs-original-title="Running">
-						<td>0002</td>
-						<td><span class="text-primary">Running</span></td>
+						<td style="border: 2px solid white;"><span class="text-primary">Running</span></td>
 					</tr>
 					<tr data-bs-container="body" 
 					data-bs-toggle="popover" 
 					data-bs-placement="left" 
 					data-bs-content="The project set to Completed. Team members can only read drawings, documentation and layouts." 
 					data-bs-original-title="Completed">
-						<td>0003</td>
-						<td><span class="text-success">Completed</span></td>
+						<td style="border: 2px solid white;"><span class="text-success">Completed</span></td>
 					</tr>
 					<tr data-bs-container="body" 
 					data-bs-toggle="popover" 
 					data-bs-placement="bottom" 
 					data-bs-content="The project has been canceled, but project data is still available to team members. Team members can only read drawings, documentation and layouts." 
 					data-bs-original-title="Canceled">
-						<td>0004</td>
-						<td><span class="text-danger">Canceled</span></td>
+						<td style="border: 2px solid white;"><span class="text-danger">Canceled</span></td>
 					</tr>
 				</tbody>
 			</table>
 		</div>
-		<div class="col-4"></div>
 	</div>
 
 
@@ -75,99 +70,87 @@
 	<hr class="my-4">
 </div>
 
-<div class="mt-5 d-flex flex-wrap justify-content-around">
-	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-		<div class="card-header">
-			<i class="bi bi-sunglasses h1"></i>
-		</div>
-		<div class="card-body">
-			<h4 class="card-title">Login & Explore</h4>
-			<p class="card-text">
-				Don't want to register? Login as spectator and explore! Seeded data will show you all features in no time.
-			</p>
-			<p class="card-text">
-				<strong>Spectators can't Create, Update and Delete</strong>
-			</p>
-			<hr />
-			<p class="card-text">
-				Email:<br />spectator@email.com<br />
-				Password:<br />spectator2022
-			</p>
-		</div>
-	</div>
+<div class="jumbotron mt-5">
+	<h3 class="display-5 text-center mb-5 text-primary">Register an account and create your own Drawing Register</h3>
 
-	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-		<div class="card-header">
-			<i class="bi bi-book-fill h1"></i>
-		</div>
-		<div class="card-body">
-			<h4 class="card-title">Register & Create</h4>
-			<p class="card-text">
-				Register account and test application without any limitations! Separate documents into projects, add new 
-				members to your register and more!
-			</p>
-		</div>
-	</div>
+	<p class="lead text-secondary">&emsp; You can control how accessible the project is for team members. Each project state will 
+		have different functions to create, read, update and delete drawings, documentation and layouts.
+	</p>
 
-	<div class="card text-white bg-primary mb-3" style="max-width: 20rem;">
-		<div class="card-header">
-			<i class="bi bi-bar-chart-line-fill h1"></i>
+	<div class="mt-5 d-flex flex-wrap justify-content-around text-secondary">
+		<div class="card border-primary mb-3" style="max-width: 20rem;">
+			<div class="card-header text-primary">
+				<i class="bi bi-sunglasses h1"></i>
+			</div>
+			<div class="card-body">
+				<h4 class="card-title text-primary">Login & Explore</h4>
+				<p class="card-text">
+					Don't want to register? Login as spectator and explore! Seeded data will show you all features in no time.
+				</p>
+				<p class="card-text">
+					<strong class="text-warning">Spectators can't Create, Update and Delete</strong>
+				</p>
+				<hr />
+				<p class="card-text">
+					Email:<br />spectator@email.com<br />
+					Password:<br />spectator2022
+				</p>
+			</div>
 		</div>
-		<div class="card-body">
-			<h4 class="card-title">My Progress</h4>
-			<p class="card-text">
-				Track your progress with built-in application graphics.
-			</p>
+
+		<div class="card border-primary mb-3" style="max-width: 20rem;">
+			<div class="card-header text-primary">
+				<i class="bi bi-book-fill h1"></i>
+			</div>
+			<div class="card-body">
+				<h4 class="card-title text-primary">Register & Create</h4>
+				<p class="card-text">
+					Register account and test application without any limitations! Separate documents into projects, add new 
+					members to your register and more!
+				</p>
+			</div>
+		</div>
+
+		<div class="card border-primary mb-3" style="max-width: 20rem;">
+			<div class="card-header text-primary">
+				<i class="bi bi-bar-chart-line-fill h1"></i>
+			</div>
+			<div class="card-body">
+				<h4 class="card-title text-primary">My Progress</h4>
+				<p class="card-text">
+					Track your progress with built-in application graphics.
+				</p>
+			</div>
 		</div>
 	</div>
 </div>
 
-@*@section Scripts {
-	
-	<script type="module">
+<hr class="my-4">
 
-	import * as THREE from 'https://cdn.skypack.dev/three@0.136.0';
-	import { GLTFLoader } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/loaders/GLTFLoader.js';
-	import { OrbitControls } from 'https://cdn.skypack.dev/three@0.136.0/examples/jsm/controls/OrbitControls.js';
+<div class="jumbotron mt-5">
 
-	const renderer = new THREE.WebGLRenderer();
-	const scene = new THREE.Scene();
-	const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight);
-	let mesh;
-	const controls = new OrbitControls(camera, renderer.domElement);
+	<h4 class="display-5 text-center mb-5 text-secondary">Upload 3D models straight to your Drawing Register!!!</h4>
 
-	renderer.setSize(window.innerWidth, window.innerHeight);
-	scene.background = new THREE.Color(0xeff5555);
-	scene.add(new THREE.HemisphereLight(0xffffcc, 0x333399, 1.0));
-	camera.position.set(-2, 2, 10);
+	<div class="d-flex flex-wrap justify-content-evenly">
 
-	new GLTFLoader().load('~/Files/SeededData/0001.glb', ({ scene: model }, animations) => {
-	  scene.add(model);
+		<p class="lead text-secondary">&emsp;Upload your 3D models with Solidworks eDrawings and preview them everywhere!!! 
+			With this Drawing Register you can load your CAD files to your portable device on sight. It can be used not 
+			only for presentations, but also for your engineers.
+		</p>
 
-	  model.scale.setScalar(2.0);
+		<div class="card mt-3 p-1 overflow-hidden" style="width:75%; max-width:800px;">
+			<iframe
+				src="~/Assets/ConveyorSystem.html" 
+				alt="3D-Model" 
+				loading="lazy" 
+				style="width:100%; aspect-ratio: 3/2;">
+			</iframe>
+		</div>
 
-	  camera.lookAt(model.position);
+		<p class="lead text-secondary mt-3">&emsp;Built in eDrawings features allow you to review components list, explode model, 
+			make section view, move separate components, play animated views,  change the display settings and has a full screen mode.
+		</p>
 
-	  controls.target.copy(model.position);
+	</div>
+</div>
 
-	  mesh = model;
-	});
-
-	const animate = () => {
-	  if (mesh) {
-		mesh.rotateY(Math.PI / 360);
-	  }
-
-	  renderer.render(scene, camera);
-
-	  controls.update();
-
-	  requestAnimationFrame(animate);
-	};
-
-	animate();
-
-	document.body.appendChild(renderer.domElement);
-
-	</script>
-}*@

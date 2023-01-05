@@ -6,6 +6,15 @@
 
 <h1 class="text-primary">Details</h1>
 
+<div class="alert alert-dismissible alert-warning">
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  <h4 class="alert-heading">Warning!</h4>
+  <p class="mb-0">&emsp;The good practice consists in separating your drawing numbers from the revision by the sign underscore "_". <b>For example, "1-0001_A" 
+	  is a drawing numbered 1-0001 and revision A</b>. It is a common practice to name engineering revisions. The automatic revision will be 
+	  delegated after the last underscore symbol "_". <b>Check whether your drawing file complies with this rule</b>. If your drawing number has symbol "_" 
+	  and not revised, or revised without underscore sign - automatic revision will not be delegated or will be misleading.</p>
+</div>
+
 <div>
 	<h4>Drawing</h4>
 	<hr />
@@ -62,7 +71,7 @@
 	   <button id="submitFile" type="submit" class="btn btn-primary col-4">Upload</button >
 </form>
 
-<table class="table table-striped mt-3" id="sortTable">
+<table class="table table-striped mt-3" id="sortTable" style="vertical-align: middle">
 	<thead>
 		<tr class="user-select-none">
 			<th onclick="sortTable(0)">

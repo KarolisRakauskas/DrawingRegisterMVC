@@ -1,4 +1,6 @@
-﻿using DrawingRegisterWeb.Data;
+﻿using Aspose.Pdf;
+using Aspose.Pdf.Devices;
+using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -82,6 +84,22 @@ namespace DrawingRegisterWeb.Controllers
 					using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 					{
 						file.CopyTo(fileStream);
+					}
+
+					if (documentation.FileType.ToLower() == "pdf")
+					{
+						var pdfDocument = new Aspose.Pdf.Document(Path.Combine(uploads, fileName + extension));
+						int pageIndex = 1;
+						var page = pdfDocument.Pages[pageIndex];
+
+						using (FileStream imageStream = new FileStream(Path.Combine(uploads, fileName + ".jpg"), FileMode.Create))
+						{
+
+							var resolution = new Resolution(300);
+							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+							jpegDevice.Process(page, imageStream);
+							imageStream.Close();
+						}
 					}
 
 					_context.Add(documentation);
@@ -179,15 +197,20 @@ namespace DrawingRegisterWeb.Controllers
 			var documentation = await _context.Documentation.FindAsync(id);
 			int projectId = documentation!.ProjectId;
 
+
 			if (documentation != null)
 			{
 				_context.Documentation.Remove(documentation);
 
 				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, documentation.FileUrl.TrimStart('\\'));
+				int oldFileEndIndex = oldFilePath.LastIndexOf(".");
+				string thumbanilUrl = oldFilePath.Substring(0, oldFileEndIndex);
+				thumbanilUrl += ".jpg";
 
-				if (System.IO.File.Exists(oldFilePath))
+				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
 				{
 					System.IO.File.Delete(oldFilePath);
+					System.IO.File.Delete(thumbanilUrl);
 				}
 
 				_context.Documentation.Remove(documentation);
