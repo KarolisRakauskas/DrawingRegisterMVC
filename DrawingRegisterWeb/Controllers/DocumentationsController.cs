@@ -212,9 +212,6 @@ namespace DrawingRegisterWeb.Controllers
 					System.IO.File.Delete(oldFilePath);
 					System.IO.File.Delete(thumbanilUrl);
 				}
-
-				_context.Documentation.Remove(documentation);
-
 			}
 
 			await _context.SaveChangesAsync();

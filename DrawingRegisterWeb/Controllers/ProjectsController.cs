@@ -1,9 +1,9 @@
-﻿using Aspose.Pdf.Devices;
-using DrawingRegisterWeb.Data;
+﻿using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrawingRegisterWeb.Controllers
@@ -89,7 +89,7 @@ namespace DrawingRegisterWeb.Controllers
 		// POST: Project/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,DeadlineDate,ProjectStateId")] Project project)
+		public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,DeadlineDate,ProjectStateId")] Models.Project project)
 		{
 			if (ModelState.IsValid)
 			{
@@ -121,7 +121,7 @@ namespace DrawingRegisterWeb.Controllers
 		// POST: Project/Edit
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId")] Project project)
+		public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId,ModelUrl")] Models.Project project)
 		{
 			if (id != project.Id)
 			{
@@ -208,6 +208,16 @@ namespace DrawingRegisterWeb.Controllers
 			var uploads = Path.Combine(wwwRootPath, @"Files\3DModels");
 			var extension = Path.GetExtension(file.FileName)!.ToLower();
 
+			if(project.ModelUrl != null)
+			{
+				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, project.ModelUrl!.TrimStart('\\'));
+
+				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
+				{
+					System.IO.File.Delete(oldFilePath);
+				}
+			}
+	
 			using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 			{
 				file.CopyTo(fileStream);
@@ -215,12 +225,68 @@ namespace DrawingRegisterWeb.Controllers
 
 			project.ModelUrl = @"\Files\3DModels\" + fileName + extension;
 
-			_context.Update(project);
-			_context.SaveChanges();
-
-			//TODO Edit not updated instantly
+			try
+			{
+				_context.Update(project);
+				await _context.SaveChangesAsync();
+			}
+			catch (DbUpdateConcurrencyException)
+			{
+				if (!ProjectExists(project.Id))
+				{
+					return NotFound();
+				}
+				else
+				{
+					throw;
+				}
+			}
 
 			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+			return RedirectToAction("Edit", "Projects", new { id = project.Id });
+		}
+
+		// POST: Project/DeleteUpload
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> UploadDelete(int id)
+		{
+
+			var project = await _context.Project.FindAsync(id);
+
+			if (project != null)
+			{
+				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, project.ModelUrl!.TrimStart('\\'));
+
+				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
+				{
+					System.IO.File.Delete(oldFilePath);
+				}
+
+				project!.ModelUrl = null;
+
+				try
+				{
+					_context.Update(project);
+					await _context.SaveChangesAsync();
+				}
+				catch (DbUpdateConcurrencyException)
+				{
+					if (!ProjectExists(project.Id))
+					{
+						return NotFound();
+					}
+					else
+					{
+						throw;
+					}
+				}
+
+				ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+				return RedirectToAction("Edit", "Projects", new { id = project.Id });
+			}
+
+			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project!.ProjectStateId);
 			return RedirectToAction("Edit", "Projects", new { id = project.Id });
 		}
 
