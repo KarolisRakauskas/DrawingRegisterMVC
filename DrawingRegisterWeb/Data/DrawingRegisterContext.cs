@@ -1,10 +1,11 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using DrawingRegisterWeb.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace DrawingRegisterWeb.Data
 {
-	public class DrawingRegisterContext : DbContext
+	public class DrawingRegisterContext : IdentityDbContext
 	{
 		public DrawingRegisterContext(DbContextOptions<DrawingRegisterContext> options) : base(options)
 		{
