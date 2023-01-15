@@ -8,9 +8,12 @@ using Microsoft.EntityFrameworkCore;
 using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace DrawingRegisterWeb.Controllers
 {
+	[Authorize]
 	public class ProjectStatesController : Controller
 	{
 		private readonly DrawingRegisterContext _context;
@@ -23,8 +26,12 @@ namespace DrawingRegisterWeb.Controllers
 		// GET: ProjectStates
 		public async Task<IActionResult> Index(string search, string states)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
 			var projectStates = from p in _context.ProjectState select p;
+			var drawingRegisters = from dr in _context.drawingRegisters select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim.Value);
 
 			if (search != null)
 			{
@@ -56,7 +63,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var projectStateVM = new ProjectStateVM
 			{
-				ProjectStates = await projectStates.OrderBy(p => p.Id).ToListAsync()
+				ProjectStates = await projectStates.Where(p => p.DrawingRegisterId == drawingRegister.Id).OrderBy(p => p.Id).ToListAsync()
 			};
 
 			return View(projectStateVM);
@@ -65,7 +72,18 @@ namespace DrawingRegisterWeb.Controllers
 		// GET: ProjectStates/Create
 		public IActionResult Create()
 		{
-			return View();
+			var claimsIdentity = (ClaimsIdentity)User.Identity;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+			var drawingRegisters = from dr in _context.drawingRegisters select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim.Value);
+
+			ProjectState projectState = new()
+			{
+				DrawingRegisterId = drawingRegister.Id
+			};
+
+			return View(projectState);
 		}
 
 		// POST: ProjectStates/Create

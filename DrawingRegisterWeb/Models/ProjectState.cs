@@ -10,5 +10,7 @@ public class ProjectState
 	public string Name { get; set; } = null!;
 	[Required]
 	public string Description { get; set; } = null!;
+	[Required]
+	public int DrawingRegisterId { get; set; }
 }
 

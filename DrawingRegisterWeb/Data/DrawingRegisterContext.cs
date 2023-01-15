@@ -19,5 +19,6 @@ namespace DrawingRegisterWeb.Data
 		public DbSet<DrawingFile> DrawingFile { get; set; }
 		public DbSet<Documentation> Documentation { get; set; }
 		public DbSet<Layout> Layout { get; set; }
+		public DbSet<DrawingRegister> drawingRegisters { get; set; }
 	}
 }

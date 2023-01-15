@@ -126,6 +126,23 @@ namespace DrawingRegisterWeb.Migrations
                     b.ToTable("DrawingFile");
                 });
 
+            modelBuilder.Entity("DrawingRegisterWeb.Models.DrawingRegister", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("drawingRegisters");
+                });
+
             modelBuilder.Entity("DrawingRegisterWeb.Models.Layout", b =>
                 {
                     b.Property<int>("Id")
@@ -212,6 +229,9 @@ namespace DrawingRegisterWeb.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DrawingRegisterId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
