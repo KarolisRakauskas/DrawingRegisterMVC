@@ -10,6 +10,7 @@ namespace DrawingRegisterWeb.Models
 		[Key]
 		public int Id { get; set; }
 		[Required]
+		[DisplayName("File")]
 		public string FileUrl { get; set; } = null!;
 		[Required]
 		[DisplayName("File Name")]
@@ -23,11 +24,10 @@ namespace DrawingRegisterWeb.Models
 		[DisplayName("Create Date")]
 		public DateTime CreateDate { get; set; } = DateTime.Now;
 		[Required]
-		[ValidateNever]
+		[DisplayName("Project Id")]
 		public int ProjectId { get; set; }
-		[Required]
-		[ValidateNever]
 		[ForeignKey("ProjectId")]
-		public Project Project { get; set; } = null!;
+		[ValidateNever]
+		public Project? Project { get; set; }
 	}
 }

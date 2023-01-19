@@ -1,6 +1,8 @@
 ﻿namespace DrawingRegisterWeb.Models;
-using System.ComponentModel.DataAnnotations;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class ProjectState
 {
@@ -12,5 +14,8 @@ public class ProjectState
 	public string Description { get; set; } = null!;
 	[Required]
 	public int DrawingRegisterId { get; set; }
+	[ForeignKey("DrawingRegisterId")]
+	[ValidateNever]
+	public DrawingRegister? DrawingRegister { get; set; }
 }
 

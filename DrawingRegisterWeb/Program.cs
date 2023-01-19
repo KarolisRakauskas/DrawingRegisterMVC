@@ -1,7 +1,7 @@
 using DrawingRegisterWeb.Data;
-using DrawingRegisterWeb.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using DrawingRegisterWeb.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +11,7 @@ builder.Services.AddDbContext<DrawingRegisterContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-	.AddEntityFrameworkStores<DrawingRegisterContext>();
+	.AddRoles<IdentityRole>().AddEntityFrameworkStores<DrawingRegisterContext>();
 
 var app = builder.Build();
 

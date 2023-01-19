@@ -24,11 +24,11 @@ namespace DrawingRegisterWeb.Models
 		[DataType(DataType.Date)]
 		public DateTime DeadlineDate { get; set; }
 		[Required]
-		[DisplayName("Project State")]
 		public int ProjectStateId { get; set; }
 		[ForeignKey("ProjectStateId")]
 		[ValidateNever]
 		public ProjectState? ProjectState { get; set; }
+		[DisplayName("3D Model")]
 		public string? ModelUrl { get; set; }
 	}
 }
