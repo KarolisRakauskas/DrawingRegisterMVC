@@ -6,22 +6,43 @@
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
-    <li class="nav-item">
-        <a id="manage" class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
-    </li>
-    <li class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button id="logout" type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
+	<li class="nav-item dropdown">
+		@if (User.IsInRole("Administrator"))
+		{
+			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<img style="height:2em" src="~/Assets/owner.png" />
+			</a>
+		} else
+		{
+			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+				<img style="height:2em" src="~/Assets/user.png" />
+			</a>
+		}
+		<div class="dropdown-menu dropdown-menu-end">
+			<p class="text-secondary text-center user-select-none dropdown-header">
+				<b>@UserManager.GetUserName(User)</b>
+			</p>
+			<a asp-area="Identity" asp-page="/Account/Manage/Index" id="manage" class="dropdown-item">Profile</a>
+			<form 
+				id="logoutForm"  
+				asp-area="Identity" 
+				asp-page="/Account/Logout" 
+				asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+				<button id="logout" type="submit" class="dropdown-item">Logout</button>
+			</form>
+		</div>
+	</li>
 }
 else
 {
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
+	<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<i class="bi bi-door-open-fill text-primary"></i>
+		</a>
+		<div class="dropdown-menu dropdown-menu-end">
+			<a class="dropdown-item" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+			<a class="dropdown-item" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+		</div>
+	</li>	
 }
 </ul>

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20230116201821_InitialCreate")]
+    [Migration("20230125213350_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -137,13 +137,10 @@ namespace DrawingRegisterWeb.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("DrawingRegisters");
                 });
@@ -175,6 +172,34 @@ namespace DrawingRegisterWeb.Migrations
                     b.HasIndex("StatusId");
 
                     b.ToTable("DrawingRegisterInvitations");
+                });
+
+            modelBuilder.Entity("DrawingRegisterWeb.Models.DrawingRegisterUsers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("DrawingRegisterId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Role")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DrawingRegisterId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("DrawingRegisterUsers");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Layout", b =>
@@ -530,17 +555,6 @@ namespace DrawingRegisterWeb.Migrations
                     b.Navigation("Drawing");
                 });
 
-            modelBuilder.Entity("DrawingRegisterWeb.Models.DrawingRegister", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IdentityUser");
-                });
-
             modelBuilder.Entity("DrawingRegisterWeb.Models.DrawingRegisterInvitation", b =>
                 {
                     b.HasOne("DrawingRegisterWeb.Models.DrawingRegister", "DrawingRegister")
@@ -566,6 +580,25 @@ namespace DrawingRegisterWeb.Migrations
                     b.Navigation("IdentityRole");
 
                     b.Navigation("Status");
+                });
+
+            modelBuilder.Entity("DrawingRegisterWeb.Models.DrawingRegisterUsers", b =>
+                {
+                    b.HasOne("DrawingRegisterWeb.Models.DrawingRegister", "DrawingRegister")
+                        .WithMany()
+                        .HasForeignKey("DrawingRegisterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DrawingRegister");
+
+                    b.Navigation("IdentityUser");
                 });
 
             modelBuilder.Entity("DrawingRegisterWeb.Models.Layout", b =>

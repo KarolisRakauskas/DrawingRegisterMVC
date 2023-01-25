@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
+using DrawingRegisterWeb.ViewModels;
 
 namespace DrawingRegisterWeb
 {
@@ -26,35 +25,58 @@ namespace DrawingRegisterWeb
 			_signInManager = signInManager;
 		}
 
-		// GET: DrawingRegisters
+		//GET: DrawingRegisters
 		public async Task<IActionResult> Index()
 		{
-			var drawingRegisterContext = _context.DrawingRegisters.Include(d => d.IdentityUser);
-			return View(await drawingRegisterContext.ToListAsync());
+			var user = _userManager.GetUserId(User);
+			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user);
+
+			if (userRegister == null)
+			{
+				return View();
+			}
+
+			var drawingRegisterUsers = 
+				from d in _context.DrawingRegisterUsers.Include(u => u.IdentityUser)
+				where d.DrawingRegisterId == userRegister.DrawingRegisterId 
+				select d;
+
+			var registerVM = new RegisterVM
+			{
+				DrawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(d => d.Id == userRegister.DrawingRegisterId),
+				DrawingRegisterUsers = await drawingRegisterUsers.ToListAsync()
+			};
+
+			return View(registerVM);
 		}
 
 		// GET: DrawingRegisters/Create
 		public IActionResult Create()
 		{
-			var user = _userManager.GetUserId(User);
-			var drawingRegister = new DrawingRegister
-			{
-				UserId = user
-			};
-			return View(drawingRegister);
+			return View();
 		}
 
 		// POST: DrawingRegisters/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,UserId")] DrawingRegister drawingRegister)
+		public async Task<IActionResult> Create(DrawingRegister drawingRegister)
 		{
 			var user = await _userManager.GetUserAsync(User);
 
-			if (ModelState.IsValid)
+
+			if (ModelState.IsValid && user != null)
 			{
 				_context.Add(drawingRegister);
 				_context.SaveChanges();
+
+				var drawingRegisterUser = new DrawingRegisterUsers
+				{
+					DrawingRegisterId = drawingRegister.Id,
+					UserId = user.Id,
+					Role = "Administrator"
+				};
+
+				_context.Add(drawingRegisterUser);
 
 				var states = SeedDataRuntime.CreateProjectStates(drawingRegister.Id);
 
@@ -70,7 +92,6 @@ namespace DrawingRegisterWeb
 				return RedirectToAction(nameof(Index));
 			}
 
-			ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", drawingRegister.UserId);
 			return View(drawingRegister);
 		}
 
@@ -82,9 +103,7 @@ namespace DrawingRegisterWeb
 				return NotFound();
 			}
 
-			var drawingRegister = await _context.DrawingRegisters
-				.Include(d => d.IdentityUser)
-				.FirstOrDefaultAsync(m => m.Id == id);
+			var drawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(m => m.Id == id);
 			if (drawingRegister == null)
 			{
 				return NotFound();

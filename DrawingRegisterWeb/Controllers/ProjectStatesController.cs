@@ -24,7 +24,7 @@ namespace DrawingRegisterWeb.Controllers
 			var claimsIdentity = (ClaimsIdentity)User.Identity!;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
 
-			var drawingRegisters = from dr in _context.DrawingRegisters select dr;
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
 			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 
 			if (drawingRegister == null) return RedirectToAction("Index", "DrawingRegisters");
@@ -33,7 +33,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			if (search != null)
 			{
-				projectStates = projectStates.Where(p => p.Name.Contains(search) || 
+				projectStates = projectStates.Where(p => p.Name.Contains(search) ||
 					p.Description.Contains(search));
 			}
 
@@ -47,7 +47,8 @@ namespace DrawingRegisterWeb.Controllers
 						p.Name == "Canceled" ||
 						p.Name == "Completed"
 						);
-				} else if (states == "Custom")
+				}
+				else if (states == "Custom")
 				{
 					projectStates = projectStates.Where(
 						p => p.Name != "Defined" &&
@@ -60,7 +61,9 @@ namespace DrawingRegisterWeb.Controllers
 
 			var projectStateVM = new ProjectStateVM
 			{
-				ProjectStates = await projectStates.Where(p => p.DrawingRegisterId == drawingRegister!.Id).OrderBy(p => p.Id).ToListAsync(),
+				ProjectStates = await projectStates
+					.Where(p => p.DrawingRegisterId == drawingRegister!.DrawingRegisterId)
+					.OrderBy(p => p.Id).ToListAsync(),
 				Search = search,
 				States = states
 			};
@@ -73,12 +76,12 @@ namespace DrawingRegisterWeb.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity!;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisters select dr;
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
 			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 
 			ProjectState projectState = new()
 			{
-				DrawingRegisterId = drawingRegister!.Id
+				DrawingRegisterId = drawingRegister!.DrawingRegisterId
 			};
 
 			return View(projectState);

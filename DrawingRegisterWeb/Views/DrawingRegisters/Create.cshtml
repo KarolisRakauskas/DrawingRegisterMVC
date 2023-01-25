@@ -1,31 +1,53 @@
 ﻿@model DrawingRegisterWeb.Models.DrawingRegister
 
 @{
-    ViewData["Title"] = "Create";
+	ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 class="text-primary">Before setting up a new Drawing Register</h1>
+<h6 class="text-secondary">Should know...</h6>
 
-<h4>DrawingRegister</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <input asp-for="UserId" value="@Model.UserId" hidden>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+
+<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
+	<div class="col">
+		<div class="container h-100">
+			<h2 class="text-info"><i class="bi bi-info-circle"></i></h2>
+			<ul class="list-group">
+				<li class="list-group-item list-group-item-success p-3">
+					&emsp;Drawings are secure! No one can access them apart from you and your team. New members can 
+					join only after you confirm they request or send them an invitation
+				 </li>	
+				<li class="list-group-item list-group-item-primary p-3">
+					&emsp;The administrator can change team member's role or delete existing member from the Register
+					at any time
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col">
+		<div class="container">
+			<h2 class="text-warning"><i class="bi bi-exclamation-circle"></i></h2>
+			<ul class="list-group">
+				 <li class="list-group-item list-group-item-warning p-3">
+					 &emsp;Each user cannot have more than ONE Drawing Register. If you want to join the existing register, 
+					 you should request an invitation from <a asp-action="Index">Drawing Register Manager</a>
+				</li>
+				<li class="list-group-item list-group-item-danger p-3">
+					 &emsp;<b>The Administrator can Delete the Register entirely</b>. All Projects, Drawings, Layouts and 
+					 Documentation will be Removed also. Keep this in mind before assigning the Administration 
+					 role to team members!
+				</li>
+			</ul>
+		</div>
+
+	</div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<form asp-action="Create" class="mt-5 text-center">
+@*	<input asp-for="UserId" value="@Model.UserId" hidden>*@
+	<div class="btn-group">
+		<button type="submit" class="btn btn-lg btn-outline-primary"><i class="bi bi-plus-circle lead"></i> Create New Register</button>
+		<a asp-action="Index" class="btn btn-lg btn-outline-secondary"><i class="bi bi-arrow-return-left"></i> Back to Manager</a>
+	</div>
+</form>

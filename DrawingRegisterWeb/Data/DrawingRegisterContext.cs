@@ -22,6 +22,7 @@ namespace DrawingRegisterWeb.Data
 		public DbSet<DrawingRegister> DrawingRegisters { get; set; }
 		public DbSet<Status> Statuses { get; set; }
 		public DbSet<DrawingRegisterInvitation> DrawingRegisterInvitations { get; set; }
+		public DbSet<DrawingRegisterUsers> DrawingRegisterUsers { get; set; }
 
 	}
 }

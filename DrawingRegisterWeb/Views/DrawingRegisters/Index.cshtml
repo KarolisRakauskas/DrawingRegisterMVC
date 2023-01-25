@@ -1,35 +1,131 @@
-﻿@model IEnumerable<DrawingRegisterWeb.Models.DrawingRegister>
+﻿@model DrawingRegisterWeb.ViewModels.RegisterVM
 
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div id="backgroundImgDR" class="mt-5 jumbotron mb-0">
+	<h1 class="display-1 text-light text-center p-3"><b>Your Drawing Register!</b></h1>
+</div>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<hr />
+
+<p class="lead text-center">&emsp;This is where you can manage Your Drawing Register! 
+	Create invitations to your register, manage team members or join existing register.
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdentityUser)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdentityUser.Id)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+
+<hr />
+
+@if (Model == null)
+{
+	<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
+
+		<div class="col">
+			<div class="card mt-2 h-100">
+				<div class="card-body">
+					<div class="row mt-3">
+						<div class="col-6">
+							<h2 class="card-title text-primary">Create Your Own Drawing Register</h2>
+							<h6 class="card-subtitle text-secondary">Register Owner - Administrator</h6>
+						</div>
+						<div class="col-6 text-end">
+							<img src="~/Assets/owner.png" />
+						</div>
+					</div>
+
+					<div class="text-end mt-3">
+						<a asp-action="Create" class="btn btn-lg btn-outline-primary"><i class="bi bi-plus-circle"></i> Create Register</a>
+					</div>
+
+					<p class="card-text lead text-secondary mt-3">&emsp;Start Fresh and build your own Drawing Register! 
+						It will allow you to create project states, projects, drawings, documentation and 
+						layouts. Once the register is added, you will be assigned as an Administrator.
+					</p>
+			  </div>
+			</div>
+		</div>
+
+		<div class="col">
+			<div class="card mt-2 h-100">
+				<div class="card-body">
+
+
+					<div class="row mt-3">
+						<div class="col-4">
+							<h2 class="card-title text-primary">Join Existing Register</h2>
+							<h6 class="card-subtitle text-secondary">Engineer & Mechanic</h6>
+						</div>
+						<div class="col-8 text-end">
+							<img src="~/Assets/engineer.png" />
+							<img src="~/Assets/mechanic.png" />
+						</div>
+					</div>
+
+					<div class="text-end mt-3">
+						<a href="#" class="btn btn-lg btn-outline-primary"><i class="bi bi-send-plus"></i> Request an invitation</a>
+					</div>
+
+					<p class="card-text lead text-secondary mt-3">&emsp;Send a request to the Existing Drawing Register. 
+						Once the administrator approves your application, you can access register.
+					</p>
+			  </div>
+			</div>
+		</div>
+	</div>
 }
-    </tbody>
+else
+{
+
+<h2 class="text-primary mt-5 display-5">Team Members</h2>
+
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].IdentityUser!.Email)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].Role)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+	@foreach (var item in Model.DrawingRegisterUsers!)
+	{
+		<tr style="vertical-align: middle">
+			<td>
+				@if (@item.Role == "Administrator")
+				{
+					<img style="height:2em" src="~/Assets/owner.png"/> @item.IdentityUser!.Email
+				} else if (@item.Role == "Engineer"){
+					<img src="~/Assets/engineer.png" /> @item.IdentityUser!.Email
+				} else if (@item.Role == "Mechanic"){
+					<img src="~/Assets/mechanic.png" /> @item.IdentityUser!.Email
+				}
+			</td>
+			<td>
+				@item.Role
+			</td>
+			<td>
+				<div class="btn-group">
+					<button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i>Role</button>
+					<button class="btn btn-outline-danger"><i class="bi bi-person-dash"></i>Remove</button>
+				</div>
+			</td>
+		</tr>
+	}
+	</tbody>
 </table>
+	
+<h3 class="text-primary mt-5 display-5">Invitations/Requests</h3>
+
+<hr class="mt-5" />
+<div class="row mt-3">
+	<h6 class="text-secondary col-4">Delete or Leave...</h6>
+	<div class="btn-group col-8">
+		<a asp-action="Delete" asp-route-id="@Model.DrawingRegister!.Id" class="btn btn-outline-danger">Delete Drawing Register Entirely</a>
+		<a class="btn btn-outline-secondary">Leave Drawing Register</a>
+	</div>
+</div>
+}
