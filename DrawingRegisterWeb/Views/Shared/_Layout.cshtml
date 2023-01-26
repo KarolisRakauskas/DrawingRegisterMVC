@@ -27,7 +27,7 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-controller="DrawingRegisters" asp-action="Index">Manager</a>
 						</li>
-						@if (User.IsInRole("Administrator"))
+						@if (User.IsInRole("Administrator") || User.IsInRole("Engineer") || User.IsInRole("Mechanic"))
 						{
 							<li class="nav-item">
 								<a class="nav-link text-dark" asp-controller="ProjectStates" asp-action="Index">States</a>
@@ -60,7 +60,7 @@
 
 	<footer class="border-top footer text-muted">
 		<div class="container">
-			&copy; 2022 - Drawing Register
+			&copy; 2023 - Drawing Register
 		</div>
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>

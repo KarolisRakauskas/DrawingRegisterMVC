@@ -12,6 +12,16 @@
 			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
 					<img style="height:2em" src="~/Assets/owner.png" />
 			</a>
+		} else if (User.IsInRole("Engineer"))
+		{
+			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<img style="height:2em" src="~/Assets/engineer.png" />
+			</a>
+		} else if (User.IsInRole("Mechanic"))
+		{
+			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+					<img style="height:2em" src="~/Assets/mechanic.png" />
+			</a>
 		} else
 		{
 			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">

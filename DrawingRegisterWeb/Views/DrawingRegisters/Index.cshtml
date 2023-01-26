@@ -76,56 +76,95 @@
 else
 {
 
-<h2 class="text-primary mt-5 display-5">Team Members</h2>
+<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
+	<div class="col">
+		<div class="p-3 border rounded h-100">
+			<h2 class="text-primary display-5">Team Members</h2>
+			<h6 class="text-secondary">&emsp;View your team, change roles, remove members from register</h6>
+			<div class="table-responsive">
+			<table class="table table-borderless mt-5">
+				<thead>
+					<tr>
+						<th></th>
+						<th>
+							@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].IdentityUser!.Email)
+						</th>
+						<th>
+							@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].Role)
+						</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.DrawingRegisterUsers!)
+					{
+						<tr style="vertical-align: middle">
+							<td>
+							@if (@item.Role == "Administrator")
+							{
+								<img style="height:2em" src="~/Assets/owner.png"/>
+							}
+							else if (@item.Role == "Engineer")
+							{
+								<img style="height:2em" src="~/Assets/engineer.png" />
+							}
+							else if (@item.Role == "Mechanic")
+							{
+								<img style="height:2em" src="~/Assets/mechanic.png" />
+							}
+							</td>
+							<td>
+							@item.IdentityUser!.Email
+							</td>
+							<td>
+							@item.Role
+							</td>
+							<td>
+								<div class="btn-group">
+									<button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i> Role</button>
+									<button class="btn btn-outline-danger"><i class="bi bi-person-dash"></i> Remove</button>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+				</table></div>
+		</div>
+	</div>
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].IdentityUser!.Email)
-			</th>
-			<th>
-				@Html.DisplayNameFor(model => model.DrawingRegisterUsers![0].Role)
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-	@foreach (var item in Model.DrawingRegisterUsers!)
-	{
-		<tr style="vertical-align: middle">
-			<td>
-				@if (@item.Role == "Administrator")
-				{
-					<img style="height:2em" src="~/Assets/owner.png"/> @item.IdentityUser!.Email
-				} else if (@item.Role == "Engineer"){
-					<img src="~/Assets/engineer.png" /> @item.IdentityUser!.Email
-				} else if (@item.Role == "Mechanic"){
-					<img src="~/Assets/mechanic.png" /> @item.IdentityUser!.Email
-				}
-			</td>
-			<td>
-				@item.Role
-			</td>
-			<td>
-				<div class="btn-group">
-					<button class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i>Role</button>
-					<button class="btn btn-outline-danger"><i class="bi bi-person-dash"></i>Remove</button>
-				</div>
-			</td>
-		</tr>
-	}
-	</tbody>
-</table>
-	
-<h3 class="text-primary mt-5 display-5">Invitations/Requests</h3>
-
-<hr class="mt-5" />
-<div class="row mt-3">
-	<h6 class="text-secondary col-4">Delete or Leave...</h6>
-	<div class="btn-group col-8">
-		<a asp-action="Delete" asp-route-id="@Model.DrawingRegister!.Id" class="btn btn-outline-danger">Delete Drawing Register Entirely</a>
-		<a class="btn btn-outline-secondary">Leave Drawing Register</a>
+	<div class="col">
+		<div class="p-3 border rounded h-100">
+			<h3 class="text-primary display-5">Invitations/Requests</h3>
+		</div>
 	</div>
 </div>
+
+<hr class="mt-5"/>
+	<h3 class="text-primary display-6">TODO: Progress</h3>
+<hr/>
+
+<div class="alert alert-warning mt-4">
+	<h4 class="alert-heading">Warning!</h4>
+	<p class="mb-0">
+		&emsp;As an Administrator, you can Delete your Drawing Register. Once Register Deleted your Drawings 
+		and Projects will be Deleted as well. If you have assigned another team member as an Administrator, 
+		you can simply leave Register and join another one or send a request to join the same Register again.
+	</p>
+	<div class="mt-4">
+		<div class="btn-group">
+			<a 
+				asp-action="Delete" 
+				asp-route-id="@Model.DrawingRegister!.Id" 
+				class="btn btn-outline-danger">
+					<i class="bi bi-trash-fill"></i>&emsp;Delete Register
+			</a>
+
+			<a 
+				class="btn btn-outline-dark">
+					<i class="bi bi-person-dash"></i>&emsp; Leave Register
+			</a>
+		</div>
+	</div>
+</div>
+
 }

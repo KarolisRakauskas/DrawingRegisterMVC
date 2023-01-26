@@ -123,13 +123,26 @@ namespace DrawingRegisterWeb
 			{
 				return Problem("Entity set 'DrawingRegisterContext.DrawingRegisters'  is null.");
 			}
+
 			var drawingRegister = await _context.DrawingRegisters.FindAsync(id);
+
 			if (drawingRegister != null)
 			{
 				_context.DrawingRegisters.Remove(drawingRegister);
 			}
 
-			await _userManager.RemoveFromRoleAsync(user!, "Administrator");
+			//Take all Users and clear all roles
+			var drawingRegisterUsers = from d in _context.DrawingRegisterUsers where d.DrawingRegisterId == id select d;
+			var registerUsersList = await drawingRegisterUsers.ToListAsync();
+			var allUsers = from u in _userManager.Users select u;
+
+			foreach (var item in registerUsersList)
+			{
+				var itemUser = await allUsers.FirstOrDefaultAsync(u => u.Id == item.UserId);
+				await _userManager.RemoveFromRoleAsync(itemUser!, "Administrator");
+				await _userManager.RemoveFromRoleAsync(itemUser!, "Engineer");
+				await _userManager.RemoveFromRoleAsync(itemUser!, "Mechanic");
+			}
 
 			await _context.SaveChangesAsync();
 			await _signInManager.RefreshSignInAsync(user!);
