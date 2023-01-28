@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Security.Claims;
 
 namespace DrawingRegisterWeb.Controllers
 {
@@ -22,9 +24,20 @@ namespace DrawingRegisterWeb.Controllers
 		//GET: Projects
 		public async Task<IActionResult> Index(string search, string states)
 		{
-			IQueryable<string> statesQuery = from s in _context.ProjectState orderby s.Name select s.Name;
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 
-			var project = from p in  _context.Project.Include(s => s.ProjectState) select p;
+			if (drawingRegister == null) return RedirectToAction("Index", "DrawingRegisters");
+
+			IQueryable<string> statesQuery = from s in _context.ProjectState 
+											 where s.DrawingRegisterId == drawingRegister.DrawingRegisterId 
+											 orderby s.Name select s.Name;
+
+			var project = from p in _context.Project.Include(s => s.ProjectState)
+						  where p.ProjectState.DrawingRegisterId == drawingRegister.DrawingRegisterId 
+						  select p;
 
 			if (search != null) 
 			{ 
@@ -82,7 +95,16 @@ namespace DrawingRegisterWeb.Controllers
 		// GET: Project/Create
 		public IActionResult Create()
 		{
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name");
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+
+			ViewData["ProjectStateId"] = new SelectList(
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+				"Id", 
+				"Name");
+
 			return View();
 		}
 
@@ -91,19 +113,35 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,DeadlineDate,ProjectStateId")] Models.Project project)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+
 			if (ModelState.IsValid)
 			{
 				_context.Add(project);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+
+			ViewData["ProjectStateId"] = new SelectList(
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+				"Id", 
+				"Name", 
+				project.ProjectStateId);
+
 			return View(project);
 		}
 
 		// GET: Project/Edit
 		public async Task<IActionResult> Edit(int? id)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+
 			if (id == null || _context.Project == null)
 			{
 				return NotFound();
@@ -114,7 +152,13 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				return NotFound();
 			}
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+
+			ViewData["ProjectStateId"] = new SelectList(
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+				"Id", 
+				"Name", 
+				project.ProjectStateId);
+
 			return View(project);
 		}
 
@@ -123,6 +167,11 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId,ModelUrl")] Models.Project project)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+
 			if (id != project.Id)
 			{
 				return NotFound();
@@ -148,7 +197,13 @@ namespace DrawingRegisterWeb.Controllers
 				}
 				return RedirectToAction(nameof(Details), new {id});
 			}
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+
+			ViewData["ProjectStateId"] = new SelectList(
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+				"Id", 
+				"Name",
+				project.ProjectStateId);
+
 			return View(project);
 		}
 
@@ -195,6 +250,11 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Upload(int id, IFormFile file)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+
 			var project = await _context.Project.FindAsync(id);
 
 			if (id != project!.Id)
@@ -242,7 +302,11 @@ namespace DrawingRegisterWeb.Controllers
 				}
 			}
 
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+			ViewData["ProjectStateId"] = new SelectList(
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+				"Id", 
+				"Name",
+				project.ProjectStateId);
 			return RedirectToAction("Edit", "Projects", new { id = project.Id });
 		}
 
@@ -251,6 +315,10 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> UploadDelete(int id)
 		{
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 
 			var project = await _context.Project.FindAsync(id);
 
@@ -282,11 +350,20 @@ namespace DrawingRegisterWeb.Controllers
 					}
 				}
 
-				ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project.ProjectStateId);
+				ViewData["ProjectStateId"] = new SelectList(
+					_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+					"Id", 
+					"Name",
+					project.ProjectStateId);
+
 				return RedirectToAction("Edit", "Projects", new { id = project.Id });
 			}
 
-			ViewData["ProjectStateId"] = new SelectList(_context.ProjectState, "Id", "Name", project!.ProjectStateId);
+				ViewData["ProjectStateId"] = new SelectList(
+					_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
+					"Id", 
+					"Name",
+					project.ProjectStateId);
 			return RedirectToAction("Edit", "Projects", new { id = project.Id });
 		}
 

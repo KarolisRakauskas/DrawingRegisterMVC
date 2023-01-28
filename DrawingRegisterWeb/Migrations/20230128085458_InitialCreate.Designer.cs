@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DrawingRegisterWeb.Migrations
 {
     [DbContext(typeof(DrawingRegisterContext))]
-    [Migration("20230125213350_InitialCreate")]
+    [Migration("20230128085458_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -156,18 +156,12 @@ namespace DrawingRegisterWeb.Migrations
                     b.Property<int>("DrawingRegisterId")
                         .HasColumnType("int");
 
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<int>("StatusId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("DrawingRegisterId");
-
-                    b.HasIndex("RoleId");
 
                     b.HasIndex("StatusId");
 
@@ -563,12 +557,6 @@ namespace DrawingRegisterWeb.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", "IdentityRole")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DrawingRegisterWeb.Models.Status", "Status")
                         .WithMany()
                         .HasForeignKey("StatusId")
@@ -576,8 +564,6 @@ namespace DrawingRegisterWeb.Migrations
                         .IsRequired();
 
                     b.Navigation("DrawingRegister");
-
-                    b.Navigation("IdentityRole");
 
                     b.Navigation("Status");
                 });

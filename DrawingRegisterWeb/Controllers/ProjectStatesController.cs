@@ -23,13 +23,14 @@ namespace DrawingRegisterWeb.Controllers
 		{
 			var claimsIdentity = (ClaimsIdentity)User.Identity!;
 			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
 			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
 			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			if (drawingRegister == null) 
+			{ 
+				return RedirectToAction("Index", "DrawingRegisters"); 
+			}
 
-			if (drawingRegister == null) return RedirectToAction("Index", "DrawingRegisters");
-
-			var projectStates = from p in _context.ProjectState select p;
+			var projectStates = from p in _context.ProjectState where p.DrawingRegisterId == drawingRegister.Id select p;
 
 			if (search != null)
 			{
@@ -61,9 +62,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var projectStateVM = new ProjectStateVM
 			{
-				ProjectStates = await projectStates
-					.Where(p => p.DrawingRegisterId == drawingRegister!.DrawingRegisterId)
-					.OrderBy(p => p.Id).ToListAsync(),
+				ProjectStates = await projectStates.OrderBy(p => p.Id).ToListAsync(),
 				Search = search,
 				States = states
 			};

@@ -16,7 +16,7 @@
 
 <hr />
 
-@if (Model == null)
+@if (Model.DrawingRegister == null)
 {
 	<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
 
@@ -100,15 +100,15 @@ else
 					{
 						<tr style="vertical-align: middle">
 							<td>
-							@if (@item.Role == "Administrator")
+							@if (@item.Role == ConstData.Role_Admin_Name)
 							{
 								<img style="height:2em" src="~/Assets/owner.png"/>
 							}
-							else if (@item.Role == "Engineer")
+							else if (@item.Role == ConstData.Role_Engr_Name)
 							{
 								<img style="height:2em" src="~/Assets/engineer.png" />
 							}
-							else if (@item.Role == "Mechanic")
+							else if (@item.Role == ConstData.Role_Mech_Name)
 							{
 								<img style="height:2em" src="~/Assets/mechanic.png" />
 							}

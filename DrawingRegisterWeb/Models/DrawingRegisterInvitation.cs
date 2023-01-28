@@ -15,11 +15,6 @@ namespace DrawingRegisterWeb.Models
         [ValidateNever]
         public DrawingRegister? DrawingRegister { get; set; }
         [Required]
-        public string RoleId { get; set; } = null!;
-        [ForeignKey("RoleId")]
-        [ValidateNever]
-        public IdentityRole? IdentityRole { get; set; }
-        [Required]
         public int StatusId { get; set; }
         [ForeignKey("StatusId")]
         [ValidateNever]

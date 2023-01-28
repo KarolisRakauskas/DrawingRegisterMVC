@@ -25,15 +25,18 @@ namespace DrawingRegisterWeb
 			_signInManager = signInManager;
 		}
 
-		//GET: DrawingRegisters
+
+
+
 		public async Task<IActionResult> Index()
 		{
+			var registerVM = new RegisterVM();
 			var user = _userManager.GetUserId(User);
 			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user);
 
-			if (userRegister == null)
-			{
-				return View();
+			if (userRegister == null) 
+			{ 
+				return View(registerVM); 
 			}
 
 			var drawingRegisterUsers = 
@@ -41,28 +44,25 @@ namespace DrawingRegisterWeb
 				where d.DrawingRegisterId == userRegister.DrawingRegisterId 
 				select d;
 
-			var registerVM = new RegisterVM
-			{
-				DrawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(d => d.Id == userRegister.DrawingRegisterId),
-				DrawingRegisterUsers = await drawingRegisterUsers.ToListAsync()
-			};
+			registerVM.DrawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(d => d.Id == userRegister.DrawingRegisterId);
+			registerVM.DrawingRegisterUsers = await drawingRegisterUsers.ToListAsync();
 
 			return View(registerVM);
 		}
 
-		// GET: DrawingRegisters/Create
+
+
+
 		public IActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: DrawingRegisters/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(DrawingRegister drawingRegister)
 		{
 			var user = await _userManager.GetUserAsync(User);
-
 
 			if (ModelState.IsValid && user != null)
 			{
@@ -73,19 +73,21 @@ namespace DrawingRegisterWeb
 				{
 					DrawingRegisterId = drawingRegister.Id,
 					UserId = user.Id,
-					Role = "Administrator"
+					Role = ConstData.Role_Admin_Name
 				};
 
-				_context.Add(drawingRegisterUser);
-
+				//Seed required data for new drawing register - default states
 				var states = SeedDataRuntime.CreateProjectStates(drawingRegister.Id);
+				await _context.ProjectState.AddRangeAsync(states);
+				await _context.SaveChangesAsync();
 
-				foreach (var state in states)
-				{
-					await _context.ProjectState.AddAsync(state);
-				}
+				//Seed example data for new drawing register: projects, drawings, layouts
+				var projects = SeedDataRuntime.CreateProjects(states[0], states[1], drawingRegister.Id);
+				await _context.Project.AddRangeAsync(projects);
+				await _context.SaveChangesAsync();
 
-				await _userManager.AddToRoleAsync(user!, "Administrator");
+				await _context.AddAsync(drawingRegisterUser);
+				await _userManager.AddToRoleAsync(user!, ConstData.Role_Admin_Name);
 				await _context.SaveChangesAsync();
 				await _signInManager.RefreshSignInAsync(user!);
 
@@ -95,7 +97,9 @@ namespace DrawingRegisterWeb
 			return View(drawingRegister);
 		}
 
-		// GET: DrawingRegisters/Delete/5
+
+
+
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || _context.DrawingRegisters == null)
@@ -112,7 +116,6 @@ namespace DrawingRegisterWeb
 			return View(drawingRegister);
 		}
 
-		// POST: DrawingRegisters/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
@@ -131,7 +134,7 @@ namespace DrawingRegisterWeb
 				_context.DrawingRegisters.Remove(drawingRegister);
 			}
 
-			//Take all Users and clear all roles
+			//Remove all roles for all users in this current drawing register
 			var drawingRegisterUsers = from d in _context.DrawingRegisterUsers where d.DrawingRegisterId == id select d;
 			var registerUsersList = await drawingRegisterUsers.ToListAsync();
 			var allUsers = from u in _userManager.Users select u;
@@ -139,9 +142,9 @@ namespace DrawingRegisterWeb
 			foreach (var item in registerUsersList)
 			{
 				var itemUser = await allUsers.FirstOrDefaultAsync(u => u.Id == item.UserId);
-				await _userManager.RemoveFromRoleAsync(itemUser!, "Administrator");
-				await _userManager.RemoveFromRoleAsync(itemUser!, "Engineer");
-				await _userManager.RemoveFromRoleAsync(itemUser!, "Mechanic");
+				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Admin_Name);
+				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Engr_Name);
+				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Mech_Name);
 			}
 
 			await _context.SaveChangesAsync();

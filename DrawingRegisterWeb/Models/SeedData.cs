@@ -14,106 +14,12 @@ public static class SeedData
 		if (!context.Roles.Any())
 		{
 			context.AddRange(
-				new IdentityRole() { Name = "Administrator", NormalizedName = "ADMINISTRATOR"},
-				new IdentityRole() { Name = "Engineer", NormalizedName = "ENGINEER" },
-				new IdentityRole() { Name = "Mechanic", NormalizedName = "MECHANIC" }
+				new IdentityRole() { Name = ConstData.Role_Admin_Name, NormalizedName = ConstData.Role_Admin_NormalizedName},
+				new IdentityRole() { Name = ConstData.Role_Engr_Name, NormalizedName = ConstData.Role_Engr_NormalizedName },
+				new IdentityRole() { Name = ConstData.Role_Mech_Name, NormalizedName = ConstData.Role_Mech_NormalizedName }
 				);
 			context.SaveChanges();
 		}
-	
-
-
-		//if (context.ProjectState.Any())
-		//{
-		//	return;
-		//}
-		//else
-		//{
-		//context.ProjectState.AddRange(
-		//	new ProjectState
-		//	{
-		//		Name = "Defined",
-		//		Description = "The project has been created but the plan has not yet been initiated and team members have no access to the project."
-		//	},
-		//	new ProjectState
-		//	{
-		//		Name = "Running",
-		//		Description = "The project has been started and is accessible by team members." +
-		//		" Team members can create, read, update and delete drawings, documentation and layouts."
-		//	},
-		//	new ProjectState
-		//	{
-		//		Name = "Canceled",
-		//		Description = "The project has been canceled, but project data is still available to team members." +
-		//		" Team members can only read drawings, documentation and layouts."
-		//	},
-		//	new ProjectState
-		//	{
-		//		Name = "Completed",
-		//		Description = "The project set to Completed." +
-		//		" Team members can only read drawings, documentation and layouts."
-		//	},
-		//	new ProjectState
-		//	{
-		//		Name = "Customized Project State",
-		//		Description = "It is a customized project state. You can create your own customized project statements, to give more details about the progress of the project." +
-		//		" Project accessibility will be the same as project state - running."
-		//	}
-		//	);
-
-		//context.SaveChanges();
-
-		//var states = from s in context.ProjectState select s;
-		//var stateDefined = states.FirstOrDefault(s => s.Name == "Defined");
-		//var stateRunning = states.FirstOrDefault(s => s.Name == "Running");
-		//var stateCanceled = states.FirstOrDefault(s => s.Name == "Canceled");
-		//var stateCompleted = states.FirstOrDefault(s => s.Name == "Completed");
-		//string testDescription = "Built for application testing purposes only.";
-
-		//context.Project.AddRange(
-
-		//	//Trivial Notation Example
-		//	new Project
-		//	{
-		//		ProjectNubmer = "0001",
-		//		Name = "Roller Conveyor System (Example)",
-		//		Description = $"{testDescription}(Trivial Notation Example)",
-		//		CreateDate = new DateTime(2023, 1, 1),
-		//		DeadlineDate = new DateTime(2023, 3, 1),
-		//		ProjectStateId = stateRunning!.Id,
-		//		ModelUrl = "/Files/SeededData/0001.html"
-		//	},
-		//	new Project
-		//	{
-		//		ProjectNubmer = "0002",
-		//		Name = "Project for Defined State (Example)",
-		//		Description = $"{testDescription}(Trivial Notation Example)",
-		//		CreateDate = new DateTime(2023, 3, 1),
-		//		DeadlineDate = new DateTime(2023, 5, 1),
-		//		ProjectStateId = stateDefined!.Id,
-		//		ModelUrl = null
-		//	}
-		//	/*TODO
-		//	new Project
-		//	{
-		//		ProjectNubmer = "DR-001",
-		//		Name = "Roller Conveyor System",
-		//		Description = testDescription,
-		//		CreateDate = new DateTime(2023, 3, 1),
-		//		DeadlineDate = new DateTime(2023, 5, 1),
-		//		ProjectStateId = stateRunning!.Id
-		//	}
-		//	*/
-		//	);
-
-		//context.SaveChanges();
-
-		//var project = from p in context.Project select p;
-		//var project0001 = project.FirstOrDefault(p => p.ProjectNubmer == "0001");
-		///*TODO
-		//var projectDR001 = project.FirstOrDefault(p => p.ProjectNubmer == "DR-001");
-		//*/
-
 
 		//context.AddRange(
 

@@ -7,24 +7,44 @@
 @if (SignInManager.IsSignedIn(User))
 {
 	<li class="nav-item dropdown">
-		@if (User.IsInRole("Administrator"))
+		@if (User.IsInRole(ConstData.Role_Admin_Name))
 		{
-			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<a 
+				class="nav-link dropdown-toggle" 
+				data-bs-toggle="dropdown" 
+				role="button" 
+				aria-haspopup="true"
+				aria-expanded="false">
 					<img style="height:2em" src="~/Assets/owner.png" />
 			</a>
-		} else if (User.IsInRole("Engineer"))
+		} else if (User.IsInRole(ConstData.Role_Engr_Name))
 		{
-			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<a 
+				class="nav-link dropdown-toggle" 
+				data-bs-toggle="dropdown" 
+				role="button" 
+				aria-haspopup="true" 
+				aria-expanded="false">
 					<img style="height:2em" src="~/Assets/engineer.png" />
 			</a>
-		} else if (User.IsInRole("Mechanic"))
+		} else if (User.IsInRole(ConstData.Role_Mech_Name))
 		{
-			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<a 
+				class="nav-link dropdown-toggle" 
+				data-bs-toggle="dropdown" 
+				role="button" 
+				aria-haspopup="true" 
+				aria-expanded="false">
 					<img style="height:2em" src="~/Assets/mechanic.png" />
 			</a>
 		} else
 		{
-			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+			<a 
+				class="nav-link dropdown-toggle" 
+				data-bs-toggle="dropdown" 
+				role="button" 
+				aria-haspopup="true" 
+				aria-expanded="false">
 				<img style="height:2em" src="~/Assets/user.png" />
 			</a>
 		}
@@ -46,8 +66,13 @@
 else
 {
 	<li class="nav-item dropdown">
-		<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-			<i class="bi bi-door-open-fill text-primary"></i>
+		<a 
+			class="nav-link dropdown-toggle" 
+			data-bs-toggle="dropdown" 
+			role="button" 
+			aria-haspopup="true" 
+			aria-expanded="false">
+				<i class="bi bi-door-open-fill text-primary"></i>
 		</a>
 		<div class="dropdown-menu dropdown-menu-end">
 			<a class="dropdown-item" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
