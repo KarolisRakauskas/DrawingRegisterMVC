@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using NuGet.Configuration;
+using System.Security.Claims;
 
 namespace DrawingRegisterWeb.Controllers
 {
@@ -21,9 +22,16 @@ namespace DrawingRegisterWeb.Controllers
 		// GET: Drawings
 		public async Task<IActionResult> Index(string search, string projects)
 		{
-			IQueryable<string> ProjectsQuery = from p in _context.Project orderby p.ProjectNubmer select p.ProjectNubmer + " " + p.Name;
+			var claimsIdentity = (ClaimsIdentity)User.Identity!;
+			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
+			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			IQueryable<string> ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState) 
+											   where p.ProjectState.DrawingRegisterId == drawingRegister.Id 
+											   orderby p.ProjectNubmer select p.ProjectNubmer + " " + p.Name;
 
-			var drawing = from d in _context.Drawing.Include(p => p.Project) select d;
+			var drawing = from d in _context.Drawing.Include(p => p.Project).Include(s => s.Project.ProjectState) 
+						  where d.Project.ProjectState.DrawingRegisterId == drawingRegister.Id select d;
 
 			if (search != null)
 			{

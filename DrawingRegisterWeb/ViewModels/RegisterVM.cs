@@ -1,4 +1,5 @@
 ﻿using DrawingRegisterWeb.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DrawingRegisterWeb.ViewModels
 {
@@ -6,5 +7,6 @@ namespace DrawingRegisterWeb.ViewModels
 	{
 		public DrawingRegister? DrawingRegister { get; set; }
 		public List<DrawingRegisterUsers>? DrawingRegisterUsers { get; set; }
+
 	}
 }

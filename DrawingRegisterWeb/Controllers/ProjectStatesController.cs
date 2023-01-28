@@ -30,7 +30,7 @@ namespace DrawingRegisterWeb.Controllers
 				return RedirectToAction("Index", "DrawingRegisters"); 
 			}
 
-			var projectStates = from p in _context.ProjectState where p.DrawingRegisterId == drawingRegister.Id select p;
+			var projectStates = from p in _context.ProjectState where p.DrawingRegisterId == drawingRegister.DrawingRegisterId select p;
 
 			if (search != null)
 			{

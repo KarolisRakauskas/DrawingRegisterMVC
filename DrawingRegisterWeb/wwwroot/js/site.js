@@ -61,7 +61,7 @@ $(document).ready(function () {
 	$('[data-bs-toggle="tooltip"]').tooltip();
 });
 
-// Get Popover function popover
+// Get Popover function
 $(document).ready(function () {
 	$('[data-bs-toggle="popover"]').popover();
 });

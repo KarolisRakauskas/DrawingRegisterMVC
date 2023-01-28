@@ -5,6 +5,8 @@ using DrawingRegisterWeb.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using DrawingRegisterWeb.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 
 namespace DrawingRegisterWeb
 {
@@ -25,14 +27,13 @@ namespace DrawingRegisterWeb
 			_signInManager = signInManager;
 		}
 
-
-
-
 		public async Task<IActionResult> Index()
 		{
 			var registerVM = new RegisterVM();
-			var user = _userManager.GetUserId(User);
-			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user);
+			var user = await _userManager.GetUserAsync(User);
+			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user.Id);
+
+			await _signInManager.RefreshSignInAsync(user!);
 
 			if (userRegister == null) 
 			{ 
@@ -108,6 +109,7 @@ namespace DrawingRegisterWeb
 			}
 
 			var drawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(m => m.Id == id);
+
 			if (drawingRegister == null)
 			{
 				return NotFound();
@@ -120,13 +122,12 @@ namespace DrawingRegisterWeb
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			var user = await _userManager.GetUserAsync(User);
-
 			if (_context.DrawingRegisters == null)
 			{
 				return Problem("Entity set 'DrawingRegisterContext.DrawingRegisters'  is null.");
 			}
 
+			var user = await _userManager.GetUserAsync(User);
 			var drawingRegister = await _context.DrawingRegisters.FindAsync(id);
 
 			if (drawingRegister != null)
@@ -148,6 +149,73 @@ namespace DrawingRegisterWeb
 			}
 
 			await _context.SaveChangesAsync();
+			await _signInManager.RefreshSignInAsync(user!);
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
+		public async Task<IActionResult> ChangeRole(int id, string role)
+		{
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FindAsync(id);
+			var thisUser = await _userManager.FindByIdAsync(drawingRegisterUser!.UserId);
+
+			if (drawingRegisterUser != null && role != null && thisUser != null)
+			{
+				await _userManager.RemoveFromRoleAsync(thisUser!, drawingRegisterUser.Role);
+				await _userManager.AddToRoleAsync(thisUser!, role);
+
+				drawingRegisterUser!.Role = role;
+
+				_context.Update(drawingRegisterUser);
+				await _context.SaveChangesAsync();
+			}
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
+		public async Task<IActionResult> RemoveMember(int id)
+		{
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FindAsync(id);
+			var thisUser = await _userManager.FindByIdAsync(drawingRegisterUser!.UserId);
+
+			if (drawingRegisterUser != null && thisUser != null)
+			{
+				await _userManager.RemoveFromRoleAsync(thisUser!, drawingRegisterUser.Role);
+				_context.DrawingRegisterUsers.Remove(drawingRegisterUser);
+				await _context.SaveChangesAsync();
+			}
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Leave()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user.Id);
+
+			if (drawingRegisterUser != null)
+			{
+				await _userManager.RemoveFromRoleAsync(user!, drawingRegisterUser.Role);
+				_context.DrawingRegisterUsers.Remove(drawingRegisterUser);
+				await _context.SaveChangesAsync();
+			}
+
 			await _signInManager.RefreshSignInAsync(user!);
 			return RedirectToAction(nameof(Index));
 		}
