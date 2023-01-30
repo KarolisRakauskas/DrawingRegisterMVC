@@ -8,5 +8,7 @@
 		public const string Role_Engr_NormalizedName = "ENGINEER";
 		public const string Role_Mech_Name = "Mechanic";
 		public const string Role_Mech_NormalizedName = "MECHANIC";
+
+		public const string Status_Approval_pending = "Approval pending";
 	}
 }

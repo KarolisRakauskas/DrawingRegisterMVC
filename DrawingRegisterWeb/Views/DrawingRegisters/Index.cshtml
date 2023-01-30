@@ -52,7 +52,6 @@
 			<div class="card mt-2 h-100">
 				<div class="card-body">
 
-
 					<div class="row mt-3">
 						<div class="col-4">
 							<h2 class="card-title text-primary">Join Existing Register</h2>
@@ -65,7 +64,7 @@
 					</div>
 
 					<div class="text-end mt-3">
-						<a href="#" class="btn btn-lg btn-outline-primary"><i class="bi bi-send-plus"></i> Request an invitation</a>
+						<a asp-action="RequestInvitation" class="btn btn-lg btn-outline-primary"><i class="bi bi-send-plus"></i> Request an invitation</a>
 					</div>
 
 					<p class="card-text lead text-secondary mt-3">&emsp;Send a request to the Existing Drawing Register. 
@@ -73,6 +72,62 @@
 					</p>
 			  </div>
 			</div>
+		</div>
+	</div>
+	<div class="contaitner mt-3">
+		<div class="p-3 border rounded h-100">
+			<h3 class="text-primary display-5">Invitations/Requests</h3>
+			<h6 class="text-secondary">&emsp;Here you can accept invitations or view/delete requests</h6>
+			@if (Model.Invitations!.Count == 0)
+			{
+				<p class="lead text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
+			} else
+			{
+				<div class="table-responsive">
+					<table class="table table-borderless mt-3">
+						<thead>
+							<tr>
+								<th>
+									@Html.DisplayNameFor(model => model.Invitations![0].RecipientEmail)
+								</th>
+								<th>
+									@Html.DisplayNameFor(model => model.Invitations![0].Role)
+								</th>
+								<th>
+									@Html.DisplayNameFor(model => model.Invitations![0].Status)
+								</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							@foreach (var item in Model.Invitations!)
+							{
+								<tr style="vertical-align: middle">
+									<td>
+										@item.RecipientEmail
+									</td>
+									<td>
+										@item.Role
+									</td>
+									<td>
+										@item.Status!.Name 
+									</td>
+									<td>
+										@if(item.Status!.Name == ConstData.Status_Approval_pending)
+										{
+											<form method="post" asp-action="RemoveRequestInvitation" asp-route-id="@item.Id">
+												<button type="submit" class="btn btn-outline-danger">
+													<i class="bi bi-send-dash"></i> Unsent Request
+												</button>
+											</form>
+										}
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
 		</div>
 	</div>
 }
@@ -85,7 +140,7 @@ else
 				<h2 class="text-primary display-5">Team Members</h2>
 				<h6 class="text-secondary">&emsp;View your team, change roles, remove members from register</h6>
 				<div class="table-responsive">
-					<table class="table table-borderless mt-5">
+					<table class="table table-borderless mt-3">
 						<thead>
 							<tr>
 								<th></th>
@@ -159,6 +214,65 @@ else
 		<div class="col">
 			<div class="p-3 border rounded h-100">
 				<h3 class="text-primary display-5">Invitations/Requests</h3>
+				<h6 class="text-secondary">&emsp;Here you can accept invitations or view/delete requests</h6>
+				@if (Model.Invitations!.Count == 0)
+				{
+					<p class="lead text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
+				} else
+				{
+					<div class="table-responsive">
+						<table class="table table-borderless mt-3">
+							<thead>
+								<tr>
+									<th>
+										@Html.DisplayNameFor(model => model.Invitations![0].IdentityUser!.Email)
+									</th>
+									<th>
+										@Html.DisplayNameFor(model => model.Invitations![0].Role)
+									</th>
+									<th>
+										@Html.DisplayNameFor(model => model.Invitations![0].Status)
+									</th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach (var item in Model.Invitations!)
+								{
+									<tr style="vertical-align: middle">
+										<td>
+											@item.IdentityUser!.Email
+										</td>
+										<td>
+											@item.Role
+										</td>
+										<td>
+											@item.Status!.Name 
+										</td>
+										<td>
+											@if(item.Status!.Name == ConstData.Status_Approval_pending &&
+												User.IsInRole(ConstData.Role_Admin_Name))
+											{
+												<div class="btn-group">
+													<form method="post" asp-action="RemoveInvitation" asp-route-id="@item.Id">
+														<button type="submit" class="btn btn-sm btn-outline-danger">
+															<i class="bi bi-person-dash"></i> Reject
+														</button>
+													</form>	
+													<form method="post" asp-action="AcceptRequest" asp-route-id="@item.Id">
+														<button type="submit" class="btn btn-sm btn-outline-primary">
+															<i class="bi bi-person-add"></i> Accept
+														</button>
+													</form>
+												</div>
+											}
+										</td>
+									</tr>
+								}
+							</tbody>
+						</table>
+					</div>
+				}
 			</div>
 		</div>
 	</div>

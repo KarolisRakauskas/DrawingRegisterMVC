@@ -7,6 +7,7 @@ namespace DrawingRegisterWeb.ViewModels
 	{
 		public DrawingRegister? DrawingRegister { get; set; }
 		public List<DrawingRegisterUsers>? DrawingRegisterUsers { get; set; }
+		public List<Invitation>? Invitations { get; set; }
 
 	}
 }

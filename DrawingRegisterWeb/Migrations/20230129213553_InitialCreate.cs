@@ -231,25 +231,34 @@ namespace DrawingRegisterWeb.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DrawingRegisterInvitations",
+                name: "Invitations",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    RecipientEmail = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false),
                     DrawingRegisterId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DrawingRegisterInvitations", x => x.Id);
+                    table.PrimaryKey("PK_Invitations", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DrawingRegisterInvitations_DrawingRegisters_DrawingRegisterId",
+                        name: "FK_Invitations_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Invitations_DrawingRegisters_DrawingRegisterId",
                         column: x => x.DrawingRegisterId,
                         principalTable: "DrawingRegisters",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DrawingRegisterInvitations_Statuses_StatusId",
+                        name: "FK_Invitations_Statuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "Statuses",
                         principalColumn: "Id",
@@ -431,16 +440,6 @@ namespace DrawingRegisterWeb.Migrations
                 column: "DrawingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DrawingRegisterInvitations_DrawingRegisterId",
-                table: "DrawingRegisterInvitations",
-                column: "DrawingRegisterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_DrawingRegisterInvitations_StatusId",
-                table: "DrawingRegisterInvitations",
-                column: "StatusId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DrawingRegisterUsers_DrawingRegisterId",
                 table: "DrawingRegisterUsers",
                 column: "DrawingRegisterId");
@@ -448,6 +447,21 @@ namespace DrawingRegisterWeb.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DrawingRegisterUsers_UserId",
                 table: "DrawingRegisterUsers",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_DrawingRegisterId",
+                table: "Invitations",
+                column: "DrawingRegisterId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_StatusId",
+                table: "Invitations",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Invitations_UserId",
+                table: "Invitations",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -491,10 +505,10 @@ namespace DrawingRegisterWeb.Migrations
                 name: "DrawingFile");
 
             migrationBuilder.DropTable(
-                name: "DrawingRegisterInvitations");
+                name: "DrawingRegisterUsers");
 
             migrationBuilder.DropTable(
-                name: "DrawingRegisterUsers");
+                name: "Invitations");
 
             migrationBuilder.DropTable(
                 name: "Layout");
@@ -506,10 +520,10 @@ namespace DrawingRegisterWeb.Migrations
                 name: "Drawing");
 
             migrationBuilder.DropTable(
-                name: "Statuses");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Project");

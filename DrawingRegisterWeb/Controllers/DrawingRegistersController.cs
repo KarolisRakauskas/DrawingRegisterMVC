@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using DrawingRegisterWeb.Data;
+﻿using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
+using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using DrawingRegisterWeb.ViewModels;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace DrawingRegisterWeb
 {
@@ -18,8 +16,8 @@ namespace DrawingRegisterWeb
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public DrawingRegistersController(
-			DrawingRegisterContext context, 
-			UserManager<IdentityUser> userManager, 
+			DrawingRegisterContext context,
+			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)
 		{
 			_context = context;
@@ -33,20 +31,20 @@ namespace DrawingRegisterWeb
 			var user = await _userManager.GetUserAsync(User);
 			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user.Id);
 
-			await _signInManager.RefreshSignInAsync(user!);
-
-			if (userRegister == null) 
-			{ 
-				return View(registerVM); 
+			if (userRegister == null)
+			{
+				registerVM.Invitations = await _context.Invitations.Include(s => s.Status).Where(i => i.UserId == user.Id).ToListAsync();
+				return View(registerVM);
 			}
 
-			var drawingRegisterUsers = 
-				from d in _context.DrawingRegisterUsers.Include(u => u.IdentityUser)
-				where d.DrawingRegisterId == userRegister.DrawingRegisterId 
-				select d;
-
 			registerVM.DrawingRegister = await _context.DrawingRegisters.FirstOrDefaultAsync(d => d.Id == userRegister.DrawingRegisterId);
-			registerVM.DrawingRegisterUsers = await drawingRegisterUsers.ToListAsync();
+			registerVM.DrawingRegisterUsers = await _context.DrawingRegisterUsers
+				.Include(u => u.IdentityUser)
+				.Where(d => d.DrawingRegisterId == userRegister.DrawingRegisterId).ToListAsync();
+			registerVM.Invitations = await _context.Invitations
+				.Include(s => s.Status)
+				.Include(u => u.IdentityUser)
+				.Where(i => i.DrawingRegisterId == userRegister.DrawingRegisterId).ToListAsync();
 
 			return View(registerVM);
 		}
@@ -79,11 +77,13 @@ namespace DrawingRegisterWeb
 
 				//Seed required data for new drawing register - default states
 				var states = SeedDataRuntime.CreateProjectStates(drawingRegister.Id);
+
 				await _context.ProjectState.AddRangeAsync(states);
 				await _context.SaveChangesAsync();
 
 				//Seed example data for new drawing register: projects, drawings, layouts
 				var projects = SeedDataRuntime.CreateProjects(states[0], states[1], drawingRegister.Id);
+
 				await _context.Project.AddRangeAsync(projects);
 				await _context.SaveChangesAsync();
 
@@ -120,6 +120,7 @@ namespace DrawingRegisterWeb
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			if (_context.DrawingRegisters == null)
@@ -143,9 +144,7 @@ namespace DrawingRegisterWeb
 			foreach (var item in registerUsersList)
 			{
 				var itemUser = await allUsers.FirstOrDefaultAsync(u => u.Id == item.UserId);
-				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Admin_Name);
-				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Engr_Name);
-				await _userManager.RemoveFromRoleAsync(itemUser!, ConstData.Role_Mech_Name);
+				await _userManager.RemoveFromRoleAsync(itemUser!, item.Role);
 			}
 
 			await _context.SaveChangesAsync();
@@ -162,6 +161,7 @@ namespace DrawingRegisterWeb
 		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> ChangeRole(int id, string role)
 		{
+			var user = await _userManager.GetUserAsync(User);
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FindAsync(id);
 			var thisUser = await _userManager.FindByIdAsync(drawingRegisterUser!.UserId);
 
@@ -175,6 +175,12 @@ namespace DrawingRegisterWeb
 				_context.Update(drawingRegisterUser);
 				await _context.SaveChangesAsync();
 			}
+
+			if(user == thisUser)
+			{
+				await _signInManager.RefreshSignInAsync(user);
+			}
+
 			return RedirectToAction(nameof(Index));
 		}
 
@@ -217,6 +223,131 @@ namespace DrawingRegisterWeb
 			}
 
 			await _signInManager.RefreshSignInAsync(user!);
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		public IActionResult RequestInvitation()
+		{
+			return View();
+		}
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> RequestInvitation(Invitation invitation)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var registerUser = await _userManager.Users.
+				FirstOrDefaultAsync(u => u.NormalizedEmail == invitation.RecipientEmail.ToUpper());
+			var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == ConstData.Status_Approval_pending);
+
+			if (registerUser != null)
+			{
+				var drawingRegisterUsers = await _context.DrawingRegisterUsers.
+					FirstOrDefaultAsync(d => d.UserId == registerUser.Id);
+
+				if (drawingRegisterUsers == null)
+				{
+					ModelState.AddModelError("NoRegister",
+						"This user has no drawing register. Write the email of the user who already owns register.");
+				}
+				else
+				{
+					invitation.StatusId = status!.Id;
+					invitation.DrawingRegisterId = drawingRegisterUsers.DrawingRegisterId;
+				}
+			}
+			else
+			{
+				ModelState.AddModelError("NoUser",
+					"There is no such user. Please verify that the user's e-mail is correct.");
+			}
+
+			if (ModelState.IsValid)
+			{
+				_context.Add(invitation);
+				_context.SaveChanges();
+
+				return RedirectToAction(nameof(Index));
+			}
+
+			var invitationVM = new InvitationVM()
+			{
+				Invitation = invitation
+			};
+
+			return View(invitationVM);
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> RemoveRequestInvitation(int id)
+		{
+			var invitation = await _context.Invitations.FindAsync(id);
+
+			if (invitation != null)
+			{
+				_context.Invitations.Remove(invitation);
+			}
+
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
+		public async Task<IActionResult> RemoveInvitation(int id)
+		{
+			var invitation = await _context.Invitations.FindAsync(id);
+
+			if (invitation != null)
+			{
+				_context.Invitations.Remove(invitation);
+			}
+
+			await _context.SaveChangesAsync();
+
+			return RedirectToAction(nameof(Index));
+		}
+
+
+
+
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
+		public async Task<IActionResult> AcceptRequest(int id)
+		{
+			var invitation = await _context.Invitations.FindAsync(id);
+			var user = await _context.Users.FindAsync(invitation!.UserId);
+
+			if (invitation != null && user != null)
+			{
+				var drawingRegisterUser = new DrawingRegisterUsers
+				{
+					DrawingRegisterId = invitation.DrawingRegisterId,
+					UserId = invitation.UserId,
+					Role = invitation.Role
+				};
+
+				_context.Invitations.Remove(invitation);
+				_context.DrawingRegisterUsers.Add(drawingRegisterUser);
+				await _userManager.AddToRoleAsync(user, invitation.Role);
+			}
+
+			await _context.SaveChangesAsync();
+
 			return RedirectToAction(nameof(Index));
 		}
 	}

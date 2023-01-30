@@ -20,6 +20,13 @@ public static class SeedData
 				);
 			context.SaveChanges();
 		}
+		if (!context.Statuses.Any())
+		{
+			context.AddRange(
+				new Status() { Name = ConstData.Status_Approval_pending}
+				);
+			context.SaveChanges();
+		}
 
 		//context.AddRange(
 

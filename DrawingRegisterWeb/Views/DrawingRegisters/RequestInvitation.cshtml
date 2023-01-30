@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model DrawingRegisterWeb.ViewModels.InvitationVM
+@inject UserManager<IdentityUser> UserManager
+
+@{
+	ViewData["Title"] = "Request";
+}
+
+<h1 class="text-primary">Send Request to join the existing Drawing Register</h1>
+
+<hr />
+
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="RequestInvitation">
+			<input hidden asp-for="Invitation.UserId" value="@UserManager.GetUserId(User)" />
+			<div class="form-floating">
+				<input asp-for="Invitation.RecipientEmail" class="form-control" autocomplete="RecipientEmail" aria-required="true" />
+				<label asp-for="Invitation.RecipientEmail" class="form-label">Recipient Email</label>
+				<span asp-validation-for="Invitation.RecipientEmail" class="text-danger"></span>
+				<span class="text-danger">@Html.ValidationMessage("NoRegister")</span>
+				<span class="text-danger">@Html.ValidationMessage("NoUser")</span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Invitation.Role" class="control-label"></label>
+				<select asp-for="Invitation.Role" class ="form-control">
+					<option selected>@ConstData.Role_Engr_Name</option>
+					<option >@ConstData.Role_Mech_Name</option>
+				</select>
+			</div>
+			<div class="btn-group mt-3" role="group">
+				<input type="submit" value="Create" class="btn btn-outline-primary"/>
+				<a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+			</div>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}
