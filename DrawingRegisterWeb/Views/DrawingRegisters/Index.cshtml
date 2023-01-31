@@ -88,7 +88,7 @@
 						<thead>
 							<tr>
 								<th>
-									@Html.DisplayNameFor(model => model.Invitations![0].RecipientEmail)
+									@Html.DisplayNameFor(model => model.Invitations![0].IdentityUser!.Email)
 								</th>
 								<th>
 									@Html.DisplayNameFor(model => model.Invitations![0].Role)
@@ -104,7 +104,13 @@
 							{
 								<tr style="vertical-align: middle">
 									<td>
-										@item.RecipientEmail
+										@if (item.Status!.Name == ConstData.Status_Request)
+										{
+											@item.RecipientEmail
+										} else
+										{
+											@item.IdentityUser!.Email
+										}
 									</td>
 									<td>
 										@item.Role
@@ -113,13 +119,27 @@
 										@item.Status!.Name 
 									</td>
 									<td>
-										@if(item.Status!.Name == ConstData.Status_Approval_pending)
+										@if(item.Status!.Name == ConstData.Status_Request)
 										{
 											<form method="post" asp-action="RemoveRequestInvitation" asp-route-id="@item.Id">
 												<button type="submit" class="btn btn-outline-danger">
 													<i class="bi bi-send-dash"></i> Unsent Request
 												</button>
 											</form>
+										} else
+										{
+											<div class="btn-group">
+												<form method="post" asp-action="AcceptInvitation" asp-route-id="@item.Id">
+													<button type="submit" class="btn btn-outline-primary">
+														<i class="bi bi-person-add"></i> Accept
+													</button>
+												</form>
+												<form method="post" asp-action="RemoveRequestInvitation" asp-route-id="@item.Id">
+													<button type="submit" class="btn btn-outline-danger">
+														<i class="bi bi-person-dash"></i> Deny
+													</button>
+												</form>
+											</div>
 										}
 									</td>
 								</tr>
@@ -133,12 +153,13 @@
 }
 else
 {
-
 	<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
 		<div class="col">
 			<div class="p-3 border rounded h-100">
 				<h2 class="text-primary display-5">Team Members</h2>
 				<h6 class="text-secondary">&emsp;View your team, change roles, remove members from register</h6>
+				<span class="text-danger">@Html.TempData["AdminChangeRole"]</span>
+				<span class="text-danger">@Html.TempData["AdminLeave"]</span>
 				<div class="table-responsive">
 					<table class="table table-borderless mt-3">
 						<thead>
@@ -178,7 +199,7 @@ else
 										@if (User.IsInRole(ConstData.Role_Admin_Name))
 										{
 											<form method="post" asp-action="ChangeRole" asp-route-id="@item.Id" class="btn-group">
-												<select name="role">
+												<select name="role" class="form-select-sm">
 													<option disabled selected>@item.Role</option>
 													<option>@ConstData.Role_Engr_Name</option>
 													<option>@ConstData.Role_Mech_Name</option>
@@ -214,7 +235,16 @@ else
 		<div class="col">
 			<div class="p-3 border rounded h-100">
 				<h3 class="text-primary display-5">Invitations/Requests</h3>
-				<h6 class="text-secondary">&emsp;Here you can accept invitations or view/delete requests</h6>
+				<div class="row row-cols-2">
+					<h6 class="text-secondary col">&emsp;Accept or send invitations, view or delete requests</h6>
+					@if (User.IsInRole(ConstData.Role_Admin_Name))
+					{
+						<div class="col text-center">
+							<a asp-action="Invitation" class="btn btn-outline-primary"><i class="bi bi-send-plus"></i> Send an invitation</a>	
+						</div>
+					}
+				</div>
+				
 				@if (Model.Invitations!.Count == 0)
 				{
 					<p class="lead text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
@@ -241,7 +271,13 @@ else
 								{
 									<tr style="vertical-align: middle">
 										<td>
-											@item.IdentityUser!.Email
+											@if (item.Status!.Name == ConstData.Status_Request)
+											{
+												@item.IdentityUser!.Email
+											} else
+											{
+												@item.RecipientEmail
+											}
 										</td>
 										<td>
 											@item.Role
@@ -250,7 +286,7 @@ else
 											@item.Status!.Name 
 										</td>
 										<td>
-											@if(item.Status!.Name == ConstData.Status_Approval_pending &&
+											@if(item.Status!.Name == ConstData.Status_Request &&
 												User.IsInRole(ConstData.Role_Admin_Name))
 											{
 												<div class="btn-group">
@@ -265,6 +301,15 @@ else
 														</button>
 													</form>
 												</div>
+											}
+											else if (item.Status!.Name == ConstData.Status_Invitation &&
+												User.IsInRole(ConstData.Role_Admin_Name))
+											{
+											<form method="post" asp-action="RemoveInvitation" asp-route-id="@item.Id">
+												<button type="submit" class="btn btn-outline-danger">
+													<i class="bi bi-send-dash"></i> Unsent Request
+												</button>
+											</form>
 											}
 										</td>
 									</tr>
@@ -301,6 +346,7 @@ else
 					<button type="submit" class="btn btn-outline-dark"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
 				</form>
 			</div>
+			<span class="text-danger">@Html.TempData["AdminLeave"]</span>
 		</div>
 	} else 
 	{

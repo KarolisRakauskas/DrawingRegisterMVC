@@ -3,22 +3,22 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-	ViewData["Title"] = "Request";
+	ViewData["Title"] = "Invitation";
 }
 
-<h1 class="text-primary">Send Request to join the existing Drawing Register</h1>
+<h1 class="text-primary">Send invitation to join the your Drawing Register</h1>
 
 <hr />
 
 <div class="row">
 	<div class="col-md-4">
-		<form asp-action="RequestInvitation">
+		<form asp-action="Invitation">
 			<input hidden asp-for="UserId" value="@UserManager.GetUserId(User)" />
 			<div class="form-floating">
 				<input asp-for="RecipientEmail" class="form-control" autocomplete="RecipientEmail" aria-required="true" />
 				<label asp-for="RecipientEmail" class="form-label">Recipient Email</label>
 				<span asp-validation-for="RecipientEmail" class="text-danger"></span>
-				<span class="text-danger">@Html.ValidationMessage("NoRegister")</span>
+				<span class="text-danger">@Html.ValidationMessage("UserRegister")</span>
 				<span class="text-danger">@Html.ValidationMessage("NoUser")</span>
 			</div>
 			<div class="form-group">
@@ -26,6 +26,7 @@
 				<select asp-for="Role" class ="form-control">
 					<option selected>@ConstData.Role_Engr_Name</option>
 					<option >@ConstData.Role_Mech_Name</option>
+					<option >@ConstData.Role_Admin_Name</option>
 				</select>
 			</div>
 			<div class="btn-group mt-3" role="group">
