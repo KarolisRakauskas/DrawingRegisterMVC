@@ -11,5 +11,11 @@
 
 		public const string Status_Request = "Request";
 		public const string Status_Invitation = "Invitation";
+
+		public const string State_Defined = "Defined";
+		public const string State_Running = "Running";
+		public const string State_Canceled = "Canceled";
+		public const string State_Completed = "Completed";
+
 	}
 }

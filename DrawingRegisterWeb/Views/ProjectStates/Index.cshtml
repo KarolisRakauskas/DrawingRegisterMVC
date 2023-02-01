@@ -6,63 +6,54 @@
 
 <h1 class="text-primary">Project States</h1>
 
-<div class="alert alert-dismissible alert-warning">
-  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  <h4 class="alert-heading">Warning!</h4>
-  <p class="mb-0">
-	  Custom project states have no built-in functions such as limiting accessibility to team members. 
-	  Custom project state will have the same functionality as a running project state. In all project 
-	  statuses, the administrator will always have complete access to create, read, update and delete 
-	  functions.
-  </p>
-</div>
-
-<p>
+<p class="mt-3">
 	<a asp-action="Create" class="btn btn-primary">
 		Create New Custom State
 	</a>
 </p>
 
 <form asp-controller="ProjectStates" asp-action="Index" method="get" class="d-flex">
-		<select asp-for="States" class="text-secondary form-select me-sm-2">
-			<option value="">All</option>
-			<option value="Standard">Standard States</option>
-			<option value="Custom">Custom States</option>
-		</select>
+	<select asp-for="States" class="text-secondary form-select me-sm-2">
+		<option value="">All</option>
+		<option value="Standard">Standard States</option>
+		<option value="Custom">Custom States</option>
+	</select>
 
-		<input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
-		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+	<input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
+	<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
 </form>
 
-<table class="table table-striped" id="sortTable" style="vertical-align: middle">
-	<thead>
-		<tr class="user-select-none">
-			<th onclick="sortTable(0)">
-				@Html.DisplayNameFor(model => model.ProjectStates![0].Name)
-				<i class="sortIcon bi"></i>
-			</th>
-			<th onclick="sortTable(1)">
-				@Html.DisplayNameFor(model => model.ProjectStates![0].Description)
-				<i class="sortIcon bi"></i>
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model.ProjectStates!)
-		{
-			<tr>
-				<td>
-					@Html.DisplayFor(model => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(model => item.Description)
-				</td>
-				<td>
-						@if (item.Name == "Defined" ||
-								item.Name == "Running" ||
-								item.Name == "Canceled" ||
-								item.Name == "Completed")
+<div class="table-responsive">
+	<table class="table table-striped" id="sortTable" style="vertical-align: middle">
+		<thead>
+			<tr class="user-select-none">
+				<th onclick="sortTable(0)">
+					@Html.DisplayNameFor(model => model.ProjectStates![0].Name)
+					<i class="sortIcon bi"></i>
+				</th>
+				<th onclick="sortTable(1)">
+					@Html.DisplayNameFor(model => model.ProjectStates![0].Description)
+					<i class="sortIcon bi"></i>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+
+		<tbody>
+			@foreach (var item in Model.ProjectStates!)
+			{
+				<tr>
+					<td>
+						@Html.DisplayFor(model => item.Name)
+					</td>
+					<td>
+						@Html.DisplayFor(model => item.Description)
+					</td>
+					<td>
+						@if (item.Name == ConstData.State_Defined ||
+							 item.Name == ConstData.State_Running ||
+						     item.Name == ConstData.State_Canceled ||
+							 item.Name == ConstData.State_Completed)
 						{
 							<button 
 								type="button" 
@@ -77,12 +68,25 @@
 						else
 						{
 							<div class="btn-group" role="group">
-							<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
-							<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+								<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+								<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
 							</div>
 						}
-				</td>
-			</tr>
-		}
-	</tbody>
-</table>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+<div class="alert alert-dismissible alert-warning mt-5">
+  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  <h4 class="alert-heading">Warning!</h4>
+  <p class="mb-0">
+	  &emsp;Custom project states have no built-in functions such as limiting accessibility to team members. 
+	  Custom project state will have the same functionality as a running project state. If a custom 
+	  state has projects and was deleted, all projects will be automatically assigned to running state. 
+	  In all project statuses, the administrator will always have complete access to create, read, 
+	  update and delete functions.
+  </p>
+</div>

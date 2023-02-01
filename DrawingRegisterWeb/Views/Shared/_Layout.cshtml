@@ -48,14 +48,17 @@
 								User.IsInRole(ConstData.Role_Engr_Name) || 
 								User.IsInRole(ConstData.Role_Mech_Name))
 							{
-								<li class="nav-item">
-									<a 
-										class="nav-link text-dark" 
-										asp-controller="ProjectStates" 
-										asp-action="Index">
-											States
-									</a>
-								</li>
+								if (User.IsInRole(ConstData.Role_Admin_Name))
+								{
+									<li class="nav-item">
+										<a 
+											class="nav-link text-dark" 
+											asp-controller="ProjectStates" 
+											asp-action="Index">
+												States
+										</a>
+									</li>
+								}
 
 								<li class="nav-item">
 									<a 

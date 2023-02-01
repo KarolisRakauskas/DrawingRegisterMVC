@@ -8,15 +8,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DrawingRegisterWeb
 {
-	/* DrawingRegisters - Creates a unique identifier;
-	 
-	 * DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers;
-	 
-	 * Invitations - Enable AspNetUsers to join DrawingRegisterUsers by mutual agreement between two or more users;
-	 
-	 * TODO: RefreshSignIn - likely a poor approach. There should be a better way to update roles while the user is connected.
-			 Creates a bug where you cannot use two or more accounts from the same device at the same time.
-			 RefreshSignIn changes the login for all open tabs of the most recently used account.*/
+	// DrawingRegisters - Creates a unique identifier
+	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+	// Invitations - Enable AspNetUsers to join DrawingRegisterUsers by mutual agreement between two or more users
 
 	[Authorize]
 	public class DrawingRegistersController : Controller
@@ -44,6 +38,8 @@ namespace DrawingRegisterWeb
 			var registerVM = new RegisterVM();
 			var user = await _userManager.GetUserAsync(User);
 			var userRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(u => u.UserId == user.Id);
+
+			await _signInManager.RefreshSignInAsync(user);
 
 			if (userRegister == null)
 			{
@@ -124,9 +120,9 @@ namespace DrawingRegisterWeb
 				}
 
 				await _context.AddAsync(drawingRegisterUser);
-				await _userManager.AddToRoleAsync(user!, ConstData.Role_Admin_Name);
+				await _userManager.AddToRoleAsync(user, ConstData.Role_Admin_Name);
 				await _context.SaveChangesAsync();
-				await _signInManager.RefreshSignInAsync(user!);
+				await _signInManager.RefreshSignInAsync(user);
 
 				return RedirectToAction(nameof(Index));
 			}
@@ -168,13 +164,24 @@ namespace DrawingRegisterWeb
 			var user = await _userManager.GetUserAsync(User);
 			var drawingRegister = await _context.DrawingRegisters.FindAsync(id);
 
-			if (drawingRegister != null)
+			//Check if drawingRegister exsist and check whether the current user's role has not been changed at this time
+			if (drawingRegister == null)
 			{
-				_context.DrawingRegisters.Remove(drawingRegister);
+				return View(drawingRegister);
 			}
 
-			//Remove all roles for all users in this current Drawingregister
 			var drawingRegisterUsers = from d in _context.DrawingRegisterUsers where d.DrawingRegisterId == id select d;
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				TempData["NoLongerAdmin"] = "You are no longer Administrator, your role has been changed";
+				return View(drawingRegister);
+			}
+
+			_context.DrawingRegisters.Remove(drawingRegister);
+
+			//Remove all roles for all users in this current Drawingregister
 			var registerUsersList = await drawingRegisterUsers.ToListAsync();
 			var allUsers = from u in _userManager.Users select u;
 
@@ -185,7 +192,7 @@ namespace DrawingRegisterWeb
 			}
 
 			await _context.SaveChangesAsync();
-			await _signInManager.RefreshSignInAsync(user!);
+			await _signInManager.RefreshSignInAsync(user);
 
 			return RedirectToAction(nameof(Index));
 		}
@@ -206,6 +213,15 @@ namespace DrawingRegisterWeb
 				.Where(d => d.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId &&
 							d.Role == ConstData.Role_Admin_Name).ToListAsync();
 
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			//Make sure not to leave DrawingRegister without Administrator
 			if (drawingRegisterUser.Role == ConstData.Role_Admin_Name && adminRegisterUsers.Count == 1)
 			{
 				TempData["AdminChangeRole"] = "If you are the only one administrator, you can't change your role. " +
@@ -225,7 +241,7 @@ namespace DrawingRegisterWeb
 				await _context.SaveChangesAsync();
 			}
 
-			if(user == thisUser)
+			if (user == thisUser)
 			{
 				await _signInManager.RefreshSignInAsync(user);
 			}
@@ -242,8 +258,23 @@ namespace DrawingRegisterWeb
 		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> RemoveMember(int id)
 		{
+			var user = await _userManager.GetUserAsync(User);
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FindAsync(id);
 			var thisUser = await _userManager.FindByIdAsync(drawingRegisterUser!.UserId);
+
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			//Check for current user not to remove self
+			if(user == thisUser)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 
 			if (drawingRegisterUser != null && thisUser != null)
 			{
@@ -273,6 +304,7 @@ namespace DrawingRegisterWeb
 				.Where(d => d.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId &&
 							d.Role == ConstData.Role_Admin_Name).ToListAsync();
 
+				//Make sure not to leave DrawingRegister without Administrator
 				if (drawingRegisterUser.Role == ConstData.Role_Admin_Name && adminRegisterUsers.Count == 1)
 				{
 					TempData["AdminLeave"] = "If you are the only one administrator, you can't leave the register. " +
@@ -281,12 +313,11 @@ namespace DrawingRegisterWeb
 					return RedirectToAction(nameof(Index));
 				}
 
-				await _userManager.RemoveFromRoleAsync(user!, drawingRegisterUser.Role);
+				await _userManager.RemoveFromRoleAsync(user, drawingRegisterUser.Role);
 				_context.DrawingRegisterUsers.Remove(drawingRegisterUser);
 				await _context.SaveChangesAsync();
+				await _signInManager.RefreshSignInAsync(user);
 			}
-
-			await _signInManager.RefreshSignInAsync(user!);
 
 			return RedirectToAction(nameof(Index));
 		}
@@ -309,6 +340,7 @@ namespace DrawingRegisterWeb
 				FirstOrDefaultAsync(u => u.NormalizedEmail == invitation.RecipientEmail.ToUpper());
 			var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == ConstData.Status_Request);
 
+			//Check if recipient user exist and if recipient user has DrawingRegister
 			if (registerUser != null)
 			{
 				var drawingRegisterUsers = await _context.DrawingRegisterUsers.
@@ -371,7 +403,16 @@ namespace DrawingRegisterWeb
 		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> RemoveInvitation(int id)
 		{
+			var user = await _userManager.GetUserAsync(User);
 			var invitation = await _context.Invitations.FindAsync(id);
+
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction(nameof(Index));
+			}
 
 			if (invitation != null)
 			{
@@ -386,16 +427,25 @@ namespace DrawingRegisterWeb
 
 
 
-		//Accept request or invitation which was assign to current user's DrawingRegister
+		//Accept request which was assign to current user's DrawingRegister
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> AcceptRequest(int id)
 		{
+			var user = await _userManager.GetUserAsync(User);
 			var invitation = await _context.Invitations.FindAsync(id);
-			var user = await _context.Users.FindAsync(invitation!.UserId);
+			var invitationUser = await _context.Users.FindAsync(invitation!.UserId);
 
-			if (invitation != null && user != null)
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			if (invitation != null && invitationUser != null)
 			{
 				var drawingRegisterUser = new DrawingRegisterUsers
 				{
@@ -406,7 +456,7 @@ namespace DrawingRegisterWeb
 
 				_context.Invitations.Remove(invitation);
 				_context.DrawingRegisterUsers.Add(drawingRegisterUser);
-				await _userManager.AddToRoleAsync(user, invitation.Role);
+				await _userManager.AddToRoleAsync(invitationUser, invitation.Role);
 			}
 
 			await _context.SaveChangesAsync();
@@ -417,7 +467,7 @@ namespace DrawingRegisterWeb
 
 
 
-		//Accept request or invitation which was assign to current user, who has no DrawingRegister
+		//Accept invitation which was assign to current user, who has no DrawingRegister
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> AcceptInvitation(int id)
@@ -440,7 +490,7 @@ namespace DrawingRegisterWeb
 			}
 
 			await _context.SaveChangesAsync();
-			await _signInManager.RefreshSignInAsync(user!);
+			await _signInManager.RefreshSignInAsync(user);
 
 			return RedirectToAction(nameof(Index));
 		}
@@ -464,6 +514,15 @@ namespace DrawingRegisterWeb
 				FirstOrDefaultAsync(u => u.NormalizedEmail == invitation.RecipientEmail.ToUpper());
 			var status = await _context.Statuses.FirstOrDefaultAsync(s => s.Name == ConstData.Status_Invitation);
 
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction(nameof(Index));
+			}
+
+			//Check if reuquest user exist and if reuquest user has DrawingRegister
 			if (registerUser != null)
 			{
 				var hasDrawingRegisterUsers = await _context.DrawingRegisterUsers.

@@ -323,8 +323,8 @@ else
 	</div>
 
 	<hr class="mt-5"/>
-		<h3 class="text-primary display-6">TODO: Progress</h3>
-	<hr/>
+@*		<h3 class="text-primary display-6">TODO: Progress</h3>
+	<hr/>*@
 
 	@if (User.IsInRole(ConstData.Role_Admin_Name))
 	{
@@ -350,7 +350,6 @@ else
 		</div>
 	} else 
 	{
-		<p class="lead text-danger">Leave Register and join another one or send a request to join the same Register again</p>
 		<form method="post" asp-action="Leave">
 			<button type="submit" class="btn btn-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
 		</form>

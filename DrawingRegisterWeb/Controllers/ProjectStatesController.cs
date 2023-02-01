@@ -4,34 +4,50 @@ using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace DrawingRegisterWeb.Controllers
 {
-	[Authorize]
+	// DrawingRegisters - Creates a unique identifier
+	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+	// ProjectState - Defines states for projects, creates a relationship with projects and DrawingRegisters,
+	//				  restricts access to DrawingRegisterUsers that share the same DrawingRegister as the current user
+	// Default states - States that are seeded into new DrawingRegister. No user can edit/delete default states
+
+	[Authorize(Roles = ConstData.Role_Admin_Name)]
 	public class ProjectStatesController : Controller
 	{
 		private readonly DrawingRegisterContext _context;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly SignInManager<IdentityUser> _signInManager;
 
-		public ProjectStatesController(DrawingRegisterContext context)
+		public ProjectStatesController(
+			DrawingRegisterContext context,
+			UserManager<IdentityUser> userManager,
+			SignInManager<IdentityUser> signInManager)
 		{
 			_context = context;
+			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 
-		// GET: ProjectStates
+
+
+
 		public async Task<IActionResult> Index(string search, string states)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
-			if (drawingRegister == null) 
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+
+			//Check if current user has DrawingRegister
+			if (drawingRegisterUser == null) 
 			{ 
-				return RedirectToAction("Index", "DrawingRegisters"); 
+				return RedirectToAction("Index", "DrawingRegisters");
 			}
 
-			var projectStates = from p in _context.ProjectState where p.DrawingRegisterId == drawingRegister.DrawingRegisterId select p;
+			var projectStates = from s in _context.ProjectState where s.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId select s;
 
+			//Select states that matches the search criterias
 			if (search != null)
 			{
 				projectStates = projectStates.Where(p => p.Name.Contains(search) ||
@@ -43,23 +59,22 @@ namespace DrawingRegisterWeb.Controllers
 				if (states == "Standard")
 				{
 					projectStates = projectStates.Where(
-						p => p.Name == "Defined" ||
-						p.Name == "Running" ||
-						p.Name == "Canceled" ||
-						p.Name == "Completed"
-						);
+						p => p.Name == ConstData.State_Defined ||
+						p.Name == ConstData.State_Running ||
+						p.Name == ConstData.State_Canceled ||
+						p.Name == ConstData.State_Completed);
 				}
 				else if (states == "Custom")
 				{
 					projectStates = projectStates.Where(
-						p => p.Name != "Defined" &&
-						p.Name != "Running" &&
-						p.Name != "Canceled" &&
-						p.Name != "Completed"
-						);
+						p => p.Name != ConstData.State_Defined &&
+						p.Name != ConstData.State_Running &&
+						p.Name != ConstData.State_Canceled &&
+						p.Name != ConstData.State_Completed);
 				}
 			}
 
+			//ProjectStateVM gathers ProjectStates and search data
 			var projectStateVM = new ProjectStateVM
 			{
 				ProjectStates = await projectStates.OrderBy(p => p.Id).ToListAsync(),
@@ -67,39 +82,68 @@ namespace DrawingRegisterWeb.Controllers
 				States = states
 			};
 
+			await _signInManager.RefreshSignInAsync(user);
+
 			return View(projectStateVM);
 		}
 
-		//ProjectStates/Create
-		public IActionResult Create()
+
+
+
+		//Create custom state
+		public async Task<IActionResult> Create()
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegister = _context.DrawingRegisterUsers.FirstOrDefault(dr => dr.UserId == user.Id);
 
-			ProjectState projectState = new()
+			if(drawingRegister != null)
 			{
-				DrawingRegisterId = drawingRegister!.DrawingRegisterId
-			};
+				ProjectState projectState = new()
+				{
+					DrawingRegisterId = drawingRegister!.DrawingRegisterId
+				};
 
-			return View(projectState);
+				return View(projectState);
+			}
+
+			return RedirectToAction("Index", "DrawingRegisters");
 		}
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Create(ProjectState projectState)
 		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = _context.DrawingRegisterUsers.FirstOrDefault(dr => dr.UserId == user.Id);
+
+			//Prevent from same ProjectState name
+			var existingProjectStates = await _context.ProjectState
+				.Where(s => s.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId)
+				.ToListAsync();
+
+			foreach(var state in existingProjectStates)
+			{
+				if(state.Name.ToLower() == projectState.Name.Trim().ToLower())
+				{
+					ModelState.AddModelError("ExistingState",
+						"This project state name already exists. Please choose another name.");
+				}
+			}
+
 			if (ModelState.IsValid)
 			{
 				_context.Add(projectState);
 				await _context.SaveChangesAsync();
 				return RedirectToAction(nameof(Index));
 			}
+
 			return View(projectState);
 		}
 
-		//ProjectStates/Edit
+
+
+
+		//Edit custom state
 		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null || _context.ProjectState == null)
@@ -108,10 +152,12 @@ namespace DrawingRegisterWeb.Controllers
 			}
 
 			var projectState = await _context.ProjectState.FindAsync(id);
+
 			if (projectState == null)
 			{
 				return NotFound();
 			}
+
 			return View(projectState);
 		}
 
@@ -119,10 +165,27 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(int id, ProjectState projectState)
 		{
+			var user = await _userManager.GetUserAsync(User);
+
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction("Index", "DrawingRegisters");
+			}
+
 			if (id != projectState.Id)
 			{
 				return NotFound();
 			}
+
+			//Prevent from editing default state and from same ProjectState name
+
+
+
+
+
 
 			if (ModelState.IsValid)
 			{
@@ -138,8 +201,12 @@ namespace DrawingRegisterWeb.Controllers
 				}
 				return RedirectToAction(nameof(Index));
 			}
+
 			return View(projectState);
 		}
+
+
+
 
 		//ProjectStates/Delete
 		public async Task<IActionResult> Delete(int? id)
