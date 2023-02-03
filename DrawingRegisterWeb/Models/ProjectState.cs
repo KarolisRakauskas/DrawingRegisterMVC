@@ -8,8 +8,10 @@ public class ProjectState
 {
 	[Key]
 	public int Id { get; set; }
+	[StringLength(20, MinimumLength = 3, ErrorMessage = "The Name must be a text with a minimum of 3 and a maximum of 20 characters.")]
 	[Required]
 	public string Name { get; set; } = null!;
+	[MinLength(3, ErrorMessage = "The Name must be a text with a minimum of 3 characters.")]
 	[Required]
 	public string Description { get; set; } = null!;
 	[Required]

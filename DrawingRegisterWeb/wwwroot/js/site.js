@@ -56,15 +56,43 @@ function sortTable(n) {
 	}
 }
 
-// Get Tooltip function
+
+
+/*
+	Bootstrap: 
+		Tooltip - Get Tooltip function
+		Popover - Get Popover function
+*/
+
 $(document).ready(function () {
 	$('[data-bs-toggle="tooltip"]').tooltip();
 });
 
-// Get Popover function
 $(document).ready(function () {
 	$('[data-bs-toggle="popover"]').popover();
 });
+
+
+
+
+/*
+		Project State Warning alert display controll from local storage.
+	In ProjectStates/Index button #alertState has Onclick function => turnOffStateAlert()
+*/
+
+const getLocalAlert = localStorage.getItem('alertNone');
+const alert = document.getElementById("alertState");
+
+if (getLocalAlert != "off") {
+	alert.style.display = "block";
+}
+
+function turnOffStateAlert() {
+	localStorage.setItem("alertNone", "off")
+	alert.style.display = "none";
+}
+
+
 
 
 /*
@@ -122,6 +150,9 @@ function sortTableDoc(n) {
 		icon.getElementsByTagName("I")[n].classList.add("bi-caret-down-fill");
 	}
 }
+
+
+
 
 /*
 	SORT TALBE ONLY FOR LAYOUTS TOGLE TAB !!!

@@ -50,8 +50,8 @@ namespace DrawingRegisterWeb.Controllers
 			//Select states that matches the search criterias
 			if (search != null)
 			{
-				projectStates = projectStates.Where(p => p.Name.Contains(search) ||
-					p.Description.Contains(search));
+				projectStates = projectStates.Where(s => s.Name.Contains(search) ||
+					s.Description.Contains(search));
 			}
 
 			if (states != null)
@@ -59,18 +59,18 @@ namespace DrawingRegisterWeb.Controllers
 				if (states == "Standard")
 				{
 					projectStates = projectStates.Where(
-						p => p.Name == ConstData.State_Defined ||
-						p.Name == ConstData.State_Running ||
-						p.Name == ConstData.State_Canceled ||
-						p.Name == ConstData.State_Completed);
+						s => s.Name == ConstData.State_Defined ||
+						s.Name == ConstData.State_Running ||
+						s.Name == ConstData.State_Canceled ||
+						s.Name == ConstData.State_Completed);
 				}
 				else if (states == "Custom")
 				{
 					projectStates = projectStates.Where(
-						p => p.Name != ConstData.State_Defined &&
-						p.Name != ConstData.State_Running &&
-						p.Name != ConstData.State_Canceled &&
-						p.Name != ConstData.State_Completed);
+						s => s.Name != ConstData.State_Defined &&
+						s.Name != ConstData.State_Running &&
+						s.Name != ConstData.State_Canceled &&
+						s.Name != ConstData.State_Completed);
 				}
 			}
 
@@ -118,15 +118,22 @@ namespace DrawingRegisterWeb.Controllers
 
 			//Prevent from same ProjectState name
 			var existingProjectStates = await _context.ProjectState
-				.Where(s => s.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId)
+				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.ToListAsync();
 
-			foreach(var state in existingProjectStates)
+			if(projectState.Name == null && projectState.Description == null)
 			{
-				if(state.Name.ToLower() == projectState.Name.Trim().ToLower())
+				ModelState.AddModelError("WhiteSpaces",
+						"Fields should not be white spaces alone");
+			} else
+			{
+				foreach(var state in existingProjectStates)
 				{
-					ModelState.AddModelError("ExistingState",
-						"This project state name already exists. Please choose another name.");
+					if(state.Name.ToLower() == projectState.Name.Trim().ToLower())
+					{
+						ModelState.AddModelError("ExistingState",
+							"This project state name already exists. Please choose another name.");
+					}
 				}
 			}
 
@@ -143,7 +150,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//Edit custom state
+		//Edit custom state only, prevent editing default state
 		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null || _context.ProjectState == null)
@@ -157,7 +164,7 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				return NotFound();
 			}
-
+			
 			return View(projectState);
 		}
 
@@ -180,12 +187,43 @@ namespace DrawingRegisterWeb.Controllers
 				return NotFound();
 			}
 
-			//Prevent from editing default state and from same ProjectState name
+			//Prevent from same ProjectState name
+			var existingProjectStates = await _context.ProjectState
+				.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Id != id)
+				.ToListAsync();
 
+			if (projectState.Name == null && projectState.Description == null)
+			{
+				ModelState.AddModelError("WhiteSpaces",
+						"Fields should not be white spaces alone");
+			} else
+			{
+				foreach (var state in existingProjectStates)
+				{
+					if (state.Name.ToLower() == projectState.Name.Trim().ToLower())
+					{
+						ModelState.AddModelError("ExistingState",
+							"This project state name already exists. Please choose another name.");
+					}
+				}
+			}
 
+			//Prevent from editing default state
+			var defaultStates = await _context.ProjectState
+				.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
+							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
+							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
+							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
+				.ToListAsync();
 
-
-
+			foreach (var state in defaultStates)
+			{
+				if (projectState.Id == state.Id)
+				{
+					ModelState.AddModelError("DefaultState",
+						"Default states are not editable");
+				}
+			}
 
 			if (ModelState.IsValid)
 			{
@@ -208,7 +246,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//ProjectStates/Delete
+		//Delete custom state only, prevent deleting default state
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || _context.ProjectState == null) return NotFound();
@@ -224,11 +262,61 @@ namespace DrawingRegisterWeb.Controllers
 		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
-			if (_context.ProjectState == null) return Problem("Entity set is null.");
+			var user = await _userManager.GetUserAsync(User);
+
+			//Check whether the current user's role has not been changed at this time
+			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				return RedirectToAction("Index", "DrawingRegisters");
+			}
+
+			if (_context.ProjectState == null) 
+			{ 
+				return Problem("Entity set is null."); 
+			}
 
 			var projectState = await _context.ProjectState.FindAsync(id);
 
-			if (projectState != null) _context.ProjectState.Remove(projectState);
+			if (projectState != null) 
+			{
+				//Prevent from deleting default state
+				var defaultStates = await _context.ProjectState
+					.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
+								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
+								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
+								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
+					.ToListAsync();
+
+				foreach (var state in defaultStates)
+				{
+					if (projectState.Id == state.Id)
+					{
+						TempData["DefaultState"] = "Default states are not editable";
+						return View(projectState);
+					}
+				}
+
+				//Assign all current state projects to running state
+				var projects = await _context.Project
+					.Include(s => s.ProjectState)
+					.Where(p => p.ProjectState!.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && p.ProjectStateId == projectState.Id)
+					.ToListAsync();
+				var runningState = await _context.ProjectState
+					.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId)
+					.FirstOrDefaultAsync(s => s.Name == ConstData.State_Running);
+
+				if (projects.Count != 0 && runningState != null)
+				{
+					foreach (var project in projects)
+					{
+						project.ProjectStateId = runningState!.Id;
+					}
+				}
+
+				_context.ProjectState.Remove(projectState); 
+			}
 
 			await _context.SaveChangesAsync();
 

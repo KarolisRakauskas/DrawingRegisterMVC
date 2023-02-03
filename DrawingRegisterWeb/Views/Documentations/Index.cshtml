@@ -4,21 +4,15 @@
 	ViewData["Title"] = "Documentations";
 }
 
-<h1 class="text-primary">Documentation list</h1>
+<h1 class="text-primary mb-3">Documentation list</h1>
 
-<div class="alert alert-dismissible alert-info mt-3">
-  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  The best practice is to create or upload new Documentation directly from the <a  asp-controller="Projects" asp-action="Index">Project</a>. 
-  This way ensures that the project and the documentation are always connected.
-</div>
-
-<form asp-controller="Documentations" asp-action="Index" method="get" class="d-flex mt-3">
+<form asp-controller="Documentations" asp-action="Index" method="get" class="d-flex">
 		<select asp-for="Projects" asp-items="Model.ProjectSelectList" class="form-select me-sm-2">
 			<option value="">All</option>
 		</select>
 
 		<input asp-for="Search" type="text" class="form-control me-sm-2" placeholder="Search">
-		<button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+		<button class="btn btn-secondary" type="submit">Search</button>
 </form>
 
 <table class="table table-striped mt-3" id="sortTable" style="vertical-align: middle">

@@ -7,16 +7,11 @@ namespace DrawingRegisterWeb.Controllers
 {
 	public class HomeController : Controller
 	{
-		private readonly ILogger<HomeController> _logger;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
-		public HomeController(
-			ILogger<HomeController> logger, 
-			UserManager<IdentityUser> userManager, 
-			SignInManager<IdentityUser> signInManager)
+		public HomeController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
 		{
-			_logger = logger;
 			_userManager = userManager;
 			_signInManager = signInManager;
 		}

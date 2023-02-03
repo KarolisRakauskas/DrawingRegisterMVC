@@ -490,7 +490,7 @@ namespace DrawingRegisterWeb
 			}
 
 			await _context.SaveChangesAsync();
-			await _signInManager.RefreshSignInAsync(user);
+			await _signInManager.RefreshSignInAsync(user!);
 
 			return RedirectToAction(nameof(Index));
 		}
