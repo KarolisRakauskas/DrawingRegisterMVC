@@ -11,10 +11,13 @@ namespace DrawingRegisterWeb.Models
 		public int Id { get; set; }
 		[Required]
 		[DisplayName("Project Number")]
+		[MinLength(3, ErrorMessage = "The Project Number must be a text with a minimum of 3 characters.")]
 		public string ProjectNubmer { get; set; } = null!;
 		[Required]
+		[MinLength(3, ErrorMessage = "The Name must be a text with a minimum of 3 characters.")]
 		public string Name { get; set; } = null!;
 		[Required]
+		[MinLength(3, ErrorMessage = "The Description must be a text with a minimum of 3 characters.")]
 		public string Description { get; set; } = null!;
 		[DisplayName("Create Date")]
 		[DataType(DataType.Date)]

@@ -27,11 +27,11 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
 			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 			IQueryable<string> ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState) 
-											   where p.ProjectState.DrawingRegisterId == drawingRegister!.DrawingRegisterId 
+											   where p.ProjectState!.DrawingRegisterId == drawingRegister!.DrawingRegisterId 
 											   orderby p.ProjectNubmer select p.ProjectNubmer + " " + p.Name;
 
 			var drawing = from d in _context.Drawing.Include(p => p.Project).Include(s => s.Project.ProjectState) 
-						  where d.Project.ProjectState.DrawingRegisterId == drawingRegister!.DrawingRegisterId
+						  where d.Project.ProjectState!.DrawingRegisterId == drawingRegister!.DrawingRegisterId
 						  select d;
 
 			if (search != null)

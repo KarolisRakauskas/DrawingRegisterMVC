@@ -15,16 +15,15 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    height: 100%;
 }
 
-#backgroundImg {
-    position:relative;
-    background-image: url('../Assets/image-engineering-bg.jpg');
-    background-repeat: no-repeat;
-    background-size: cover;
-    height: 20em;
-}
+
+
+
+/*Manager page CSS*/
+
 #backgroundImgDR {
     position: relative;
     background-image: url('../Assets/image-enginnering-bg-dr.jpg');
@@ -36,4 +35,73 @@ body {
 #backgroundImgDR h1 {
     background-color: rgb(11, 94, 255, 0.6);
     height: 100%;
+}
+
+
+
+
+/*Home page CSS*/
+
+.cardHome {
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 6px 10px rgba(0,0,0,.08), 0 0 6px rgba(0,0,0,.05);
+    transition: .3s transform cubic-bezier(.155,1.105,.295,1.12),.3s box-shadow,.3s -webkit-transform cubic-bezier(.155,1.105,.295,1.12);
+    padding: 14px 80px 18px 36px;
+    cursor: pointer;
+}
+
+    .cardHome:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,.12), 0 4px 8px rgba(0,0,0,.06);
+    }
+
+.card-1 {
+    background-image: url(../Assets/CardHome-1.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+}
+
+.card-2 {
+    background-image: url(../Assets/CardHome-2.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+}
+
+.card-3 {
+    background-image: url(../Assets/CardHome-3.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+}
+
+.card-4 {
+    background-image: url(../Assets/CardHome-4.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+}
+
+.card-5 {
+    background-image: url(../Assets/CardHome-5.png);
+    background-repeat: no-repeat;
+    background-position: right;
+    background-size: 80px;
+}
+
+@media(max-width: 990px) {
+    .cardHome {
+        margin: 20px;
+    }
+}
+
+#HomeIntroduction {
+    position: absolute;
+    display: none;
+    aspect-ratio: 1;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
 }

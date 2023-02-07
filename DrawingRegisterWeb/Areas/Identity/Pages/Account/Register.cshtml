@@ -6,8 +6,8 @@
 
 <h1>@ViewData["Title"]</h1>
 
-<div class="row">
-    <div class="col-md-5">
+<div class="row justify-content-between">
+    <div class="col-md-5 mt-5">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h2>Create a new account.</h2>
             <hr />
@@ -30,11 +30,11 @@
             <button id="registerSubmit" type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
         </form>
     </div>
-    <div class="col-md-7 mt-5">
+    <div class="col-md-5 mt-5">
         <section class="text-center">
-            <h2>There is no Forced Registration!</h2>
+            <h2>No Forced Registration</h2>
             <hr />
-            <p>You can use a spectator mode user for a quick glimpse of the website! Spectators can't Create, Update and Delete</p>
+            <p>Spectators can't Create, Update and Delete</p>
             <div>
                 <button class="btn btn-primary">Log in as Spectator</button>
             </div>

@@ -38,16 +38,9 @@ namespace DrawingRegisterWeb.Controllers
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+			var projectStates = from s in _context.ProjectState where s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId select s;
 
-			//Check if current user has DrawingRegister
-			if (drawingRegisterUser == null) 
-			{ 
-				return RedirectToAction("Index", "DrawingRegisters");
-			}
-
-			var projectStates = from s in _context.ProjectState where s.DrawingRegisterId == drawingRegisterUser.DrawingRegisterId select s;
-
-			//Select states that matches the search criterias
+			// Select states that matches the search criterias
 			if (search != null)
 			{
 				projectStates = projectStates.Where(s => s.Name.Contains(search) ||
@@ -74,7 +67,7 @@ namespace DrawingRegisterWeb.Controllers
 				}
 			}
 
-			//ProjectStateVM gathers ProjectStates and search data
+			// ProjectStateVM gathers ProjectStates and search data
 			var projectStateVM = new ProjectStateVM
 			{
 				ProjectStates = await projectStates.OrderBy(p => p.Id).ToListAsync(),
@@ -90,23 +83,18 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//Create custom state
+		// Create custom state
 		public async Task<IActionResult> Create()
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var drawingRegister = _context.DrawingRegisterUsers.FirstOrDefault(dr => dr.UserId == user.Id);
 
-			if(drawingRegister != null)
+			ProjectState projectState = new()
 			{
-				ProjectState projectState = new()
-				{
-					DrawingRegisterId = drawingRegister!.DrawingRegisterId
-				};
+				DrawingRegisterId = drawingRegister!.DrawingRegisterId
+			};
 
-				return View(projectState);
-			}
-
-			return RedirectToAction("Index", "DrawingRegisters");
+			return View(projectState);
 		}
 
 		[HttpPost]
@@ -116,7 +104,7 @@ namespace DrawingRegisterWeb.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			var drawingRegisterUser = _context.DrawingRegisterUsers.FirstOrDefault(dr => dr.UserId == user.Id);
 
-			//Prevent from same ProjectState name
+			// Prevent from same ProjectState name
 			var existingProjectStates = await _context.ProjectState
 				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.ToListAsync();
@@ -129,7 +117,7 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				foreach(var state in existingProjectStates)
 				{
-					if(state.Name.ToLower() == projectState.Name.Trim().ToLower())
+					if(state.Name.ToLower() == projectState.Name!.Trim().ToLower())
 					{
 						ModelState.AddModelError("ExistingState",
 							"This project state name already exists. Please choose another name.");
@@ -150,17 +138,17 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//Edit custom state only, prevent editing default state
+		// Edit custom state
 		public async Task<IActionResult> Edit(int? id)
 		{
-			if (id == null || _context.ProjectState == null)
-			{
-				return NotFound();
-			}
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+			var projectState = await _context.ProjectState
+				.Where(p => p.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
 
-			var projectState = await _context.ProjectState.FindAsync(id);
-
-			if (projectState == null)
+			// Check if project exists and ensure that user access project that is only in his DrawingRegister
+			if (id == null || projectState == null)
 			{
 				return NotFound();
 			}
@@ -173,23 +161,16 @@ namespace DrawingRegisterWeb.Controllers
 		public async Task<IActionResult> Edit(int id, ProjectState projectState)
 		{
 			var user = await _userManager.GetUserAsync(User);
-
-			//Check whether the current user's role has not been changed at this time
-			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
-
-			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
-			{
-				return RedirectToAction("Index", "DrawingRegisters");
-			}
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
 			if (id != projectState.Id)
 			{
 				return NotFound();
 			}
 
-			//Prevent from same ProjectState name
+			// Prevent from same ProjectState name
 			var existingProjectStates = await _context.ProjectState
-				.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Id != id)
+				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Id != id)
 				.ToListAsync();
 
 			if (projectState.Name == null && projectState.Description == null)
@@ -200,7 +181,7 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				foreach (var state in existingProjectStates)
 				{
-					if (state.Name.ToLower() == projectState.Name.Trim().ToLower())
+					if (state.Name.ToLower() == projectState.Name!.Trim().ToLower())
 					{
 						ModelState.AddModelError("ExistingState",
 							"This project state name already exists. Please choose another name.");
@@ -208,12 +189,12 @@ namespace DrawingRegisterWeb.Controllers
 				}
 			}
 
-			//Prevent from editing default state
+			// Prevent from editing default state
 			var defaultStates = await _context.ProjectState
-				.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
-							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
-							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
-							s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
+				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
+							s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
+							s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
+							s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
 				.ToListAsync();
 
 			foreach (var state in defaultStates)
@@ -246,14 +227,20 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//Delete custom state only, prevent deleting default state
+		// Delete custom state only, prevent deleting default state
 		public async Task<IActionResult> Delete(int? id)
 		{
-			if (id == null || _context.ProjectState == null) return NotFound();
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+			var projectState = await _context.ProjectState
+				.Where(p => p.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
 
-			var projectState = await _context.ProjectState.FirstOrDefaultAsync(m => m.Id == id);
-
-			if (projectState == null) return NotFound();
+			// Check if project exists and ensure that user access project that is only in his DrawingRegister
+			if (id == null || projectState == null)
+			{
+				return NotFound();
+			}
 
 			return View(projectState);
 		}
@@ -263,14 +250,7 @@ namespace DrawingRegisterWeb.Controllers
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
-
-			//Check whether the current user's role has not been changed at this time
-			var currentUserDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
-
-			if (currentUserDrawingRegisterUser!.Role != ConstData.Role_Admin_Name)
-			{
-				return RedirectToAction("Index", "DrawingRegisters");
-			}
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
 			if (_context.ProjectState == null) 
 			{ 
@@ -281,12 +261,12 @@ namespace DrawingRegisterWeb.Controllers
 
 			if (projectState != null) 
 			{
-				//Prevent from deleting default state
+				// Prevent from deleting default state
 				var defaultStates = await _context.ProjectState
-					.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
-								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
-								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
-								s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
+					.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Defined ||
+								s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Running ||
+								s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Canceled ||
+								s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Name == ConstData.State_Completed)
 					.ToListAsync();
 
 				foreach (var state in defaultStates)
@@ -298,13 +278,13 @@ namespace DrawingRegisterWeb.Controllers
 					}
 				}
 
-				//Assign all current state projects to running state
+				// Assign all current state projects to running state
 				var projects = await _context.Project
 					.Include(s => s.ProjectState)
-					.Where(p => p.ProjectState!.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId && p.ProjectStateId == projectState.Id)
+					.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.ProjectStateId == projectState.Id)
 					.ToListAsync();
 				var runningState = await _context.ProjectState
-					.Where(s => s.DrawingRegisterId == currentUserDrawingRegisterUser!.DrawingRegisterId)
+					.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 					.FirstOrDefaultAsync(s => s.Name == ConstData.State_Running);
 
 				if (projects.Count != 0 && runningState != null)
@@ -322,6 +302,9 @@ namespace DrawingRegisterWeb.Controllers
 
 			return RedirectToAction(nameof(Index));
 		}
+
+
+
 
 		private bool ProjectStateExists(int id)
 		{

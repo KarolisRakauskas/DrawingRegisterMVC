@@ -1,49 +1,68 @@
 ﻿using DrawingRegisterWeb.Data;
 using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Security.Claims;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DrawingRegisterWeb.Controllers
 {
+	// DrawingRegister - Creates a unique identifier
+	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+	// ProjectState - Defines states for projects, creates a relationship with projects and DrawingRegisters,
+	//				  restricts access to DrawingRegisterUsers that share the same DrawingRegister as the current user
+	// Project - Holds main data about user project. Seperates and group drawings, documentation.
+	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates.
+
+	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name}")]
 	public class ProjectsController : Controller
 	{
 		private readonly DrawingRegisterContext _context;
 		private readonly IWebHostEnvironment _hostEnvironment;
+		private readonly UserManager<IdentityUser> _userManager;
+		private readonly SignInManager<IdentityUser> _signInManager;
 
-		public ProjectsController(DrawingRegisterContext context, IWebHostEnvironment hostEnvironment)
+		public ProjectsController(
+			DrawingRegisterContext context, 
+			IWebHostEnvironment hostEnvironment,
+			UserManager<IdentityUser> userManager,
+			SignInManager<IdentityUser> signInManager)
 		{
 			_context = context;
 			_hostEnvironment = hostEnvironment;
+			_userManager = userManager;
+			_signInManager = signInManager;
 		}
 
-		//GET: Projects
+		
+
+
 		public async Task<IActionResult> Index(string search, string states)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
-
-			if (drawingRegister == null) return RedirectToAction("Index", "DrawingRegisters");
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 
 			IQueryable<string> statesQuery = from s in _context.ProjectState 
-											 where s.DrawingRegisterId == drawingRegister.DrawingRegisterId 
+											 where s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId 
 											 orderby s.Name select s.Name;
 
 			var project = from p in _context.Project.Include(s => s.ProjectState)
-						  where p.ProjectState.DrawingRegisterId == drawingRegister.DrawingRegisterId 
+						  where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId 
 						  select p;
 
+			// If user is not administrator - eleminate projects with defined state
+			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				project = project.Where(p => p.ProjectState!.Name != ConstData.State_Defined);
+			}
+
+			// Select projects that matches the search criterias
 			if (search != null) 
 			{ 
-				project = project.Where(p => 
-				p.Name.Contains(search) || 
-				p.ProjectNubmer.Contains(search));
+				project = project.Where(p => p.Name.Contains(search) || p.ProjectNubmer.Contains(search));
 			}
 
 			if (states != null)
@@ -51,32 +70,37 @@ namespace DrawingRegisterWeb.Controllers
 				project = project.Where(p => p.ProjectState!.Name == states);
 			}
 
+			// ProjectStateVM gathers Projects and search data
 			var projectVM = new ProjectVM
 			{
 				ProjectStates = new SelectList(await statesQuery.Distinct().ToListAsync()),
 				Projects = await project.OrderBy(p => p.ProjectNubmer).ToListAsync()
 			};
 
+			await _signInManager.RefreshSignInAsync(user);
+
 			return View(projectVM);
 		}
 
-		// GET: Project/Details
-		public async Task<IActionResult> Details(int? id)
-		{
-			if (id == null || _context.Project == null)
-			{
-				return NotFound();
-			}
+		
 
+
+		public async Task<IActionResult> Details(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.FirstOrDefaultAsync(m => m.Id == id);
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
 
-			if (project == null)
+			// Check if project exists and ensure that user access project that is only in his DrawingRegister
+			if ( project == null)
 			{
 				return NotFound();
 			}
 
+			// ProjectVM gathers all drawings, layouts and documentation that belongs to current Project
 			var drawings = from d in _context.Drawing where d.ProjectId == id select d;
 			var documentations = from d in _context.Documentation where d.ProjectId == id select d;
 			var layouts = from l in _context.Layout where l.ProjectId == id select l;
@@ -86,37 +110,57 @@ namespace DrawingRegisterWeb.Controllers
 				Project = project,
 				Drawings = await drawings.OrderBy(d => d.DrawingNumber).ToListAsync(),
 				Documentations = await documentations.OrderBy(d => d.FileName).ToListAsync(),
-				Layouts = await layouts.OrderBy(l => l.FileName).ToListAsync()
+				Layouts = await layouts.OrderByDescending(l => l.CreateDate).ToListAsync()
 			};
 
 			return View(ProjectVM);
 		}
 
-		// GET: Project/Create
-		public IActionResult Create()
+
+
+
+		public async Task<IActionResult> Create()
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			// Return selectList of ProjectStates from current users DrawingRegister
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
 			ViewData["ProjectStateId"] = new SelectList(
-				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-				"Id", 
-				"Name");
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId), "Id", "Name");
 
 			return View();
 		}
 
-		// POST: Project/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create([Bind("Id,ProjectNubmer,Name,Description,DeadlineDate,ProjectStateId")] Models.Project project)
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
+		public async Task<IActionResult> Create(Project project)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
+
+			// Prevent from same project number
+			var existingProjects = await _context.Project
+				.Include(p => p.ProjectState)
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.ToListAsync();
+
+			if (project.ProjectNubmer == null && project.Name == null && project.Description == null)
+			{
+				ModelState.AddModelError("WhiteSpaces",
+						"Fields should not be white spaces alone");
+			}
+			else
+			{
+				foreach (var obj in existingProjects)
+				{
+					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer!.Trim().ToLower())
+					{
+						ModelState.AddModelError("ExistingProjectNumber",
+							"This project number already exists. Please choose another number.");
+					}
+				}
+			}
 
 			if (ModelState.IsValid)
 			{
@@ -125,56 +169,85 @@ namespace DrawingRegisterWeb.Controllers
 				return RedirectToAction(nameof(Index));
 			}
 
+			// If model state not valid return input data and selectList of ProjectStates from current users DrawingRegister
 			ViewData["ProjectStateId"] = new SelectList(
-				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-				"Id", 
-				"Name", 
-				project.ProjectStateId);
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId), 
+				"Id", "Name", project.ProjectStateId);
 
 			return View(project);
 		}
 
-		// GET: Project/Edit
-		public async Task<IActionResult> Edit(int? id)
+		
+
+
+		public async Task<IActionResult> Edit(int id)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+			var project = await _context.Project
+				.Include(p => p.ProjectState)
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
 
-			if (id == null || _context.Project == null)
+			// Check if project exists and ensure that user access project that is only in his DrawingRegister
+			if ( project == null)
 			{
 				return NotFound();
 			}
 
-			var project = await _context.Project.FindAsync(id);
-			if (project == null)
-			{
-				return NotFound();
-			}
-
+			// Return selectList of ProjectStates from current users DrawingRegister
 			ViewData["ProjectStateId"] = new SelectList(
-				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-				"Id", 
-				"Name", 
-				project.ProjectStateId);
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId), 
+				"Id", "Name", project.ProjectStateId);
 
 			return View(project);
 		}
 
-		// POST: Project/Edit
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectNubmer,Name,Description,CreateDate,DeadlineDate,ProjectStateId,ModelUrl")] Models.Project project)
+		[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
+		public async Task<IActionResult> Edit(int id, Project project)
 		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
-			if (id != project.Id)
+			// Prevent from same project number
+			var existingProjects = await _context.Project
+				.Include(p => p.ProjectState)
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.Id != id)
+				.ToListAsync();
+
+			if (project.ProjectNubmer == null && project.Name == null && project.Description == null)
 			{
-				return NotFound();
+				ModelState.AddModelError("WhiteSpaces",
+						"Fields should not be white spaces alone");
+			}
+			else
+			{
+				foreach (var obj in existingProjects)
+				{
+					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer!.Trim().ToLower())
+					{
+						ModelState.AddModelError("ExistingProjectNumber",
+							"This project number already exists. Please choose another number.");
+					}
+				}
+			}
+
+			if (id != project.Id) 
+			{ 
+				return NotFound(); 
+			}
+
+			// Make sure that only administrator can change state
+			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				var projectBeforEdit = await _context.Project.FindAsync(id);
+				if (projectBeforEdit!.ProjectStateId != project.ProjectStateId)
+				{
+					ModelState.AddModelError("OnlyAdmin",
+						"Only the administrator has the ability to change the status of the project");
+				}
 			}
 
 			if (ModelState.IsValid)
@@ -186,38 +259,34 @@ namespace DrawingRegisterWeb.Controllers
 				}
 				catch (DbUpdateConcurrencyException)
 				{
-					if (!ProjectExists(project.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
+					if (!ProjectExists(project.Id)) return NotFound();
+					else throw;
 				}
-				return RedirectToAction(nameof(Details), new {id});
+
+				return RedirectToAction(nameof(Details), new { project.Id });
 			}
 
+			// Return selectList of ProjectStates from current users DrawingRegister
 			ViewData["ProjectStateId"] = new SelectList(
-				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-				"Id", 
-				"Name",
-				project.ProjectStateId);
+				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId),
+				"Id", "Name", project.ProjectStateId);
 
 			return View(project);
 		}
 
-		// GET: Project/Delete
-		public async Task<IActionResult> Delete(int? id)
-		{
-			if (id == null || _context.Project == null)
-			{
-				return NotFound();
-			}
 
+
+
+		public async Task<IActionResult> Delete(int id)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.FirstOrDefaultAsync(m => m.Id == id);
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
+
+			// Check if project exists and ensure that user access project that is only in his DrawingRegister
 			if (project == null)
 			{
 				return NotFound();
@@ -226,9 +295,9 @@ namespace DrawingRegisterWeb.Controllers
 			return View(project);
 		}
 
-		// POST: Project/Delete
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			if (_context.Project == null)
@@ -245,127 +314,8 @@ namespace DrawingRegisterWeb.Controllers
 			return RedirectToAction(nameof(Index));
 		}
 
-		// POST: Project/Upload
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Upload(int id, IFormFile file)
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
 
-			var project = await _context.Project.FindAsync(id);
 
-			if (id != project!.Id)
-			{
-				return NotFound();
-			}
-
-			string wwwRootPath = _hostEnvironment.WebRootPath;
-
-			string fileName = Guid.NewGuid().ToString();
-			var uploads = Path.Combine(wwwRootPath, @"Files\3DModels");
-			var extension = Path.GetExtension(file.FileName)!.ToLower();
-
-			if(project.ModelUrl != null)
-			{
-				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, project.ModelUrl!.TrimStart('\\'));
-
-				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
-				{
-					System.IO.File.Delete(oldFilePath);
-				}
-			}
-	
-			using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
-			{
-				file.CopyTo(fileStream);
-			}
-
-			project.ModelUrl = @"\Files\3DModels\" + fileName + extension;
-
-			try
-			{
-				_context.Update(project);
-				await _context.SaveChangesAsync();
-			}
-			catch (DbUpdateConcurrencyException)
-			{
-				if (!ProjectExists(project.Id))
-				{
-					return NotFound();
-				}
-				else
-				{
-					throw;
-				}
-			}
-
-			ViewData["ProjectStateId"] = new SelectList(
-				_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-				"Id", 
-				"Name",
-				project.ProjectStateId);
-			return RedirectToAction("Edit", "Projects", new { id = project.Id });
-		}
-
-		// POST: Project/DeleteUpload
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> UploadDelete(int id)
-		{
-			var claimsIdentity = (ClaimsIdentity)User.Identity!;
-			var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-			var drawingRegisters = from dr in _context.DrawingRegisterUsers select dr;
-			var drawingRegister = drawingRegisters.FirstOrDefault(dr => dr.UserId == claim!.Value);
-
-			var project = await _context.Project.FindAsync(id);
-
-			if (project != null)
-			{
-				var oldFilePath = Path.Combine(_hostEnvironment.WebRootPath, project.ModelUrl!.TrimStart('\\'));
-
-				if (System.IO.File.Exists(oldFilePath) && !oldFilePath.Contains("SeededData"))
-				{
-					System.IO.File.Delete(oldFilePath);
-				}
-
-				project!.ModelUrl = null;
-
-				try
-				{
-					_context.Update(project);
-					await _context.SaveChangesAsync();
-				}
-				catch (DbUpdateConcurrencyException)
-				{
-					if (!ProjectExists(project.Id))
-					{
-						return NotFound();
-					}
-					else
-					{
-						throw;
-					}
-				}
-
-				ViewData["ProjectStateId"] = new SelectList(
-					_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-					"Id", 
-					"Name",
-					project.ProjectStateId);
-
-				return RedirectToAction("Edit", "Projects", new { id = project.Id });
-			}
-
-				ViewData["ProjectStateId"] = new SelectList(
-					_context.ProjectState.Where(s => s.DrawingRegisterId == drawingRegister.DrawingRegisterId), 
-					"Id", 
-					"Name",
-					project.ProjectStateId);
-			return RedirectToAction("Edit", "Projects", new { id = project.Id });
-		}
 
 		private bool ProjectExists(int id)
 		{

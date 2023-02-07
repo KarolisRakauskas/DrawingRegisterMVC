@@ -83,10 +83,6 @@ $(document).ready(function () {
 const getLocalAlert = localStorage.getItem('alertNone');
 const alert = document.getElementById("alertState");
 
-if (getLocalAlert != "off") {
-	alert.style.display = "block";
-}
-
 function turnOffStateAlert() {
 	localStorage.setItem("alertNone", "off")
 	alert.style.display = "none";

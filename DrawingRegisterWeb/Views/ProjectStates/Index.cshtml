@@ -93,3 +93,11 @@
 		<button onclick="turnOffStateAlert()" class="btn btn-sm btn-outline-danger">Don't show this message again...</button>
 	</div>
 </div>
+
+@section Scripts{
+	<script>
+	if (getLocalAlert != "off") {
+		alert.style.display = "block";
+	}
+	</script>
+}

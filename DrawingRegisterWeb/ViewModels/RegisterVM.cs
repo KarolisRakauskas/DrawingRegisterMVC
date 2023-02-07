@@ -1,5 +1,4 @@
 ﻿using DrawingRegisterWeb.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DrawingRegisterWeb.ViewModels
 {

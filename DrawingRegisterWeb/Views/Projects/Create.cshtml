@@ -9,13 +9,14 @@
 <h4>Project</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6 mt-3">
         <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <span class="text-danger">@Html.ValidationMessage("WhiteSpaces")</span>
             <div class="form-group">
                 <label asp-for="ProjectNubmer" class="control-label"></label>
                 <input asp-for="ProjectNubmer" class="form-control" />
                 <span asp-validation-for="ProjectNubmer" class="text-danger"></span>
+                <span class="text-danger">@Html.ValidationMessage("ExistingProjectNumber")</span>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
