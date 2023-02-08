@@ -62,8 +62,7 @@ namespace DrawingRegisterWeb.Models
 					Description = "Built for application testing purposes only (Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 1, 1),
 					DeadlineDate = new DateTime(2023, 3, 1),
-					ProjectStateId = runningState.Id,
-					ModelUrl = "/Files/SeededData/0001.html"
+					ProjectStateId = runningState.Id
 				},
 				new Project
 				{
@@ -72,8 +71,7 @@ namespace DrawingRegisterWeb.Models
 					Description = "Built for application testing purposes only (Trivial Notation Example)",
 					CreateDate = new DateTime(2023, 3, 1),
 					DeadlineDate = new DateTime(2023, 5, 1),
-					ProjectStateId = defineState.Id,
-					ModelUrl = null
+					ProjectStateId = defineState.Id
 				}
 			};
 			return projects;

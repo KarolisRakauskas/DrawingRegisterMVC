@@ -4,7 +4,7 @@
 @inject UserManager<IdentityUser> UserManager
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Manager";
 }
 
 <div id="backgroundImgDR">
@@ -40,10 +40,7 @@
 						<a asp-action="Create" class="btn btn-lg btn-outline-primary"><i class="bi bi-plus-circle"></i> Create Register</a>
 					</div>
 
-					<p class="card-text lead text-secondary mt-3">&emsp;Start Fresh and build your own Drawing Register! 
-						It will allow you to create project states, projects, drawings, documentation and 
-						layouts. Once the register is added, you will be assigned as an Administrator.
-					</p>
+					<p class="card-text mt-3">&emsp;Start Fresh and build your own Drawing Register! Once the register is added, you will be assigned as an Administrator.</p>
 			  </div>
 			</div>
 		</div>
@@ -67,20 +64,21 @@
 						<a asp-action="RequestInvitation" class="btn btn-lg btn-outline-primary"><i class="bi bi-send-plus"></i> Request an invitation</a>
 					</div>
 
-					<p class="card-text lead text-secondary mt-3">&emsp;Send a request to the Existing Drawing Register. 
+					<p class="card-text mt-3">&emsp;Send a request to the Existing Drawing Register. 
 						Once the administrator approves your application, you can access register.
 					</p>
 			  </div>
 			</div>
 		</div>
 	</div>
-	<div class="contaitner mt-3">
+
+	<div class="mt-5">
 		<div class="p-3 border rounded h-100">
-			<h3 class="text-primary display-5">Invitations/Requests</h3>
-			<h6 class="text-secondary">&emsp;Here you can accept invitations or view/delete requests</h6>
+			<h3>Invitations/Requests</h3>
+			<h6 class="text-secondary">Here you can accept invitations or view/delete requests</h6>
 			@if (Model.Invitations!.Count == 0)
 			{
-				<p class="lead text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
+				<p class="text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
 			} else
 			{
 				<div class="table-responsive">
@@ -156,8 +154,8 @@ else
 	<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
 		<div class="col">
 			<div class="p-3 border rounded h-100">
-				<h2 class="text-primary display-5">Team Members</h2>
-				<h6 class="text-secondary">&emsp;View your team, change roles, remove members from register</h6>
+				<h2 class="text-primary">Team Members</h2>
+				<h6 class="text-secondary">View your team, change roles, remove members from register</h6>
 				<span class="text-danger">@Html.TempData["AdminChangeRole"]</span>
 				<span class="text-danger">@Html.TempData["AdminLeave"]</span>
 				<div class="table-responsive">
@@ -234,9 +232,9 @@ else
 
 		<div class="col">
 			<div class="p-3 border rounded h-100">
-				<h3 class="text-primary display-5">Invitations/Requests</h3>
+				<h2 class="text-primary">Invitations/Requests</h2>
 				<div class="row row-cols-2">
-					<h6 class="text-secondary col">&emsp;Accept or send invitations, view or delete requests</h6>
+					<h6 class="text-secondary col">Accept or send invitations, view or delete requests</h6>
 					@if (User.IsInRole(ConstData.Role_Admin_Name))
 					{
 						<div class="col text-center">
@@ -247,7 +245,7 @@ else
 				
 				@if (Model.Invitations!.Count == 0)
 				{
-					<p class="lead text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
+					<p class="text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
 				} else
 				{
 					<div class="table-responsive">
@@ -328,30 +326,28 @@ else
 
 	@if (User.IsInRole(ConstData.Role_Admin_Name))
 	{
-		<div class="alert alert-warning mt-4">
-			<h4 class="alert-heading">Warning!</h4>
+		<div class="alert alert-light mt-4">
 			<p class="mb-0">
 				&emsp;As an Administrator, you can Delete your Drawing Register. Once Register Deleted your Drawings 
 				and Projects will be Deleted as well. If you have assigned another team member as an Administrator, 
 				you can simply leave Register and join another one or send a request to join the same Register again.
 			</p>
 			<div class="mt-4">
-				<form method="post" asp-action="Leave" class="btn-group">
+				<form method="post" asp-action="Leave" class="btn-group-sm">
 					<a 
 						asp-action="Delete" 
 						asp-route-id="@Model.DrawingRegister!.Id" 
 						class="btn btn-outline-danger">
 							<i class="bi bi-trash-fill"></i>&emsp;Delete Register
 					</a>
-					<button type="submit" class="btn btn-outline-dark"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
+					<button type="submit" class="btn btn-outline-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
 				</form>
 			</div>
-			<span class="text-danger">@Html.TempData["AdminLeave"]</span>
 		</div>
 	} else 
 	{
 		<form method="post" asp-action="Leave">
-			<button type="submit" class="btn btn-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
+			<button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
 		</form>
 	}
 }
