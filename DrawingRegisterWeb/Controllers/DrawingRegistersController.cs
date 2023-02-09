@@ -9,7 +9,9 @@ using Microsoft.EntityFrameworkCore;
 namespace DrawingRegisterWeb
 {
 	// DrawingRegisters - Creates a unique identifier
+
 	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+
 	// Invitations - Enable AspNetUsers to join DrawingRegisterUsers by mutual agreement between two or more users
 
 	[Authorize]
@@ -409,8 +411,10 @@ namespace DrawingRegisterWeb
 			var user = await _userManager.GetUserAsync(User);
 			var invitation = await _context.Invitations.FindAsync(id);
 			var invitationUser = await _context.Users.FindAsync(invitation!.UserId);
+			var invitationUserDrawingRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == invitation.UserId);
 
-			if (invitation != null && invitationUser != null)
+			//Check if request exsist, user exsist and user has no DrawingRegister already
+			if (invitation != null && invitationUser != null && invitationUserDrawingRegister == null)
 			{
 				var drawingRegisterUser = new DrawingRegisterUsers
 				{
@@ -422,6 +426,11 @@ namespace DrawingRegisterWeb
 				_context.Invitations.Remove(invitation);
 				_context.DrawingRegisterUsers.Add(drawingRegisterUser);
 				await _userManager.AddToRoleAsync(invitationUser, invitation.Role);
+			}
+			else
+			{
+				TempData["BadInvitation"] = "Something went wrong... This user or Drawing Register may no longer exist. " +
+					"User can have only one Drawing Register.";
 			}
 
 			await _context.SaveChangesAsync();
@@ -439,8 +448,10 @@ namespace DrawingRegisterWeb
 		{
 			var user = await _userManager.GetUserAsync(User);
 			var invitation = await _context.Invitations.FindAsync(id);
+			var currentUsersdrawingRegister = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
-			if (invitation != null && user != null)
+			//Check if invitation exsist, user exsist and current user has no DrawingRegister already
+			if (invitation != null && user != null && currentUsersdrawingRegister == null)
 			{
 				var drawingRegisterUser = new DrawingRegisterUsers
 				{
@@ -452,6 +463,11 @@ namespace DrawingRegisterWeb
 				_context.Invitations.Remove(invitation);
 				_context.DrawingRegisterUsers.Add(drawingRegisterUser);
 				await _userManager.AddToRoleAsync(user, invitation.Role);
+			}
+			else
+			{
+				TempData["BadInvitation"] = "Something went wrong... This user or Drawing Register may no longer exist. " +
+					"User can have only one Drawing Register.";
 			}
 
 			await _context.SaveChangesAsync();

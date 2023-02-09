@@ -12,6 +12,8 @@
 	<div class="col-md-6 mt-3">
 		<form asp-action="Edit">
 			<span class="text-danger">@Html.ValidationMessage("WhiteSpaces")</span>
+			<span class="text-danger">@Html.ValidationMessage("OnlyAdmin")</span>
+			<span class="text-danger">@Html.ValidationMessage("NoEdit")</span>
 			<input type="hidden" asp-for="Id" />
 			<div class="form-group">
 				<label asp-for="ProjectNubmer" class="control-label"></label>
@@ -45,7 +47,6 @@
 					<label asp-for="ProjectStateId" class="control-label"></label>
 					<select asp-for="ProjectStateId" class="form-control" asp-items="ViewBag.ProjectStateId"></select>
 					<span asp-validation-for="ProjectStateId" class="text-danger"></span>
-					<span class="text-danger">@Html.ValidationMessage("OnlyAdmin")</span>
 				</div>
 			}
 			<div class="btn-group mt-3" role="group">

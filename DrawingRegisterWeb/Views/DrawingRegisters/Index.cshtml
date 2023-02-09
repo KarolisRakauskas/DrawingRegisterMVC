@@ -76,6 +76,7 @@
 		<div class="p-3 border rounded h-100">
 			<h3>Invitations/Requests</h3>
 			<h6 class="text-secondary">Here you can accept invitations or view/delete requests</h6>
+			<span class="text-danger">@Html.TempData["BadInvitation"]</span>
 			@if (Model.Invitations!.Count == 0)
 			{
 				<p class="text-secondary text-center mt-3">You don't have any Requests or Invitations...</p>
@@ -235,6 +236,7 @@ else
 				<h2 class="text-primary">Invitations/Requests</h2>
 				<div class="row row-cols-2">
 					<h6 class="text-secondary col">Accept or send invitations, view or delete requests</h6>
+					<span class="text-danger">@Html.TempData["BadInvitation"]</span>
 					@if (User.IsInRole(ConstData.Role_Admin_Name))
 					{
 						<div class="col text-center">

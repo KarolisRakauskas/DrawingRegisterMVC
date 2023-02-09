@@ -2,9 +2,9 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<h1 class="lead text-center">Practice project for ASP.NET Core (Model-View-Controller) with C#.</h1>
+<h1 class="lead text-center">Practice project for ASP.NET Core (Model-View-Controller) with C# and Razor Pages.</h1>
 
-<h2 class="text-center text-primary mb-5 mt-5">What is Drawing Register?</h2>
+<h2 class="text-center text-primary mb-3 mt-4">What is Drawing Register?</h2>
 
 <div class="row">
 	<div class="col-lg-4 p-3">
@@ -27,11 +27,13 @@
 	</div>
 </div>
 
+<h3 class="text-center text-primary mb-3 mt-4">ASP.NET core MVC learning curve</h3>
+
 <div id="marginForHomeIntroduction" class="row">
 	<div class="col-lg-4 p-3">
 		<div class="cardHome card-4 h-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCard4" aria-controls="offcanvasCard4">
-			<h3>Security</h3>
-			<p>Each drawing register user will have their own login and role</p>
+			<h3>Application</h3>
+			<p>README and Source Code</p>
 		</div>
 	</div>
 	<div class="col-lg-4 p-3">
@@ -40,12 +42,15 @@
 			<p>SQL Diagram</p>
 		</div>
 	</div>
+	<div class="col-lg-4 p-3">
+		<div class="cardHome card-6 h-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCard6" aria-controls="offcanvasCard6">
+			<h3>Security</h3>
+			<p>Step By Step</p>
+		</div>
+	</div>
 </div>
 
 <img id="HomeIntroduction" src="~/Assets/Solutions_automation.svg" loading="lazy"/>
-
-
-
 
 <!-- Off Canvas -->
 
@@ -61,7 +66,7 @@
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard2" aria-labelledby="offcanvasCard2Label">
+<div class="offcanvas offcanvas-top" tabindex="-1" id="offcanvasCard2" aria-labelledby="offcanvasCard2Label">
 	<div class="offcanvas-header">
 		<h5 class="offcanvas-title" id="offcanvasCard2Label">OffCanvas</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -73,7 +78,7 @@
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard3" aria-labelledby="offcanvasCard3Label">
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCard3" aria-labelledby="offcanvasCard3Label">
 	<div class="offcanvas-header">
 		<h5 class="offcanvas-title" id="offcanvasCard3Label">OffCanvas</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -92,7 +97,9 @@
 	</div>
 	<div class="offcanvas-body">
 		<div>
-			Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+			<figcaption class="blockquote-footer">
+				Everything must work! Do it or Fake it until you Make it!
+			</figcaption>
 		</div>
 	</div>
 </div>
@@ -115,6 +122,20 @@
 		</iframe>
 	</div>
 </div>
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCard6" aria-labelledby="offcanvasCard6Label">
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="offcanvasCard4Label">OffCanvas</h5>
+		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body">
+		<div>
+			Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+		</div>
+	</div>
+</div>
+
+
 
 
 @section Scripts{

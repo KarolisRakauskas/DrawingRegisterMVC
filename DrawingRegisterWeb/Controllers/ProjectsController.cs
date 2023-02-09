@@ -6,16 +6,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace DrawingRegisterWeb.Controllers
 {
 	// DrawingRegister - Creates a unique identifier
+
 	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+
 	// ProjectState - Defines states for projects, creates a relationship with projects and DrawingRegisters,
 	//				  restricts access to DrawingRegisterUsers that share the same DrawingRegister as the current user
+
 	// Project - Holds main data about user project. Seperates and group drawings, documentation.
-	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates.
+	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates
 
 	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name}")]
 	public class ProjectsController : Controller
@@ -145,10 +147,10 @@ namespace DrawingRegisterWeb.Controllers
 				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.ToListAsync();
 
-			if (project.ProjectNubmer == null && project.Name == null && project.Description == null)
+			if (project.ProjectNubmer == null || project.Name == null || project.Description == null)
 			{
 				ModelState.AddModelError("WhiteSpaces",
-						"Fields should not be white spaces alone");
+						"Fields should not be white spaces alone.");
 			}
 			else
 			{
@@ -217,10 +219,10 @@ namespace DrawingRegisterWeb.Controllers
 				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.Id != id)
 				.ToListAsync();
 
-			if (project.ProjectNubmer == null && project.Name == null && project.Description == null)
+			if (project.ProjectNubmer == null || project.Name == null || project.Description == null)
 			{
 				ModelState.AddModelError("WhiteSpaces",
-						"Fields should not be white spaces alone");
+						"Fields should not be white spaces alone.");
 			}
 			else
 			{
@@ -240,13 +242,27 @@ namespace DrawingRegisterWeb.Controllers
 			}
 
 			// Make sure that only administrator can change state
+			var projectBeforEdit = await _context.Project.Include(p => p.ProjectState).FirstOrDefaultAsync(p => p.Id == id);
+
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				var projectBeforEdit = await _context.Project.FindAsync(id);
 				if (projectBeforEdit!.ProjectStateId != project.ProjectStateId)
 				{
 					ModelState.AddModelError("OnlyAdmin",
-						"Only the administrator has the ability to change the status of the project");
+						"Only the administrator has the ability to change the status of the project.");
+				}
+			}
+
+			// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
+			if(drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
+			{
+				if(projectBeforEdit!.ProjectState!.Name == ConstData.State_Defined ||
+					projectBeforEdit!.ProjectState!.Name == ConstData.State_Completed ||
+					projectBeforEdit!.ProjectState!.Name == ConstData.State_Canceled)
+				{
+					ModelState.AddModelError("NoEdit",
+						$"Only the administrator has the ability to edit this projcet " +
+						$"if project state is set to {projectBeforEdit!.ProjectState!.Name}.");
 				}
 			}
 
