@@ -134,7 +134,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		//TODO
+		//TODO:To
 		public IActionResult Create(string idData)
 		{
 			var project = _context.Project.FirstOrDefault(p => p.Id == Int32.Parse(idData));
