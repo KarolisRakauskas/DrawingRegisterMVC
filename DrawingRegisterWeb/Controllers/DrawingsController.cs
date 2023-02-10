@@ -240,7 +240,6 @@ namespace DrawingRegisterWeb.Controllers
             var user = await _userManager.GetUserAsync(User);
             var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
 
-
             if (id != drawing.Id)
             {
                 return NotFound();

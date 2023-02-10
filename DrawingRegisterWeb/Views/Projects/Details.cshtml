@@ -4,78 +4,77 @@
 	ViewData["Title"] = "Project Details";
 }
 
-<h1 class="text-primary">Details</h1>
-<h4>Project</h4>
-<hr />
+<div class="rounded p-3" style="background-color:rgb(100, 160, 250, 0.1);">
+	<div class="row">
+		<div class="col">
+			<h1 class="text-primary">Project Details</h1>
+			<h4 class="mt-3">@Html.DisplayFor(model => model.Project!.ProjectNubmer) @Html.DisplayFor(model => model.Project!.Name)</h4>
+		</div>
+		<div class="col text-end">
+			<img src="~/Assets/ProjectDetails.svg" style="width:100px"/>
+		</div>
+	</div>
 
-<div>
-	<dl class="row">
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.ProjectNubmer)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.ProjectNubmer)
-		</dd>
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.Name)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.Name)
-		</dd>
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.Description)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.Description)
-		</dd>
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.CreateDate)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.CreateDate)
-		</dd>
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.DeadlineDate)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.DeadlineDate)
-		</dd>
-		<dt class = "col-sm-2">
-			@Html.DisplayNameFor(model => model.Project!.ProjectState)
-		</dt>
-		<dd class = "col-sm-10">
-			@Html.DisplayFor(model => model.Project!.ProjectState!.Name)
-		</dd>
-	</dl>
+	<div class="row mt-2">
+		<div class="col">
+			<p class="text-secondary">
+				&emsp; @Html.DisplayFor(model => model.Project!.Description)
+			</p>
+		</div>
+		<div class="col">
+			<dl class="row">
+				<dt class = "col-sm-4">
+					@Html.DisplayNameFor(model => model.Project!.CreateDate)
+				</dt>
+				<dd class = "col-sm-8">
+					@Html.DisplayFor(model => model.Project!.CreateDate)
+				</dd>
+				<dt class = "col-sm-4">
+					@Html.DisplayNameFor(model => model.Project!.DeadlineDate)
+				</dt>
+				<dd class = "col-sm-8">
+					@Html.DisplayFor(model => model.Project!.DeadlineDate)
+				</dd>
+				<dt class = "col-sm-4">
+					@Html.DisplayNameFor(model => model.Project!.ProjectState)
+				</dt>
+				<dd class = "col-sm-8">
+					@Html.DisplayFor(model => model.Project!.ProjectState!.Name)
+				</dd>
+			</dl>
+		</div>
+	</div>
 
-	<div class="btn-group" role="group">
-		<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
-		@if (User.IsInRole(ConstData.Role_Admin_Name))
-		{
-			<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
-			<a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-outline-danger">Delete</a>
-		}
-		else if (User.IsInRole(ConstData.Role_Engr_Name) &&
-				Model.Project!.ProjectState!.Name != ConstData.State_Completed &&
-				Model.Project!.ProjectState!.Name != ConstData.State_Canceled)
-		{
-			<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
-		}
+
+
+	<div>
+		<div class="btn-group" role="group">
+			<a asp-action="Index" class="btn btn-outline-secondary">Back to List</a>
+			@if (User.IsInRole(ConstData.Role_Admin_Name))
+			{
+				<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
+				<a asp-action="Delete" asp-route-id="@Model.Project!.Id" class="btn btn-outline-danger">Delete</a>
+			}
+			else if (User.IsInRole(ConstData.Role_Engr_Name) &&
+					Model.Project!.ProjectState!.Name != ConstData.State_Completed &&
+					Model.Project!.ProjectState!.Name != ConstData.State_Canceled)
+			{
+				<a asp-action="Edit" asp-route-id="@Model.Project!.Id" class="btn btn-outline-primary">Edit</a>
+			}
+		</div>
 	</div>
 </div>
 
-<hr />
-
-<ul class="nav nav-tabs" role="tablist">
-  <li class="nav-item" role="presentation">
-	<a class="nav-link active" data-bs-toggle="tab" href="#drawings" data-target="#drawings" aria-selected="true" role="tab">Drawings</a>
-  </li>
-  <li class="nav-item" role="presentation">
-	<a class="nav-link" data-bs-toggle="tab" href="#documentations" data-target="#documentations" aria-selected="false" role="tab" tabindex="-1">Documentations</a>
-  </li>
-  <li class="nav-item" role="presentation">
-	<a class="nav-link" data-bs-toggle="tab" href="#layouts" data-target="#layouts" aria-selected="false" role="tab" tabindex="-1">Layouts</a>
-  </li>
+<ul class="nav nav-tabs mt-5" role="tablist">
+	<li class="nav-item" role="presentation">
+		<a class="nav-link active" data-bs-toggle="tab" href="#drawings" data-target="#drawings" aria-selected="true" role="tab">Drawings</a>
+	</li>
+	<li class="nav-item" role="presentation">
+		<a class="nav-link" data-bs-toggle="tab" href="#documentations" data-target="#documentations" aria-selected="false" role="tab" tabindex="-1">Documentations</a>
+	</li>
+	<li class="nav-item" role="presentation">
+		<a class="nav-link" data-bs-toggle="tab" href="#layouts" data-target="#layouts" aria-selected="false" role="tab" tabindex="-1">Layouts</a>
+	</li>
 </ul>
 
 <div id="myTabContent" class="tab-content">

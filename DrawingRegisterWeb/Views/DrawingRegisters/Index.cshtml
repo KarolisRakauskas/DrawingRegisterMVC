@@ -8,7 +8,7 @@
 }
 
 <div id="backgroundImgDR">
-	<h1 class="display-1 text-light text-center p-3"><b>Your Drawing Register!</b></h1>
+	<h1 class="text-primary text-center pt-5">Your Drawing Register!</h1>
 </div>
 
 <hr />
@@ -28,7 +28,7 @@
 				<div class="card-body">
 					<div class="row mt-3">
 						<div class="col-6">
-							<h2 class="card-title text-primary">Create Your Own Drawing Register</h2>
+							<h2 class="card-title">Create Your Own Drawing Register</h2>
 							<h6 class="card-subtitle text-secondary">Register Owner - Administrator</h6>
 						</div>
 						<div class="col-6 text-end">
@@ -51,7 +51,7 @@
 
 					<div class="row mt-3">
 						<div class="col-4">
-							<h2 class="card-title text-primary">Join Existing Register</h2>
+							<h2 class="card-title">Join Existing Register</h2>
 							<h6 class="card-subtitle text-secondary">Engineer & Mechanic</h6>
 						</div>
 						<div class="col-8 text-end">
@@ -73,7 +73,7 @@
 	</div>
 
 	<div class="mt-5">
-		<div class="p-3 border rounded h-100">
+		<div class="p-3 border rounded h-100" style="background-color:rgb(100, 160, 250, 0.1);">
 			<h3>Invitations/Requests</h3>
 			<h6 class="text-secondary">Here you can accept invitations or view/delete requests</h6>
 			<span class="text-danger">@Html.TempData["BadInvitation"]</span>
@@ -155,7 +155,7 @@ else
 	<div class="row row-cols-1 row-cols-lg-2 g-2 g-lg-3 mt-3">
 		<div class="col">
 			<div class="p-3 border rounded h-100">
-				<h2 class="text-primary">Team Members</h2>
+				<h2>Team Members</h2>
 				<h6 class="text-secondary">View your team, change roles, remove members from register</h6>
 				<span class="text-danger">@Html.TempData["AdminChangeRole"]</span>
 				<span class="text-danger">@Html.TempData["AdminLeave"]</span>
@@ -233,10 +233,13 @@ else
 
 		<div class="col">
 			<div class="p-3 border rounded h-100">
-				<h2 class="text-primary">Invitations/Requests</h2>
-				<div class="row row-cols-2">
-					<h6 class="text-secondary col">Accept or send invitations, view or delete requests</h6>
-					<span class="text-danger">@Html.TempData["BadInvitation"]</span>
+				<h2>Invitations/Requests</h2>
+				<div class="row">
+					<div class="col">
+						<h6 class="text-secondary col">Accept or send invitations, view or delete requests</h6>
+						<span class="text-danger">@Html.TempData["BadInvitation"]</span>
+					</div>
+					
 					@if (User.IsInRole(ConstData.Role_Admin_Name))
 					{
 						<div class="col text-center">
@@ -328,7 +331,7 @@ else
 
 	@if (User.IsInRole(ConstData.Role_Admin_Name))
 	{
-		<div class="alert alert-light mt-4">
+		<div class="alert alert-light mt-4" style="background-color:rgb(100, 160, 250, 0.1);">
 			<p class="mb-0">
 				&emsp;As an Administrator, you can Delete your Drawing Register. Once Register Deleted your Drawings 
 				and Projects will be Deleted as well. If you have assigned another team member as an Administrator, 
