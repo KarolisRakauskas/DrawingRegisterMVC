@@ -268,6 +268,9 @@ namespace DrawingRegisterWeb.Controllers
 
 			if (ModelState.IsValid)
 			{
+				// Detach EF Core Entity from tracking same primary key value
+				_context.Entry(projectBeforEdit!).State = EntityState.Detached;
+
 				try
 				{
 					_context.Update(project);
@@ -293,8 +296,13 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
-		public async Task<IActionResult> Delete(int id)
+		public async Task<IActionResult> Delete(int? id)
 		{
+			if (id == null || _context.Project == null)
+			{
+				return NotFound();
+			}
+
 			var user = await _userManager.GetUserAsync(User);
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
@@ -316,11 +324,19 @@ namespace DrawingRegisterWeb.Controllers
 		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+
 			if (_context.Project == null)
 			{
 				return Problem("Entity set 'DrawingRegisterContext.Project' is null.");
 			}
-			var project = await _context.Project.FindAsync(id);
+
+			var project = await _context.Project
+				.Include(p => p.ProjectState)
+				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.FirstOrDefaultAsync(p => p.Id == id);
+
 			if (project != null)
 			{
 				_context.Project.Remove(project);

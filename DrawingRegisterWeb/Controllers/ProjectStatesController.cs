@@ -109,7 +109,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.ToListAsync();
 
-			if(projectState.Name == null && projectState.Description == null)
+			if(projectState.Name == null || projectState.Description == null)
 			{
 				ModelState.AddModelError("WhiteSpaces",
 						"Fields should not be white spaces alone");
@@ -173,7 +173,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && s.Id != id)
 				.ToListAsync();
 
-			if (projectState.Name == null && projectState.Description == null)
+			if (projectState.Name == null || projectState.Description == null)
 			{
 				ModelState.AddModelError("WhiteSpaces",
 						"Fields should not be white spaces alone");

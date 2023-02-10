@@ -86,7 +86,7 @@
 		{
 			@using (Html.BeginForm("Create", "Drawings"))
 			{
-			   <input type="text" name="idData" value="@Model.Project!.Id" hidden/>
+			   <input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
 			   <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
 			}
 		}
@@ -96,7 +96,7 @@
 		{
 			@using (Html.BeginForm("Create", "Drawings"))
 			{
-			   <input type="text" name="idData" value="@Model.Project!.Id" hidden/>
+			   <input name="projectId" value="@Model.Project!.Id" hidden/>
 			   <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
 			}
 		}
