@@ -85,7 +85,7 @@
 		{
 			@using (Html.BeginForm("Create", "Drawings"))
 			{
-			   <input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+			   <input name="projectId" value="@Model.Project!.Id" hidden/>
 			   <button type="submit" formmethod="get" class="btn btn-primary mt-3 mb-3">Create New Drawing</button >
 			}
 		}
@@ -150,7 +150,7 @@
 		{
 			<form asp-controller="Documentations" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
 			   <div class="col-8">
-					<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputDocumentationFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
 			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
@@ -162,12 +162,14 @@
 		{
 			<form asp-controller="Documentations" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
 			   <div class="col-8">
-					<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputDocumentationFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
 			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
 			</form>
 		}
+
+		<span class="text-danger">@Html.TempData["NoUploadDocument"]</span>
 
 		<div class="table-responsive mt-3">
 			<table class="table table-striped" id="sortTableDoc" style="vertical-align: middle">
@@ -295,7 +297,7 @@
 		{
 			<form asp-controller="Layouts" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
 			   <div class="col-8">
-					<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputLayoutFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
 			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
@@ -307,12 +309,14 @@
 		{
 			<form asp-controller="Layouts" asp-action="Create" method="post" enctype="multipart/form-data" class="row mt-3 mb-3">
 			   <div class="col-8">
-					<input type="text" name="projectId" value="@Model.Project!.Id" hidden/>
+					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputLayoutFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
 			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
 			</form>
 		}
+
+		<span class="text-danger">@Html.TempData["NoUploadLayout"]</span>
 
 		<div class="table-responsive mt-3">
 			<table class="table table-striped" id="sortTableLay" style="vertical-align: middle">

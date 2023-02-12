@@ -38,7 +38,7 @@ namespace DrawingRegisterWeb.Models
 				},
 				new ProjectState
 				{
-					Name = "Customized Project State",
+					Name = "Customized State",
 					Description = "It is a customized project state. You can create your own customized project statements, " +
 					"to give more details about the progress of the project. Project accessibility will be the same as project state - running.",
 					DrawingRegisterId = id

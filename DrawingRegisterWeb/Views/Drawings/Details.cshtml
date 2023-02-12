@@ -59,8 +59,8 @@
 
 @{
 	string popoverContent = $"Automatic revision requires separating drawing numbers from revision with underscore sign _ .<br /><br />" +
-				"<b>Example (1-0001_A) :<br />&emsp;1-0001 = Drawing number;<br />&emsp;A = Revision. </b><br /><br />Check whether your drawing " +
-				"file complies with this rule.";
+				"<b>Example (1-0001_A) :<br />&emsp;1-0001 = Drawing number;<br />&emsp;A = Revision. </b><br /><br /><p class='text-danger'>Check whether your drawing " +
+				"files complies with this rule.</p>";
 }
 
 @if (User.IsInRole(ConstData.Role_Admin_Name))
@@ -69,14 +69,14 @@
 
 	<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
 		<div class="d-flex">
-			<div class="form-check form-switch">
+			<div class="form-check form-switch align-self-center">
 				<input onclick="changeText()" name="automaticRevision" value="true" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
 				<label id="checkBoxLabel" class="form-check-label text-secondary" for="flexSwitchCheckChecked">Delegate automatic revision by file name?</label>
 			</div>
 			<button
 			type="button" 
 			class="btn btn-outline-danger"
-			style="margin-left:5em"
+			style="margin-left:2em"
 			data-bs-container="body" 
 			data-bs-toggle="popover"
 			data-bs-placement="top"
@@ -105,14 +105,14 @@ else if (User.IsInRole(ConstData.Role_Engr_Name) &&
 
 	<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
 		<div class="d-flex">
-			<div class="form-check form-switch">
+			<div class="form-check form-switch align-self-center">
 				<input onclick="changeText()" name="automaticRevision" value="true" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
 				<label id="checkBoxLabel" class="form-check-label text-secondary" for="flexSwitchCheckChecked">Delegate automatic revision by file name?</label>
 			</div>
 			<button
 			type="button" 
 			class="btn btn-outline-danger"
-			style="margin-left:5em"
+			style="margin-left:2em"
 			data-bs-container="body" 
 			data-bs-toggle="popover"
 			data-bs-placement="top"

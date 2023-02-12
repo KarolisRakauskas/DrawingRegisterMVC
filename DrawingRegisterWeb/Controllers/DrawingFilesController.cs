@@ -121,9 +121,9 @@ namespace DrawingRegisterWeb.Controllers
 
 						using (FileStream imageStream = new FileStream(Path.Combine(uploads,fileName + ".jpg"), FileMode.Create))
 						{
-
 							var resolution = new Resolution(300);
 							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+
 							jpegDevice.Process(page, imageStream);
 							imageStream.Close();
 						}
@@ -297,7 +297,7 @@ namespace DrawingRegisterWeb.Controllers
 						drawingFile!.Drawing.Project.ProjectState!.Name == ConstData.State_Completed ||
 						drawingFile!.Drawing.Project.ProjectState!.Name == ConstData.State_Canceled)
 					{
-						TempData["NoDelete"] = $"Only the administrator has the ability to edit this drawing file " +
+						TempData["NoDelete"] = $"Only the administrator has the ability to delete this drawing file " +
 							$"if project state is set to {drawingFile!.Drawing.Project.ProjectState!.Name}.";
 
 						return View(drawingFile);

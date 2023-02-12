@@ -28,6 +28,6 @@ namespace DrawingRegisterWeb.Models
 		public int ProjectId { get; set; }
 		[ForeignKey("ProjectId")]
 		[ValidateNever]
-		public Project? Project { get; set; }
+		public Project Project { get; set; } = null!;
 	}
 }

@@ -1,12 +1,15 @@
 ﻿@model DrawingRegisterWeb.Models.Documentation
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Documentation Delete";
 }
 
 <h1 class="text-danger">Delete</h1>
 
 <h3>Are you sure you want to delete this Documentation?</h3>
+
+<span class="text-danger">@Html.TempData["NoDelete"]</span>
+
 <div>
     <hr />
     <dl class="row">
