@@ -235,7 +235,7 @@ namespace DrawingRegisterWeb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
-        public async Task<IActionResult> Edit(int id, Drawing drawing) //TODO: error track
+        public async Task<IActionResult> Edit(int id, Drawing drawing)
         {
             var user = await _userManager.GetUserAsync(User);
             var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.UserId == user.Id);
@@ -273,7 +273,7 @@ namespace DrawingRegisterWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                // Detach EF Core Entity from tracking same primary key value
+                // Deatach EF Core Entity from tracking same primary key value
                 _context.Entry(drawingBeforeEdit!).State = EntityState.Detached;
 
                 try

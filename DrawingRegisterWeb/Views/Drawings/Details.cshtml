@@ -42,51 +42,95 @@
 	<div class="btn-group" role="group">
 		<a asp-controller="Projects" asp-action="Details" asp-route-id="@Model.Drawing!.ProjectId" class="btn btn-outline-secondary">Go to Project</a>
 		<a asp-action="Index" class="btn btn-outline-secondary">Go to Drawings List</a>
-		<a asp-action="Edit" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-primary">Edit</a>
-		<a asp-action="Delete" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-danger">Delete</a>
+		@if (User.IsInRole(ConstData.Role_Admin_Name))
+		{
+			<a asp-action="Edit" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-primary">Edit</a>
+			<a asp-action="Delete" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-danger">Delete</a>
+		}
+		else if (User.IsInRole(ConstData.Role_Engr_Name) &&
+				Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Completed &&
+				Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Canceled)
+		{
+			<a asp-action="Edit" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-primary">Edit</a>
+			<a asp-action="Delete" asp-route-id="@Model.Drawing!.Id" class="btn btn-outline-danger">Delete</a>
+		}
 	</div>
 </div>
 
-@*<div class="alert alert-dismissible alert-warning">
-  <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  <h4 class="alert-heading">Warning!</h4>
-  <p class="mb-0">&emsp;The good practice consists in separating your drawing numbers from the revision by the sign underscore "_". <b>For example, "1-0001_A" 
-	  is a drawing numbered 1-0001 and revision A</b>. It is a common practice to name engineering revisions. The automatic revision will be 
-	  delegated after the last underscore symbol "_". <b>Check whether your drawing file complies with this rule</b>. If your drawing number has symbol "_" 
-	  and not revised, or revised without underscore sign - automatic revision will not be delegated or will be misleading.</p>
-</div>*@
+@if (User.IsInRole(ConstData.Role_Admin_Name))
+{
+	<h3 class="mt-5">Upload New Files:</h3>
 
-<h3 class="mt-5">Upload New Files:</h3>
-
-<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
-	<div class="d-flex">
-		<div class="form-check form-switch">
-			<input onclick="changeText()" name="automaticRevision" value="true" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-			<label id="checkBoxLabel" class="form-check-label text-secondary" for="flexSwitchCheckChecked">Delegate automatic revision by file name?</label>
-		</div>
-		<button
+	<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
+		<div class="d-flex">
+			<div class="form-check form-switch">
+				<input onclick="changeText()" name="automaticRevision" value="true" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+				<label id="checkBoxLabel" class="form-check-label text-secondary" for="flexSwitchCheckChecked">Delegate automatic revision by file name?</label>
+			</div>
+			<button
 			type="button" 
 			class="btn btn-outline-danger"
 			style="margin-left:5em"
-			data-bs-toggle="tooltip" 
-			data-bs-placement="top" 
-			data-bs-original-title="The good practice consists in separating your drawing numbers from the revision by the sign underscore _. 
-				For example, 1-0001_A is a drawing numbered 1-0001 and revision A. Check whether your drawing file complies with this rule. 
-				If your drawing number has symbol _ and not revised, or revised without underscore sign - automatic revision will not be 
-				delegated or will be misleading."
-			aria-describedby="tooltip716761">
-				<i class="bi bi-question-lg"></i>
-		</button>
-	</div>
+			data-bs-container="body" 
+			data-bs-toggle="popover"
+			data-bs-placement="top"
+			data-bs-html="true"
+			data-bs-content="Automatic revision requires separating drawing numbers from revision with underscore sign _ . <br /><br />
+				<b>Example (1-0001_A) :<br />&emsp;1-0001 - Drawing number; A - Revision. </b><br /><br />
+				Check whether your drawing file complies with this rule." 
+			data-bs-original-title="Revision by file name" 
+			aria-describedby="popover365908">
+					<i class="bi bi-question-lg"></i>
+			</button>
+		</div>
 
-	<div class="row mt-3">
-		<div class="col-8">
-			<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
-			<input id="inputFile" type="file" name="files" class="form-control" multiple/>
-		</div> 
-		<button id="submitFile" type="submit" class="btn btn-primary col-4">Upload</button >
-	</div>
-</form>
+		<div class="row mt-3">
+			<div class="col-8">
+				<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
+				<input id="inputFile" type="file" name="files" class="form-control" multiple/>
+			</div> 
+			<button id="submitFile" type="submit" class="btn btn-primary col-4" disabled>Upload</button >
+		</div>
+	</form>
+}
+else if (User.IsInRole(ConstData.Role_Engr_Name) &&
+		Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Completed &&
+		Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Canceled)
+{
+	<h3 class="mt-5">Upload New Files:</h3>
+
+	<form asp-controller="DrawingFiles" asp-action="Create" method="post" enctype="multipart/form-data" class="mt-3">
+		<div class="d-flex">
+			<div class="form-check form-switch">
+				<input onclick="changeText()" name="automaticRevision" value="true" class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
+				<label id="checkBoxLabel" class="form-check-label text-secondary" for="flexSwitchCheckChecked">Delegate automatic revision by file name?</label>
+			</div>
+			<button
+			type="button" 
+			class="btn btn-outline-danger"
+			style="margin-left:5em"
+			data-bs-container="body" 
+			data-bs-toggle="popover"
+			data-bs-placement="top"
+			data-bs-html="true"
+			data-bs-content="Automatic revision requires separating drawing numbers from revision with underscore sign _ . <br /><br />
+				<b>Example (1-0001_A) :<br />&emsp;1-0001 - Drawing number; A - Revision. </b><br /><br />
+				Check whether your drawing file complies with this rule." 
+			data-bs-original-title="Revision by file name" 
+			aria-describedby="popover365908">
+					<i class="bi bi-question-lg"></i>
+			</button>
+		</div>
+
+		<div class="row mt-3">
+			<div class="col-8">
+				<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
+				<input id="inputFile" type="file" name="files" class="form-control" multiple/>
+			</div> 
+			<button id="submitFile" type="submit" class="btn btn-primary col-4" disabled>Upload</button >
+		</div>
+	</form>
+}
 
 <h2 class="mt-5">Drawing Files:</h2>
 
@@ -133,7 +177,7 @@
 						@item.CreateDate.ToString("yyyy/MM/dd")
 					</td>
 					<td>
-						<div class="btn btn-group">							
+						<div class="btn btn-group">
 							@if (item.FileType.ToLower() == "pdf")
 							{
 								<a	href="@item.FileUrl"
@@ -155,22 +199,46 @@
 								download="@item.FileName.@item.FileType"> 
 									<i class="bi bi-cloud-download"></i>
 							</a>
-							<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
-								class="btn btn-outline-primary btn-lg"
-								data-bs-toggle="tooltip" 
-								data-bs-placement="bottom" 
-								data-bs-original-title="Edit" 
-								aria-describedby="tooltip716761"> 
-									<i class="bi bi-pencil-square"></i>
-							</a>
-							<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
-								class="btn btn-outline-danger btn-lg"
-								data-bs-toggle="tooltip" 
-								data-bs-placement="bottom" 
-								data-bs-original-title="Delete" 
-								aria-describedby="tooltip716761"> 
-								<i class="bi bi-trash"></i>
-							</a>
+							@if (User.IsInRole(ConstData.Role_Admin_Name))
+							{
+								<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
+									class="btn btn-outline-primary btn-lg"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Edit" 
+									aria-describedby="tooltip716761"> 
+										<i class="bi bi-pencil-square"></i>
+								</a>
+								<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
+									class="btn btn-outline-danger btn-lg"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Delete" 
+									aria-describedby="tooltip716761"> 
+									<i class="bi bi-trash"></i>
+								</a>
+							}
+							else if (User.IsInRole(ConstData.Role_Engr_Name) &&
+								Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Completed &&
+								Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Canceled)
+							{
+								<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
+									class="btn btn-outline-primary btn-lg"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Edit" 
+									aria-describedby="tooltip716761"> 
+										<i class="bi bi-pencil-square"></i>
+								</a>
+								<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
+									class="btn btn-outline-danger btn-lg"
+									data-bs-toggle="tooltip" 
+									data-bs-placement="bottom" 
+									data-bs-original-title="Delete" 
+									aria-describedby="tooltip716761"> 
+									<i class="bi bi-trash"></i>
+								</a>
+							}
 						</div>
 					</td>
 				</tr>
@@ -185,15 +253,16 @@
 		const submitfile = document.getElementById('submitFile');
 		const inputFile = document.getElementById('inputFile');
 
-		submitfile.disabled = true;
-		inputFile.addEventListener("change", function(){
-			if (inputFile.value == "") {
-				submitfile.disabled = true;
-			}
-			else {
-				submitfile.disabled = false;
-			}
-		});
+		if(inputFile != null){
+			inputFile.addEventListener("change", function(){
+				if (inputFile.value == "") {
+					submitfile.disabled = true;
+				}
+				else {
+					submitfile.disabled = false;
+				}
+			});
+		}
 
 		//CheckBox Style Control
 		const checkBoxLabel = document.getElementById("checkBoxLabel");

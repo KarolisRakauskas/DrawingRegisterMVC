@@ -25,7 +25,7 @@ namespace DrawingRegisterWeb.Controllers
 		// POST: DrawingFiles/Create
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public async Task<IActionResult> Create(string drawingId, List<IFormFile> files)
+		public async Task<IActionResult> Create(string drawingId, List<IFormFile> files, bool automaticRevision = false)
 		{
 			if (ModelState.IsValid)
 			{
@@ -48,12 +48,16 @@ namespace DrawingRegisterWeb.Controllers
 						FileUrl = @"\Files\Drawings\" + fileName + extension
 					};
 
-					if (file.FileName != null && file.FileName.Contains("_"))
+					if (automaticRevision)
 					{
-						int fileNameEndIndex = drawingFile.FileName.LastIndexOf("_");
-						drawingFile.Revision = Path.GetFileNameWithoutExtension(file.FileName)!.Substring(fileNameEndIndex+1);
+						if (file.FileName != null && file.FileName.Contains("_"))
+						{
+							int fileNameEndIndex = drawingFile.FileName.LastIndexOf("_");
+							drawingFile.Revision = Path.GetFileNameWithoutExtension(file.FileName)!.Substring(fileNameEndIndex+1);
 						
+						}
 					}
+
 
 					using (var fileStream = new FileStream(Path.Combine(uploads, fileName + extension), FileMode.Create))
 					{
