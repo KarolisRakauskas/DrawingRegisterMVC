@@ -113,7 +113,7 @@ namespace DrawingRegisterWeb.Controllers
                 .FirstOrDefaultAsync(p => p.Id == id);
             
 
-            // Check if drawing exists and ensure that user access drawing that is only in his DrawingRegister
+            // Check if drawing exists and ensure that user access to drawing that is only in his DrawingRegister
             if (drawing == null)
             {
                 return NotFound();
@@ -356,7 +356,10 @@ namespace DrawingRegisterWeb.Controllers
                         drawing!.Project.ProjectState!.Name == ConstData.State_Completed ||
                         drawing!.Project.ProjectState!.Name == ConstData.State_Canceled)
                     {
-                        return NotFound();
+                        TempData["NoDelete"] = $"Only the administrator has the ability to edit this drawing file " +
+                            $"if project state is set to {drawing!.Project.ProjectState!.Name}.";
+
+                        return View(drawing);
                     }
                 }
 

@@ -57,6 +57,12 @@
 	</div>
 </div>
 
+@{
+	string popoverContent = $"Automatic revision requires separating drawing numbers from revision with underscore sign _ .<br /><br />" +
+				"<b>Example (1-0001_A) :<br />&emsp;1-0001 = Drawing number;<br />&emsp;A = Revision. </b><br /><br />Check whether your drawing " +
+				"file complies with this rule.";
+}
+
 @if (User.IsInRole(ConstData.Role_Admin_Name))
 {
 	<h3 class="mt-5">Upload New Files:</h3>
@@ -75,9 +81,7 @@
 			data-bs-toggle="popover"
 			data-bs-placement="top"
 			data-bs-html="true"
-			data-bs-content="Automatic revision requires separating drawing numbers from revision with underscore sign _ . <br /><br />
-				<b>Example (1-0001_A) :<br />&emsp;1-0001 - Drawing number; A - Revision. </b><br /><br />
-				Check whether your drawing file complies with this rule." 
+			data-bs-content="@popoverContent"
 			data-bs-original-title="Revision by file name" 
 			aria-describedby="popover365908">
 					<i class="bi bi-question-lg"></i>
@@ -86,7 +90,7 @@
 
 		<div class="row mt-3">
 			<div class="col-8">
-				<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
+				<input name="drawingId" value="@Model.Drawing!.Id" hidden/>
 				<input id="inputFile" type="file" name="files" class="form-control" multiple/>
 			</div> 
 			<button id="submitFile" type="submit" class="btn btn-primary col-4" disabled>Upload</button >
@@ -113,9 +117,7 @@ else if (User.IsInRole(ConstData.Role_Engr_Name) &&
 			data-bs-toggle="popover"
 			data-bs-placement="top"
 			data-bs-html="true"
-			data-bs-content="Automatic revision requires separating drawing numbers from revision with underscore sign _ . <br /><br />
-				<b>Example (1-0001_A) :<br />&emsp;1-0001 - Drawing number; A - Revision. </b><br /><br />
-				Check whether your drawing file complies with this rule." 
+			data-bs-content="@popoverContent"
 			data-bs-original-title="Revision by file name" 
 			aria-describedby="popover365908">
 					<i class="bi bi-question-lg"></i>
@@ -131,6 +133,8 @@ else if (User.IsInRole(ConstData.Role_Engr_Name) &&
 		</div>
 	</form>
 }
+
+<span class="text-danger">@Html.TempData["NoUpload"]</span>
 
 <h2 class="mt-5">Drawing Files:</h2>
 

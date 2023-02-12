@@ -25,6 +25,8 @@
         <hr class="mt-3 mb-3" />
 
         <form asp-action="Edit">
+            <span class="text-danger">@Html.ValidationMessage("WhiteSpaces")</span>
+            <span class="text-danger">@Html.ValidationMessage("NoEdit")</span>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group" hidden>
@@ -53,9 +55,7 @@
                 <span asp-validation-for="CreateDate" class="text-danger"></span>
             </div>
             <div class="form-group" hidden>
-                <label asp-for="DrawingId" class="control-label"></label>
-                <select asp-for="DrawingId" class="form-control" asp-items="ViewBag.DrawingId"></select>
-                <span asp-validation-for="DrawingId" class="text-danger"></span>
+                <input asp-for="DrawingId" value="@ViewBag.DrawingId" hidden/>
             </div>
             <div class="btn-group mt-3" role="group">
                 <input type="submit" value="Save" class="btn btn-outline-primary" />
