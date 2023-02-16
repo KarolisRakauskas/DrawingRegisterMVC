@@ -14,9 +14,10 @@ namespace DrawingRegisterWeb.Utilities
             //emailToSend.Subject = subject;
             //emailToSend.Body = new TextPart(MimeKit.Text.TextFormat.Html) { Text = htmlMessage };
 
-            //using(var emailClient = new SmtpClient()) 
+            //using (var emailClient = new SmtpClient())
             //{
             //    emailClient.Connect("smtp.gmail.com", 587, MailKit.Security.SecureSocketOptions.StartTls);
+            //    // Write your gmail email adress and app password
             //    emailClient.Authenticate("EnterYourEmail", "EnterYourAppPassword");
             //    emailClient.Send(emailToSend);
             //    emailClient.Disconnect(true);
