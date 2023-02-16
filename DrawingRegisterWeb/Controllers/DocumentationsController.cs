@@ -50,7 +50,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 
 			var documentation = from d in _context.Documentation.Include(p => p.Project).Include(s => s.Project.ProjectState)
-						  where d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+						  where d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 						  select d;
 
 			IQueryable<string> ProjectsQuery;
@@ -59,16 +59,16 @@ namespace DrawingRegisterWeb.Controllers
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
-								where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId &&
+								where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId &&
 								p.ProjectState.Name != ConstData.State_Defined
 								orderby p.ProjectNubmer
 								select p.ProjectNubmer + " " + p.Name;
-				documentation = documentation.Where(d => d.Project.ProjectState!.Name != ConstData.State_Defined);
+				documentation = documentation.Where(d => d.Project.ProjectState.Name != ConstData.State_Defined);
 			}
 			else
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
-								where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+								where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 								orderby p.ProjectNubmer
 								select p.ProjectNubmer + " " + p.Name;
 			}
@@ -77,14 +77,14 @@ namespace DrawingRegisterWeb.Controllers
 			if (search != null)
 			{
 				documentation = documentation.Where(d =>
-				d.FileName!.Contains(search) ||
-				d.FileType!.Contains(search) ||
+				d.FileName.Contains(search) ||
+				d.FileType.Contains(search) ||
 				d.Project.Name.Contains(search));
 			}
 
 			if (projects != null)
 			{
-				documentation = documentation.Where(d => d.Project!.ProjectNubmer + " " + d.Project!.Name == projects);
+				documentation = documentation.Where(d => d.Project.ProjectNubmer + " " + d.Project.Name == projects);
 			}
 
 			// DocumentationVM gathers Documentation and search data
@@ -112,7 +112,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var project = await _context.Project
 				.Include(d => d.ProjectState)
-				.Where(d => d.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == projectId);
 
 			// Check if project exists and ensure that user access to project that is only in his DrawingRegister
@@ -124,12 +124,12 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can create drawing files if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (project!.ProjectState!.Name == ConstData.State_Defined ||
-					project!.ProjectState!.Name == ConstData.State_Completed ||
-					project!.ProjectState!.Name == ConstData.State_Canceled)
+				if (project!.ProjectState.Name == ConstData.State_Defined ||
+					project!.ProjectState.Name == ConstData.State_Completed ||
+					project!.ProjectState.Name == ConstData.State_Canceled)
 				{
 					TempData["NoUploadDocument"] = $"Only the administrator has the ability to upload documentation files to this project " +
-						$"if project state is set to {project!.ProjectState!.Name}.";
+						$"if project state is set to {project!.ProjectState.Name}.";
 
 					return RedirectToAction("Details", "Projects", new { id = projectId });
 				}
@@ -201,7 +201,7 @@ namespace DrawingRegisterWeb.Controllers
 			var documentation = await _context.Documentation
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if documentation file exists and ensure that user access to documentation that is only in his DrawingRegister
@@ -232,7 +232,7 @@ namespace DrawingRegisterWeb.Controllers
 			var documentationBeforeEdit = await _context.Documentation
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if Documentation belongs to current users DrawingRegister
@@ -244,13 +244,13 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (documentationBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Defined ||
-					documentationBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Completed ||
-					documentationBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Canceled)
+				if (documentationBeforeEdit!.Project.ProjectState.Name == ConstData.State_Defined ||
+					documentationBeforeEdit!.Project.ProjectState.Name == ConstData.State_Completed ||
+					documentationBeforeEdit!.Project.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoEdit",
 						$"Only the administrator has the ability to edit this document " +
-						$"if project state is set to {documentationBeforeEdit!.Project.ProjectState!.Name}.");
+						$"if project state is set to {documentationBeforeEdit!.Project.ProjectState.Name}.");
 				}
 			}
 
@@ -304,7 +304,7 @@ namespace DrawingRegisterWeb.Controllers
 			var documentation = await _context.Documentation
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing file exists and ensure that user access drawing file that is only in his DrawingRegister
@@ -331,7 +331,7 @@ namespace DrawingRegisterWeb.Controllers
 			var documentation = await _context.Documentation
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing file exists and ensure that user access drawing file that is only in his DrawingRegister
@@ -340,12 +340,12 @@ namespace DrawingRegisterWeb.Controllers
 				// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 				if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 				{
-					if (documentation!.Project.ProjectState!.Name == ConstData.State_Defined ||
-						documentation!.Project.ProjectState!.Name == ConstData.State_Completed ||
-						documentation!.Project.ProjectState!.Name == ConstData.State_Canceled)
+					if (documentation!.Project.ProjectState.Name == ConstData.State_Defined ||
+						documentation!.Project.ProjectState.Name == ConstData.State_Completed ||
+						documentation!.Project.ProjectState.Name == ConstData.State_Canceled)
 					{
 						TempData["NoDelete"] = $"Only the administrator has the ability to delete this documentation file " +
-							$"if project state is set to {documentation!.Project.ProjectState!.Name}.";
+							$"if project state is set to {documentation!.Project.ProjectState.Name}.";
 
 						return View(documentation);
 					}

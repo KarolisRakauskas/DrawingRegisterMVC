@@ -30,6 +30,6 @@ namespace DrawingRegisterWeb.Models
 		public int ProjectStateId { get; set; }
 		[ForeignKey("ProjectStateId")]
 		[ValidateNever]
-		public ProjectState? ProjectState { get; set; }
+		public ProjectState ProjectState { get; set; } = null!;
 	}
 }

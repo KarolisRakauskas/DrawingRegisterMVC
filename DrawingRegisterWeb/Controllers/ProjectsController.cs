@@ -52,13 +52,13 @@ namespace DrawingRegisterWeb.Controllers
 											 orderby s.Name select s.Name;
 
 			var project = from p in _context.Project.Include(s => s.ProjectState)
-						  where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId 
+						  where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId 
 						  select p;
 
 			// If user is not administrator - eleminate projects with defined state
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				project = project.Where(p => p.ProjectState!.Name != ConstData.State_Defined);
+				project = project.Where(p => p.ProjectState.Name != ConstData.State_Defined);
 			}
 
 			// Select projects that matches the search criterias
@@ -69,7 +69,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			if (states != null)
 			{
-				project = project.Where(p => p.ProjectState!.Name == states);
+				project = project.Where(p => p.ProjectState.Name == states);
 			}
 
 			// ProjectStateVM gathers Projects and search data
@@ -93,7 +93,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
 
 			// Check if project exists and ensure that user access project that is only in his DrawingRegister
@@ -144,7 +144,7 @@ namespace DrawingRegisterWeb.Controllers
 			// Prevent from same project number
 			var existingProjects = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.ToListAsync();
 
 			if (project.ProjectNubmer == null || project.Name == null || project.Description == null)
@@ -156,7 +156,7 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				foreach (var obj in existingProjects)
 				{
-					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer!.Trim().ToLower())
+					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer.Trim().ToLower())
 					{
 						ModelState.AddModelError("ExistingProjectNumber",
 							"This project number already exists. Please choose another number.");
@@ -188,7 +188,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
 
 			// Check if project exists and ensure that user access project that is only in his DrawingRegister
@@ -216,7 +216,7 @@ namespace DrawingRegisterWeb.Controllers
 			// Prevent from same project number
 			var existingProjects = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.Id != id)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.Id != id)
 				.ToListAsync();
 
 			if (project.ProjectNubmer == null || project.Name == null || project.Description == null)
@@ -228,7 +228,7 @@ namespace DrawingRegisterWeb.Controllers
 			{
 				foreach (var obj in existingProjects)
 				{
-					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer!.Trim().ToLower())
+					if (obj.ProjectNubmer.ToLower() == project.ProjectNubmer.Trim().ToLower())
 					{
 						ModelState.AddModelError("ExistingProjectNumber",
 							"This project number already exists. Please choose another number.");
@@ -256,9 +256,9 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 			if(drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if(projectBeforEdit!.ProjectState!.Name == ConstData.State_Defined ||
-					projectBeforEdit!.ProjectState!.Name == ConstData.State_Completed ||
-					projectBeforEdit!.ProjectState!.Name == ConstData.State_Canceled)
+				if(projectBeforEdit!.ProjectState.Name == ConstData.State_Defined ||
+					projectBeforEdit!.ProjectState.Name == ConstData.State_Completed ||
+					projectBeforEdit!.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoEdit",
 						$"Only the administrator has the ability to edit this projcet " +
@@ -307,7 +307,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
 
 			// Check if project exists and ensure that user access project that is only in his DrawingRegister
@@ -334,7 +334,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
 
 			if (project != null)

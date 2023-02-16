@@ -53,7 +53,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawing = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == drawingId);
 
 			// Check if drawing exists and ensure that user access to drawing that is only in his DrawingRegister
@@ -65,12 +65,12 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can create drawing files if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (drawing!.Project.ProjectState!.Name == ConstData.State_Defined ||
-					drawing!.Project.ProjectState!.Name == ConstData.State_Completed ||
-					drawing!.Project.ProjectState!.Name == ConstData.State_Canceled)
+				if (drawing!.Project.ProjectState.Name == ConstData.State_Defined ||
+					drawing!.Project.ProjectState.Name == ConstData.State_Completed ||
+					drawing!.Project.ProjectState.Name == ConstData.State_Canceled)
 				{
 					TempData["NoUpload"] = $"Only the administrator has the ability to upload files to this drawing " +
-						$"if project state is set to {drawing!.Project.ProjectState!.Name}.";
+						$"if project state is set to {drawing!.Project.ProjectState.Name}.";
 
 					return RedirectToAction("Details", "Drawings", new { id = drawingId });
 				}
@@ -153,7 +153,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Include(d => d.Drawing)
 				.Include(d => d.Drawing.Project)
 				.Include(d => d.Drawing.Project.ProjectState)
-				.Where(d => d.Drawing.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Drawing.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing file exists and ensure that user access to drawing that is only in his DrawingRegister
@@ -184,7 +184,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Include(d => d.Drawing)
 				.Include(d => d.Drawing.Project)
 				.Include(d => d.Drawing.Project.ProjectState)
-				.Where(d => d.Drawing.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Drawing.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if DrawingFile belongs to current users DrawingRegister
@@ -196,13 +196,13 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (drawingFileBeforeEdit!.Drawing.Project.ProjectState!.Name == ConstData.State_Defined ||
-					drawingFileBeforeEdit!.Drawing.Project.ProjectState!.Name == ConstData.State_Completed ||
-					drawingFileBeforeEdit!.Drawing.Project.ProjectState!.Name == ConstData.State_Canceled)
+				if (drawingFileBeforeEdit!.Drawing.Project.ProjectState.Name == ConstData.State_Defined ||
+					drawingFileBeforeEdit!.Drawing.Project.ProjectState.Name == ConstData.State_Completed ||
+					drawingFileBeforeEdit!.Drawing.Project.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoEdit",
 						$"Only the administrator has the ability to edit this drawing file " +
-						$"if project state is set to {drawingFileBeforeEdit!.Drawing.Project.ProjectState!.Name}.");
+						$"if project state is set to {drawingFileBeforeEdit!.Drawing.Project.ProjectState.Name}.");
 				}
 			}
 
@@ -255,7 +255,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Include(d => d.Drawing)
 				.Include(d => d.Drawing.Project)
 				.Include(d => d.Drawing.Project.ProjectState)
-				.Where(d => d.Drawing.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Drawing.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing file exists and ensure that user access drawing file that is only in his DrawingRegister
@@ -282,7 +282,7 @@ namespace DrawingRegisterWeb.Controllers
 				.Include(d => d.Drawing)
 				.Include(d => d.Drawing.Project)
 				.Include(d => d.Drawing.Project.ProjectState)
-				.Where(d => d.Drawing.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Drawing.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing file exists and ensure that user access drawing file that is only in his DrawingRegister
@@ -291,12 +291,12 @@ namespace DrawingRegisterWeb.Controllers
 				// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 				if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 				{
-					if (drawingFile!.Drawing.Project.ProjectState!.Name == ConstData.State_Defined ||
-						drawingFile!.Drawing.Project.ProjectState!.Name == ConstData.State_Completed ||
-						drawingFile!.Drawing.Project.ProjectState!.Name == ConstData.State_Canceled)
+					if (drawingFile!.Drawing.Project.ProjectState.Name == ConstData.State_Defined ||
+						drawingFile!.Drawing.Project.ProjectState.Name == ConstData.State_Completed ||
+						drawingFile!.Drawing.Project.ProjectState.Name == ConstData.State_Canceled)
 					{
 						TempData["NoDelete"] = $"Only the administrator has the ability to delete this drawing file " +
-							$"if project state is set to {drawingFile!.Drawing.Project.ProjectState!.Name}.";
+							$"if project state is set to {drawingFile!.Drawing.Project.ProjectState.Name}.";
 
 						return View(drawingFile);
 					}

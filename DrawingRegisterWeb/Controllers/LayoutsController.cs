@@ -51,7 +51,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 
 			var layout = from d in _context.Layout.Include(p => p.Project).Include(s => s.Project.ProjectState)
-								where d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+								where d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 								select d;
 
 			IQueryable<string> ProjectsQuery;
@@ -60,16 +60,16 @@ namespace DrawingRegisterWeb.Controllers
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
-								where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId &&
+								where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId &&
 								p.ProjectState.Name != ConstData.State_Defined
 								orderby p.ProjectNubmer
 								select p.ProjectNubmer + " " + p.Name;
-				layout = layout.Where(d => d.Project!.ProjectState!.Name != ConstData.State_Defined);
+				layout = layout.Where(d => d.Project.ProjectState.Name != ConstData.State_Defined);
 			}
 			else
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
-								where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+								where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 								orderby p.ProjectNubmer
 								select p.ProjectNubmer + " " + p.Name;
 			}
@@ -78,14 +78,14 @@ namespace DrawingRegisterWeb.Controllers
 			if (search != null)
 			{
 				layout = layout.Where(l =>
-				l.FileName!.Contains(search) ||
-				l.FileType!.Contains(search) ||
-				l.Project!.Name.Contains(search));
+				l.FileName.Contains(search) ||
+				l.FileType.Contains(search) ||
+				l.Project.Name.Contains(search));
 			}
 
 			if (projects != null)
 			{
-				layout = layout.Where(d => d.Project!.ProjectNubmer + " " + d.Project!.Name == projects);
+				layout = layout.Where(d => d.Project.ProjectNubmer + " " + d.Project.Name == projects);
 			}
 
 			// LayoutVM gathers Layouts and search data
@@ -113,7 +113,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var project = await _context.Project
 				.Include(d => d.ProjectState)
-				.Where(d => d.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == projectId);
 
 			// Check if project exists and ensure that user access to project that is only in his DrawingRegister
@@ -125,9 +125,9 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can create layout files if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (project!.ProjectState!.Name == ConstData.State_Defined ||
-					project!.ProjectState!.Name == ConstData.State_Completed ||
-					project!.ProjectState!.Name == ConstData.State_Canceled)
+				if (project!.ProjectState.Name == ConstData.State_Defined ||
+					project!.ProjectState.Name == ConstData.State_Completed ||
+					project!.ProjectState.Name == ConstData.State_Canceled)
 				{
 					TempData["NoUploadLayout"] = $"Only the administrator has the ability to upload layout files to this project " +
 						$"if project state is set to {project!.ProjectState!.Name}.";
@@ -203,7 +203,7 @@ namespace DrawingRegisterWeb.Controllers
 			var layout = await _context.Layout
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if layout exists and ensure that user access to layout that is only in his DrawingRegister
@@ -234,7 +234,7 @@ namespace DrawingRegisterWeb.Controllers
 			var layoutBeforeEdit = await _context.Layout
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if Layout belongs to current users DrawingRegister
@@ -246,9 +246,9 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (layoutBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Defined ||
-					layoutBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Completed ||
-					layoutBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Canceled)
+				if (layoutBeforeEdit!.Project.ProjectState.Name == ConstData.State_Defined ||
+					layoutBeforeEdit!.Project.ProjectState.Name == ConstData.State_Completed ||
+					layoutBeforeEdit!.Project.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoEdit",
 						$"Only the administrator has the ability to edit this layout file " +
@@ -306,7 +306,7 @@ namespace DrawingRegisterWeb.Controllers
 			var layout = await _context.Layout
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if layout exists and ensure that user access layout file that is only in his DrawingRegister
@@ -333,7 +333,7 @@ namespace DrawingRegisterWeb.Controllers
 			var layout = await _context.Layout
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if layout exists and ensure that user access layout file that is only in his DrawingRegister
@@ -342,12 +342,12 @@ namespace DrawingRegisterWeb.Controllers
 				// Make sure that only administrator can edit if ProjectState is Defined, Completed or Canceled
 				if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 				{
-					if (layout!.Project.ProjectState!.Name == ConstData.State_Defined ||
-						layout!.Project.ProjectState!.Name == ConstData.State_Completed ||
-						layout!.Project.ProjectState!.Name == ConstData.State_Canceled)
+					if (layout!.Project.ProjectState.Name == ConstData.State_Defined ||
+						layout!.Project.ProjectState.Name == ConstData.State_Completed ||
+						layout!.Project.ProjectState.Name == ConstData.State_Canceled)
 					{
 						TempData["NoDelete"] = $"Only the administrator has the ability to delete this layout file " +
-							$"if project state is set to {layout!.Project.ProjectState!.Name}.";
+							$"if project state is set to {layout!.Project.ProjectState.Name}.";
 
 						return View(layout);
 					}

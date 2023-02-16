@@ -281,7 +281,7 @@ namespace DrawingRegisterWeb.Controllers
 				// Assign all current state projects to running state
 				var projects = await _context.Project
 					.Include(s => s.ProjectState)
-					.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.ProjectStateId == projectState.Id)
+					.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && p.ProjectStateId == projectState.Id)
 					.ToListAsync();
 				var runningState = await _context.ProjectState
 					.Where(s => s.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)

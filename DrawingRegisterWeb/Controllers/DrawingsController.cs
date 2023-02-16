@@ -53,7 +53,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
 
 			var drawing = from d in _context.Drawing.Include(p => p.Project).Include(s => s.Project.ProjectState) 
-						  where d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+						  where d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 						  select d;
 
 			IQueryable<string> ProjectsQuery;
@@ -62,15 +62,15 @@ namespace DrawingRegisterWeb.Controllers
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState) 
-												   where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && 
+												   where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId && 
 												   p.ProjectState.Name != ConstData.State_Defined 
 												   orderby p.ProjectNubmer select p.ProjectNubmer + " " + p.Name;
-				drawing = drawing.Where(d => d.Project.ProjectState!.Name != ConstData.State_Defined);
+				drawing = drawing.Where(d => d.Project.ProjectState.Name != ConstData.State_Defined);
 			}
 			else
 			{
 				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
-												   where p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
+												   where p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId
 												   orderby p.ProjectNubmer select p.ProjectNubmer + " " + p.Name;
 			}
 
@@ -86,7 +86,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			if (projects != null)
 			{
-				drawing = drawing.Where(d => d.Project!.ProjectNubmer + " " + d.Project!.Name == projects);
+				drawing = drawing.Where(d => d.Project.ProjectNubmer + " " + d.Project.Name == projects);
 			}
 
 			// DrawingVM gathers Drawings and search data
@@ -111,7 +111,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawing = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
 			
 
@@ -144,7 +144,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == projectId);
 
 			if(project == null)
@@ -168,7 +168,7 @@ namespace DrawingRegisterWeb.Controllers
 
 			var project = await _context.Project
 				.Include(p => p.ProjectState)
-				.Where(p => p.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == drawing.ProjectId);
 
 			if(project == null)
@@ -186,13 +186,13 @@ namespace DrawingRegisterWeb.Controllers
 			// Make sure that only administrator can create drawing if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (project!.ProjectState!.Name == ConstData.State_Defined ||
-					project!.ProjectState!.Name == ConstData.State_Completed ||
-					project!.ProjectState!.Name == ConstData.State_Canceled)
+				if (project!.ProjectState.Name == ConstData.State_Defined ||
+					project!.ProjectState.Name == ConstData.State_Completed ||
+					project!.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoCreate",
 						$"Only the administrator has the ability to create this drawing " +
-						$"if project state is set to {project!.ProjectState!.Name}.");
+						$"if project state is set to {project!.ProjectState.Name}.");
 				}
 			}
 
@@ -220,7 +220,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawing = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing exists and ensure that user access drawing that is only in his DrawingRegister
@@ -251,14 +251,14 @@ namespace DrawingRegisterWeb.Controllers
 			var drawingBeforeEdit = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
-				if (drawingBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Defined ||
-					drawingBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Completed ||
-					drawingBeforeEdit!.Project.ProjectState!.Name == ConstData.State_Canceled)
+				if (drawingBeforeEdit!.Project.ProjectState.Name == ConstData.State_Defined ||
+					drawingBeforeEdit!.Project.ProjectState.Name == ConstData.State_Completed ||
+					drawingBeforeEdit!.Project.ProjectState.Name == ConstData.State_Canceled)
 				{
 					ModelState.AddModelError("NoEdit",
 						$"Only the administrator has the ability to edit this drawing " +
@@ -317,7 +317,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawing = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing exists and ensure that user access drawing that is only in his DrawingRegister
@@ -345,7 +345,7 @@ namespace DrawingRegisterWeb.Controllers
 			var drawing = await _context.Drawing
 				.Include(d => d.Project)
 				.Include(d => d.Project.ProjectState)
-				.Where(d => d.Project.ProjectState!.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == id);
 
 			// Check if drawing exists and ensure that user access drawing that is only in his DrawingRegister
@@ -354,9 +354,9 @@ namespace DrawingRegisterWeb.Controllers
 				// Make sure that only administrator can delete if ProjectState is Defined, Completed or Canceled
 				if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 				{
-					if (drawing!.Project.ProjectState!.Name == ConstData.State_Defined ||
-						drawing!.Project.ProjectState!.Name == ConstData.State_Completed ||
-						drawing!.Project.ProjectState!.Name == ConstData.State_Canceled)
+					if (drawing!.Project.ProjectState.Name == ConstData.State_Defined ||
+						drawing!.Project.ProjectState.Name == ConstData.State_Completed ||
+						drawing!.Project.ProjectState.Name == ConstData.State_Canceled)
 					{
 						TempData["NoDelete"] = $"Only the administrator has the ability to delete this drawing " +
 							$"if project state is set to {drawing!.Project.ProjectState!.Name}.";

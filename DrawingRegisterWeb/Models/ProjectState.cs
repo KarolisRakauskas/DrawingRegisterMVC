@@ -18,6 +18,6 @@ public class ProjectState
 	public int DrawingRegisterId { get; set; }
 	[ForeignKey("DrawingRegisterId")]
 	[ValidateNever]
-	public DrawingRegister? DrawingRegister { get; set; }
+	public DrawingRegister DrawingRegister { get; set; } = null!;
 }
 
