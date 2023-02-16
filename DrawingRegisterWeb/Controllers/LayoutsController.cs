@@ -168,15 +168,13 @@ namespace DrawingRegisterWeb.Controllers
 						int pageIndex = 1;
 						var page = pdfDocument.Pages[pageIndex];
 
-						using (FileStream imageStream = new FileStream(Path.Combine(uploads, fileName + ".jpg"), FileMode.Create))
-						{
+						using FileStream imageStream = new(Path.Combine(uploads, fileName + ".jpg"), FileMode.Create);
 
-							var resolution = new Resolution(300);
-							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+						var resolution = new Resolution(300);
+						var jpegDevice = new JpegDevice(200, 200, resolution, 200);
 
-							jpegDevice.Process(page, imageStream);
-							imageStream.Close();
-						}
+						jpegDevice.Process(page, imageStream);
+						imageStream.Close();
 					}
 
 					_context.Add(layout);
@@ -365,7 +363,7 @@ namespace DrawingRegisterWeb.Controllers
 					if (layout.FileType == "pdf")
 					{
 						int oldFileEndIndex = oldFilePath.LastIndexOf(".");
-						string thumbanilUrl = oldFilePath.Substring(0, oldFileEndIndex);
+						string thumbanilUrl = oldFilePath[..oldFileEndIndex];
 
 						thumbanilUrl += ".jpg";
 

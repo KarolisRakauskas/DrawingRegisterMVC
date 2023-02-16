@@ -102,7 +102,7 @@ namespace DrawingRegisterWeb.Controllers
 						if (file.FileName != null && file.FileName.Contains('_'))
 						{
 							int fileNameEndIndex = drawingFile.FileName.LastIndexOf('_');
-							drawingFile.Revision = Path.GetFileNameWithoutExtension(file.FileName)!.Substring(fileNameEndIndex + 1);
+							drawingFile.Revision = Path.GetFileNameWithoutExtension(file.FileName)![(fileNameEndIndex + 1)..];
 						
 						}
 					}
@@ -119,14 +119,12 @@ namespace DrawingRegisterWeb.Controllers
 						int pageIndex = 1;
 						var page = pdfDocument.Pages[pageIndex];
 
-						using (FileStream imageStream = new FileStream(Path.Combine(uploads,fileName + ".jpg"), FileMode.Create))
-						{
-							var resolution = new Resolution(300);
-							var jpegDevice = new JpegDevice(200, 200, resolution, 200);
+						using FileStream imageStream = new(Path.Combine(uploads, fileName + ".jpg"), FileMode.Create);
+						var resolution = new Resolution(300);
+						var jpegDevice = new JpegDevice(200, 200, resolution, 200);
 
-							jpegDevice.Process(page, imageStream);
-							imageStream.Close();
-						}
+						jpegDevice.Process(page, imageStream);
+						imageStream.Close();
 					}
 
 					_context.Add(drawingFile);
@@ -314,7 +312,7 @@ namespace DrawingRegisterWeb.Controllers
 					if(drawingFile.FileType == "pdf")
 					{
 						int oldFileEndIndex = oldFilePath.LastIndexOf(".");
-						string thumbanilUrl = oldFilePath.Substring(0, oldFileEndIndex);
+						string thumbanilUrl = oldFilePath[..oldFileEndIndex];
 
 						thumbanilUrl += ".jpg";
 
