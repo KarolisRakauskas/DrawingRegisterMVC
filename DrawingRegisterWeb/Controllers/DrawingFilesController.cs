@@ -26,12 +26,12 @@ namespace DrawingRegisterWeb.Controllers
 	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
 	public class DrawingFilesController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly IWebHostEnvironment _hostEnvironment;
 		private readonly UserManager<IdentityUser> _userManager;
 
 		public DrawingFilesController(
-			DrawingRegisterContext context,
+			ApplicationDbContext context,
 			IWebHostEnvironment hostEnvironment,
 			UserManager<IdentityUser> userManager)
 		{

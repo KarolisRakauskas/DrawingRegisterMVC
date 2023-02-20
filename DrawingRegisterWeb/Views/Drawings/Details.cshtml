@@ -138,117 +138,119 @@ else if (User.IsInRole(ConstData.Role_Engr_Name) &&
 
 <h2 class="mt-5">Drawing Files:</h2>
 
-<table class="table table-striped table-sm mt-3" id="sortTable" style="vertical-align: middle">
-	<thead>
-		<tr class="user-select-none">
-			<th onclick="sortTable(0)">
-					@Html.DisplayNameFor(model => model.DrawingFiles![0].FileName)
-					<i class="sortIcon bi"></i>
-			</th>
-			<th onclick="sortTable(1)">
-					@Html.DisplayNameFor(model => model.DrawingFiles![0].FileType)
-					<i class="sortIcon bi"></i>
-			</th>
-			<th onclick="sortTable(2)">
-					@Html.DisplayNameFor(model => model.DrawingFiles![0].Revision)
-					<i class="sortIcon bi"></i>
-			</th>
-			<th onclick="sortTable(3)">
-					@Html.DisplayNameFor(model => model.DrawingFiles![0].CreateDate)
-					<i class="sortIcon bi"></i>
-			</th>
-			<th></th>
-		</tr>
-	</thead>
-	<tbody>
-			@foreach (var item in Model.DrawingFiles!)
-			{
-				int fileUrlendIndex = item.FileUrl.LastIndexOf(".");
-				string thumbanilUrl = item.FileUrl.Substring(0, fileUrlendIndex);
-				thumbanilUrl += ".jpg";
+<div class="table-responsive mt-3">
+	<table class="table table-striped table-sm" id="sortTable" style="vertical-align: middle">
+		<thead>
+			<tr class="user-select-none">
+				<th onclick="sortTable(0)">
+						@Html.DisplayNameFor(model => model.DrawingFiles![0].FileName)
+						<i class="sortIcon bi"></i>
+				</th>
+				<th onclick="sortTable(1)">
+						@Html.DisplayNameFor(model => model.DrawingFiles![0].FileType)
+						<i class="sortIcon bi"></i>
+				</th>
+				<th onclick="sortTable(2)">
+						@Html.DisplayNameFor(model => model.DrawingFiles![0].Revision)
+						<i class="sortIcon bi"></i>
+				</th>
+				<th onclick="sortTable(3)">
+						@Html.DisplayNameFor(model => model.DrawingFiles![0].CreateDate)
+						<i class="sortIcon bi"></i>
+				</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+				@foreach (var item in Model.DrawingFiles!)
+				{
+					int fileUrlendIndex = item.FileUrl.LastIndexOf(".");
+					string thumbanilUrl = item.FileUrl.Substring(0, fileUrlendIndex);
+					thumbanilUrl += ".jpg";
 
-				<tr>
-					<td>
-						@item.FileName
-					</td>
-					<td>
-						@item.FileType
-					</td>
-					<td>
-						@item.Revision
-					</td>
-					<td>
-						@item.CreateDate.ToString("yyyy/MM/dd")
-					</td>
-					<td>
-						<div class="btn btn-group">
-							@if (item.FileType.ToLower() == "pdf")
-							{
+					<tr>
+						<td>
+							@item.FileName
+						</td>
+						<td>
+							@item.FileType
+						</td>
+						<td>
+							@item.Revision
+						</td>
+						<td>
+							@item.CreateDate.ToString("yyyy/MM/dd")
+						</td>
+						<td>
+							<div class="btn btn-group">
+								@if (item.FileType.ToLower() == "pdf")
+								{
+									<a	href="@item.FileUrl"
+										target="_blank"
+										class="btn btn-outline-primary btn-lg p-0 overflow-hidden"
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="Open" 
+										aria-describedby="tooltip716761">
+											<img src="@thumbanilUrl" alt="Thumbanil" width="48" height="48" style="vertical-align:middle"/>
+									</a>
+								}
 								<a	href="@item.FileUrl"
-									target="_blank"
-									class="btn btn-outline-primary btn-lg p-0 overflow-hidden"
-									data-bs-toggle="tooltip" 
-									data-bs-placement="bottom" 
-									data-bs-original-title="Open" 
-									aria-describedby="tooltip716761">
-										<img src="@thumbanilUrl" alt="Thumbanil" width="48" height="48" style="vertical-align:middle"/>
-								</a>
-							}
-							<a	href="@item.FileUrl"
-								class="btn btn-outline-primary btn-lg"
-								data-bs-toggle="tooltip" 
-								data-bs-placement="bottom" 
-								data-bs-original-title="Download" 
-								aria-describedby="tooltip716761"
-								download="@item.FileName.@item.FileType"> 
-									<i class="bi bi-cloud-download"></i>
-							</a>
-							@if (User.IsInRole(ConstData.Role_Admin_Name))
-							{
-								<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
 									class="btn btn-outline-primary btn-lg"
 									data-bs-toggle="tooltip" 
 									data-bs-placement="bottom" 
-									data-bs-original-title="Edit" 
-									aria-describedby="tooltip716761"> 
-										<i class="bi bi-pencil-square"></i>
+									data-bs-original-title="Download" 
+									aria-describedby="tooltip716761"
+									download="@item.FileName.@item.FileType"> 
+										<i class="bi bi-cloud-download"></i>
 								</a>
-								<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
-									class="btn btn-outline-danger btn-lg"
-									data-bs-toggle="tooltip" 
-									data-bs-placement="bottom" 
-									data-bs-original-title="Delete" 
-									aria-describedby="tooltip716761"> 
-									<i class="bi bi-trash"></i>
-								</a>
-							}
-							else if (User.IsInRole(ConstData.Role_Engr_Name) &&
-								Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Completed &&
-								Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Canceled)
-							{
-								<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
-									class="btn btn-outline-primary btn-lg"
-									data-bs-toggle="tooltip" 
-									data-bs-placement="bottom" 
-									data-bs-original-title="Edit" 
-									aria-describedby="tooltip716761"> 
-										<i class="bi bi-pencil-square"></i>
-								</a>
-								<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
-									class="btn btn-outline-danger btn-lg"
-									data-bs-toggle="tooltip" 
-									data-bs-placement="bottom" 
-									data-bs-original-title="Delete" 
-									aria-describedby="tooltip716761"> 
-									<i class="bi bi-trash"></i>
-								</a>
-							}
-						</div>
-					</td>
-				</tr>
-			}
-	</tbody>
-</table>
+								@if (User.IsInRole(ConstData.Role_Admin_Name))
+								{
+									<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
+										class="btn btn-outline-primary btn-lg"
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="Edit" 
+										aria-describedby="tooltip716761"> 
+											<i class="bi bi-pencil-square"></i>
+									</a>
+									<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
+										class="btn btn-outline-danger btn-lg"
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="Delete" 
+										aria-describedby="tooltip716761"> 
+										<i class="bi bi-trash"></i>
+									</a>
+								}
+								else if (User.IsInRole(ConstData.Role_Engr_Name) &&
+									Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Completed &&
+									Model.Drawing.Project!.ProjectState!.Name != ConstData.State_Canceled)
+								{
+									<a asp-controller="DrawingFiles" asp-action="Edit" asp-route-id="@item.Id"
+										class="btn btn-outline-primary btn-lg"
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="Edit" 
+										aria-describedby="tooltip716761"> 
+											<i class="bi bi-pencil-square"></i>
+									</a>
+									<a asp-controller="DrawingFiles" asp-action="Delete" asp-route-id="@item.Id"
+										class="btn btn-outline-danger btn-lg"
+										data-bs-toggle="tooltip" 
+										data-bs-placement="bottom" 
+										data-bs-original-title="Delete" 
+										aria-describedby="tooltip716761"> 
+										<i class="bi bi-trash"></i>
+									</a>
+								}
+							</div>
+						</td>
+					</tr>
+				}
+		</tbody>
+	</table>
+</div>
 
 @section Scripts
 {

@@ -46,9 +46,11 @@
 
 							@if (User.IsInRole(ConstData.Role_Admin_Name) || 
 								User.IsInRole(ConstData.Role_Engr_Name) || 
-								User.IsInRole(ConstData.Role_Mech_Name))
+								User.IsInRole(ConstData.Role_Mech_Name) ||
+								User.IsInRole(ConstData.Role_Spect_Name))
 							{
-								if (User.IsInRole(ConstData.Role_Admin_Name))
+								if (User.IsInRole(ConstData.Role_Admin_Name) ||
+									User.IsInRole(ConstData.Role_Spect_Name))
 								{
 									<li class="nav-item">
 										<a 

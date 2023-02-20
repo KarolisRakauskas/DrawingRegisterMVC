@@ -24,16 +24,16 @@ namespace DrawingRegisterWeb.Controllers
 	//			  Holds main data about drawing files that belong to area/equipment/construction and so on.
 	//			  Creates the relationship between DrawingFiles and project
 
-	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name}")]
+	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name},{ConstData.Role_Spect_Name}")]
 	public class DrawingsController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly IWebHostEnvironment _hostEnvironment;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public DrawingsController(
-			DrawingRegisterContext context,
+			ApplicationDbContext context,
 			IWebHostEnvironment hostEnvironment,
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)
@@ -136,6 +136,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
+		[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
 		public async Task<IActionResult> Create(int projectId)
 		{
 			// Check if projectId is id of existing project and if it belongs to current user DrawingRegister
@@ -213,6 +214,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
+		[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
 		public async Task<IActionResult> Edit(int? id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -305,6 +307,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
+		[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || _context.Drawing == null)

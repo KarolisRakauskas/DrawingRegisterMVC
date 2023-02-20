@@ -34,9 +34,13 @@
         <section class="text-center">
             <h2>No Forced Registration</h2>
             <hr />
-            <p>Spectators can't Create, Update and Delete</p>
+            <p class="text-danger">Spectators can't Create, Update and Delete</p>
             <div>
-                <button class="btn btn-primary">Log in as Spectator</button>
+                <form asp-page="./Login" id="account" method="post">
+                    <input asp-for="Input.Email" value="Spectator@mail.com" hidden/>
+                    <input asp-for="Input.Password" value="Spectator123." hidden/>
+                    <button id="login-submit" type="submit" class="btn btn-primary">Log in as Spectator</button>
+                </form>
             </div>
         </section>
     </div>

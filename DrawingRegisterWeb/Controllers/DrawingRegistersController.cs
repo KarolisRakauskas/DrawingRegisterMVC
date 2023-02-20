@@ -17,12 +17,12 @@ namespace DrawingRegisterWeb
 	[Authorize]
 	public class DrawingRegistersController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public DrawingRegistersController(
-			DrawingRegisterContext context,
+			ApplicationDbContext context,
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)
 		{
@@ -69,6 +69,7 @@ namespace DrawingRegisterWeb
 
 
 		// Create new DrawingRegister and RegisterUser for current user
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public IActionResult Create()
 		{
 			return View();
@@ -76,9 +77,18 @@ namespace DrawingRegisterWeb
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public async Task<IActionResult> Create(DrawingRegister drawingRegister, bool seedData = false)
 		{
 			var user = await _userManager.GetUserAsync(User);
+
+			// Check if user already has Register
+			var existingDrawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(d => d.IdentityUser == user);
+			if(existingDrawingRegisterUser != null)
+			{
+				TempData["CantCreate"] = "You already have Drawing Register";
+				return View();
+			}
 
 			if (ModelState.IsValid && user != null)
 			{
@@ -136,6 +146,7 @@ namespace DrawingRegisterWeb
 
 
 		// Delete DrawingRegister and all DrawingRegisterUsers of current user's DrawingRegister
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -309,6 +320,7 @@ namespace DrawingRegisterWeb
 
 
 		// Create request to join existing DrawingRegister for user that has no DrawingRegister
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public IActionResult RequestInvitation()
 		{
 			return View();
@@ -316,6 +328,7 @@ namespace DrawingRegisterWeb
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public async Task<IActionResult> RequestInvitation(Invitation invitation)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -363,6 +376,7 @@ namespace DrawingRegisterWeb
 		// Remove request to join existing DrawingRegister for user that has no DrawingRegister
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public async Task<IActionResult> RemoveRequestInvitation(int id)
 		{
 			var invitation = await _context.Invitations.FindAsync(id);
@@ -444,6 +458,7 @@ namespace DrawingRegisterWeb
 		// Accept invitation which was assign to current user, who has no DrawingRegister
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Norml_Name)]
 		public async Task<IActionResult> AcceptInvitation(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);

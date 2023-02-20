@@ -190,6 +190,10 @@ else
 										{
 											<img style="height:2em" src="~/Assets/mechanic.png" />
 										}
+										else if (@item.Role == ConstData.Role_Spect_Name)
+										{
+											<img style="height:2em" src="~/Assets/spectator.png" />
+										}
 									</td>
 									<td>
 										@item.IdentityUser!.Email
@@ -349,10 +353,15 @@ else
 				</form>
 			</div>
 		</div>
-	} else 
+	} else if (User.IsInRole(ConstData.Role_Spect_Name))
+	{
+		<form method="post" asp-action="Leave">
+			<button type="submit" class="btn btn-sm btn-outline-danger disabled"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
+		</form>
+	} else
 	{
 		<form method="post" asp-action="Leave">
 			<button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
-		</form>
+		</form>		
 	}
 }

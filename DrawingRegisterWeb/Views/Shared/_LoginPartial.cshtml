@@ -37,6 +37,16 @@
 				aria-expanded="false">
 					<img style="height:2em" src="~/Assets/mechanic.png" />
 			</a>
+		} else if (User.IsInRole(ConstData.Role_Spect_Name))
+		{
+			<a 
+				class="nav-link dropdown-toggle" 
+				data-bs-toggle="dropdown" 
+				role="button" 
+				aria-haspopup="true" 
+				aria-expanded="false">
+					<img style="height:2em" src="~/Assets/spectator.png" />
+			</a>
 		} else
 		{
 			<a 
@@ -52,7 +62,9 @@
 			<p class="text-secondary text-center user-select-none dropdown-header">
 				<b>@UserManager.GetUserName(User)</b>
 			</p>
-			<a asp-area="Identity" asp-page="/Account/Manage/Index" id="manage" class="dropdown-item">Profile</a>
+			@if (!User.IsInRole(ConstData.Role_Spect_Name)){
+				<a asp-area="Identity" asp-page="/Account/Manage/Index" id="manage" class="dropdown-item">Profile</a>
+			}
 			<form 
 				id="logoutForm"  
 				asp-area="Identity" 

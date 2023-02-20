@@ -1,35 +1,30 @@
 using DrawingRegisterWeb.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using DrawingRegisterWeb.Models;
 using DrawingRegisterWeb.Utilities;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using DrawingRegisterWeb.DbInitializer;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
+
 // Add Database context
-builder.Services.AddDbContext<DrawingRegisterContext>(options =>
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
 	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 // Add Default Identity
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-	.AddRoles<IdentityRole>().AddEntityFrameworkStores<DrawingRegisterContext>();
+	.AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>();
+
+// Add Database Initializer
+builder.Services.AddScoped<IDbInitializer, DbInitializer>();
 
 // Configure app to support email
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 
 var app = builder.Build();
 
-// Seed Data : TODO Seed Database Migrations Automatically
-using (var scope = app.Services.CreateScope())
-{
-	var services = scope.ServiceProvider;
-
-	SeedData.Initialize(services);
-}
-
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
 	app.UseExceptionHandler("/Home/Error");
@@ -42,6 +37,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// Invoke Initializer
+SeedDatabase();
+
 app.UseAuthentication();;
 
 app.UseAuthorization();
@@ -53,3 +51,15 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+
+
+
+void SeedDatabase()
+{
+	using (var scope = app.Services.CreateScope())
+	{
+		var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializer>();
+		dbInitializer.Initialize();
+	}
+}

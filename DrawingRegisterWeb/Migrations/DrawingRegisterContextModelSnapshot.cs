@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DrawingRegisterWeb.Migrations
 {
-    [DbContext(typeof(DrawingRegisterContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class DrawingRegisterContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

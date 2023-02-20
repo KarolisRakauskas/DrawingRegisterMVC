@@ -9,20 +9,23 @@ using Microsoft.AspNetCore.Identity;
 namespace DrawingRegisterWeb.Controllers
 {
 	// DrawingRegisters - Creates a unique identifier
+
 	// DrawingRegisterUsers - Creates a relationship with DrawingRegisters and AspNetUsers
+
 	// ProjectState - Defines states for projects, creates a relationship with projects and DrawingRegisters,
 	//				  restricts access to DrawingRegisterUsers that share the same DrawingRegister as the current user
+
 	// Default states - States that are seeded into new DrawingRegister. No user can edit/delete default states
 
-	[Authorize(Roles = ConstData.Role_Admin_Name)]
+	[Authorize(Roles = $"{ConstData.Role_Admin_Name}, {ConstData.Role_Spect_Name}")]
 	public class ProjectStatesController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public ProjectStatesController(
-			DrawingRegisterContext context,
+			ApplicationDbContext context,
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)
 		{
@@ -84,6 +87,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 		// Create custom state
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Create()
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -99,6 +103,7 @@ namespace DrawingRegisterWeb.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Create(ProjectState projectState)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -139,6 +144,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 		// Edit custom state
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Edit(int? id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -158,6 +164,7 @@ namespace DrawingRegisterWeb.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Edit(int id, ProjectState projectState)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -228,6 +235,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 		// Delete custom state only, prevent deleting default state
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -247,6 +255,7 @@ namespace DrawingRegisterWeb.Controllers
 
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> DeleteConfirmed(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);

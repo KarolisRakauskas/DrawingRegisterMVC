@@ -21,16 +21,16 @@ namespace DrawingRegisterWeb.Controllers
 	// Project - Holds main data about user project. Seperates and group drawings, documentation.
 	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates
 
-	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name}")]
+	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name},{ConstData.Role_Spect_Name}")]
 	public class DocumentationsController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly IWebHostEnvironment _hostEnvironment;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public DocumentationsController(
-			DrawingRegisterContext context,
+			ApplicationDbContext context,
 			IWebHostEnvironment hostEnvironment,
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)

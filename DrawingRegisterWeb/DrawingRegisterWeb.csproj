@@ -29,11 +29,4 @@
 	<PackageReference Include="MimeKit" Version="3.5.0" />
   </ItemGroup>
 
-  <ItemGroup>
-	<Folder Include="wwwroot\Files\Drawings\" />
-	<Folder Include="wwwroot\Files\Documentation\" />
-	<Folder Include="wwwroot\Files\Layouts\" />
-	<Folder Include="wwwroot\Files\Images\" />
-  </ItemGroup>
-
 </Project>

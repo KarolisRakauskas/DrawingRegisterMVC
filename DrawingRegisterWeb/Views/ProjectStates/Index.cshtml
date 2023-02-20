@@ -8,9 +8,18 @@
 	<div class="col">
 		<h1 class="text-primary">Project States</h1>
 		<p class="mt-5">
-			<a asp-action="Create" class="btn btn-primary">
-				Create New Custom State
-			</a>
+			@if (User.IsInRole(ConstData.Role_Admin_Name))
+			{
+				<a asp-action="Create" class="btn btn-primary">
+					Create New Custom State
+				</a>
+			} else
+			{
+				<a asp-action="Create" class="btn btn-primary disabled">
+					Create New Custom State
+				</a>
+			}
+
 		</p>
 	</div>
 	<div class="col text-center mt-3">
@@ -76,11 +85,21 @@
 						}
 						else
 						{
-							<div class="btn-group" role="group">
-								<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
-								<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
-							</div>
-						}
+							@if (User.IsInRole(ConstData.Role_Admin_Name))
+							{
+								<div class="btn-group" role="group">
+									<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+									<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+								</div>
+							} else
+							{
+								<div class="btn-group" role="group">
+									<a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary disabled">Edit</a>
+									<a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger disabled">Delete</a>
+								</div>								
+							}
+
+					}
 					</td>
 				</tr>
 			}

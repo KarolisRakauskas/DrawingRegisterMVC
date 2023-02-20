@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DrawingRegisterWeb.Migrations
 {
-    [DbContext(typeof(DrawingRegisterContext))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("20230214181941_InitialCreate")]
     partial class InitialCreate
     {

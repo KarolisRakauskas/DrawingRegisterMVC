@@ -19,16 +19,16 @@ namespace DrawingRegisterWeb.Controllers
 	// Project - Holds main data about user project. Seperates and group drawings, documentation.
 	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates
 
-	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name}")]
+	[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Mech_Name},{ConstData.Role_Engr_Name},{ConstData.Role_Spect_Name}")]
 	public class ProjectsController : Controller
 	{
-		private readonly DrawingRegisterContext _context;
+		private readonly ApplicationDbContext _context;
 		private readonly IWebHostEnvironment _hostEnvironment;
 		private readonly UserManager<IdentityUser> _userManager;
 		private readonly SignInManager<IdentityUser> _signInManager;
 
 		public ProjectsController(
-			DrawingRegisterContext context, 
+			ApplicationDbContext context, 
 			IWebHostEnvironment hostEnvironment,
 			UserManager<IdentityUser> userManager,
 			SignInManager<IdentityUser> signInManager)
@@ -121,6 +121,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Create()
 		{
 			// Return selectList of ProjectStates from current users DrawingRegister
@@ -179,9 +180,10 @@ namespace DrawingRegisterWeb.Controllers
 			return View(project);
 		}
 
-		
 
 
+
+		[Authorize(Roles = $"{ConstData.Role_Admin_Name},{ConstData.Role_Engr_Name}")]
 		public async Task<IActionResult> Edit(int id)
 		{
 			var user = await _userManager.GetUserAsync(User);
@@ -296,6 +298,7 @@ namespace DrawingRegisterWeb.Controllers
 
 
 
+		[Authorize(Roles = ConstData.Role_Admin_Name)]
 		public async Task<IActionResult> Delete(int? id)
 		{
 			if (id == null || _context.Project == null)
