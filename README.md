@@ -57,13 +57,6 @@ ASP.NET Core 6 + Packages:
 
 2. No need for `Add-Migrations` or `Update-Database`. Everything is handled automatically by `DbInitializer.cs`
 
-```C#
-if (_context.Database.GetPendingMigrations().Any())
-{
-  _context.Database.Migrate();
-}
-```
-
 3. Enter your generic gmail email address and app password in `EmailSender.cs`
 
 ```C#
