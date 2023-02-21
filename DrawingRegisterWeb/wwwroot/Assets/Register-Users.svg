@@ -1,0 +1,14 @@
+<svg width="400" height="400" xmlns="http://www.w3.org/2000/svg">
+
+ <g>
+  <title>Layer 1</title>
+  <rect stroke-width="0" rx="5" id="svg_1" height="72" width="184" y="33.5" x="108" stroke="#000" fill="#56aaff"/>
+  <rect stroke-width="0" rx="5" id="svg_2" height="72" width="184" y="164" x="108" stroke="#000" fill="#56aaff"/>
+  <rect stroke-width="0" rx="5" filter="url(#svg_3_blur)" id="svg_3" height="72" width="184" y="289" x="108" stroke="#000" fill="#56aaff"/>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="22" stroke-width="0" id="svg_4" y="74.5" x="118.51758" stroke="#000" fill="#ffffff">Drawing Register</text>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="22" stroke-width="0" id="svg_6" y="207.5" x="117" stroke="#000" fill="#ffffff">invitation/request</text>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Noto Sans JP" font-size="22" stroke-width="0" id="svg_7" y="330.5" x="172" stroke="#000" fill="#ffffff">Users</text>
+  <path stroke="#000" id="svg_8" d="m178.50001,262.05249l21.5,-19.45317l21.5,19.45317l-10.75,0l0,19.54678l-21.5,0l0,-19.54678l-10.75,0z" stroke-width="0" fill="#56aaff"/>
+  <path transform="rotate(-179.779 200 133.099)" stroke="#000" id="svg_9" d="m178.50019,133.05249l21.5,-19.45317l21.49999,19.45317l-10.75,0l0,19.54678l-21.49999,0l0,-19.54678l-10.75,0z" stroke-width="0" fill="#56aaff"/>
+ </g>
+</svg>

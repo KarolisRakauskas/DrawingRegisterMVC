@@ -31,7 +31,7 @@
 		</div>
 	</div>
 	<div class="col-lg-6 p-3">
-		<div class="cardHome card-5 h-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCard5" aria-controls="offcanvasCard5">
+		<div class="cardHome card-5 h-100" onclick="sqlDiagram()">
 			<h3>Database</h3>
 			<p>SQL Diagram</p>
 		</div>
@@ -44,56 +44,144 @@
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard1" aria-labelledby="offcanvasCard1Label">
 	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasCard1Label">OffCanvas</h5>
+		<h5 class="offcanvas-title text-primary" id="offcanvasCard1Label">Drawing Register</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<div>
-			Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+			<p>
+				&emsp;A drawing register is a controlled list of drawings that also provides a standardised way of tracking the 
+				addition of revisions and changes to an existing document. The list usually includes information such as 
+				drawing number, title, revision, author and date.
+			</p>
+		</div>
+		<div class="card mt-3">
+			<div class="card-body">
+				<h4 class="card-title text-primary">Upload Your Files</h4>
+				<h6 class="card-subtitle mb-2 text-muted">Upload and download Drawings, Documents, Layouts</h6>
+				<img class="img-thumbnail" src="~/Assets/Upload-your-files.svg"/>
+				<p class="card-text">&emsp;Easy way to upload all your drawings and documents into the already constructed template. 
+					All drawings will have its own project and master drawing set. Quick to examine the PDF file thanks to automatically generated thumbnails.</p>
+			</div>
+		</div>
+		<div class="card mt-3">
+			<div class="card-body">
+				<h4 class="card-title text-primary">Share files securely</h4>
+				<h6 class="card-subtitle mb-2 text-muted">Control who and when access or modify your files</h6>
+				<img class="img-thumbnail" src="~/Assets/Transferring-files-securely.svg"/>
+				<p class="card-text">&emsp;From the manager, you can control who can access your drawing register. Without your permission, 
+					no one else can get to your files. The project states specifies the control when drawings can be edited, and when they are locked only for review.</p>
+			</div>
+		</div>
+		<div class="card mt-3">
+			<div class="card-body text-primary">
+				<h4 class="card-title">Responsive user interface</h4>
+				<h6 class="card-subtitle mb-2 text-muted">Share files in various ways</h6>
+				<img class="img-thumbnail" src="~/Assets/Share-files-in-various-ways.svg"/>
+				<p class="card-text">&emsp;Access your Drawing Register from everywhere. Thanks to a reactive user interface, you can easily review your 
+					drawings and documents from a phone, tablet or laptop.</p>
+			</div>
 		</div>
 	</div>
 </div>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCard2" aria-labelledby="offcanvasCard2Label">
 	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasCard2Label">OffCanvas</h5>
+		<h5 class="offcanvas-title text-primary" id="offcanvasCard2Label">App Workflow</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<div>
-			Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+			<h4 class="text-primary text-center">Manager</h4>
+			<p>
+				&emsp;In Manager, you can create your own Drawing Register and send or receive invites. To receive your 
+				invite or send you a request, the user must create an account on the app. Once the invite/request is approved, 
+				that's it! The user is on your staff! Only now they have access to your drawings.
+			</p>
+			<img class="img-thumbnail" src="~/Assets/Register-Users.svg"/>
+
+			<h4 class="text-primary text-center mt-3">Project States</h4>
+			<p>
+				&emsp;You can control how accessible the project is for team members. Each project state will 
+				have different functions to create, read, update and delete drawings, documentation and layouts.
+			</p>
+
+			<div class="accordion" id="accordionExample">
+				<div class="accordion-item">
+					<h5 class="accordion-header" id="headingOne">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+						<p class="text-info fw-bold">Defined</p>
+						</button>
+					</h5>
+					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
+						<div class="accordion-body">
+							&emsp;The project has been created but the plan has not yet been initiated and team members have no access to the project.
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h5 class="accordion-header" id="heading2">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
+						<p class="text-primary fw-bold">Running</p>
+						</button>
+					</h5>
+					<div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample" style="">
+						<div class="accordion-body">
+							&emsp;The project has been started and is accessible by team members. Team members can create, read, update and delete drawings, documentation and layouts.
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h5 class="accordion-header" id="heading3">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+						<p class="text-danger fw-bold">Canceled</p>
+						</button>
+					</h5>
+					<div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample" style="">
+						<div class="accordion-body">
+							&emsp;The project has been canceled, but project data is still available to team members. Team members can only read drawings, documentation and layouts.
+						</div>
+					</div>
+				</div>
+				<div class="accordion-item">
+					<h5 class="accordion-header" id="heading4">
+						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+						<p class="text-success fw-bold">Completed</p>
+						</button>
+					</h5>
+					<div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample" style="">
+						<div class="accordion-body">
+							&emsp;The project set to Completed. Team members can only read drawings, documentation and layouts.
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<h4 class="text-primary text-center mt-3">Project</h4>
+			<p>
+				&emsp;The project groups drawings, documents and layouts into one unit. It helps organise the company's documentation and monitor progress.
+			</p>
+			<img class="img-thumbnail" src="~/Assets/Project.svg"/>
+
+			<h4 class="text-primary text-center mt-3">Drawing and Drawing Files</h4>
+			<p>
+				&emsp;The drawing catalogue named after the main assembly is a common practice in engineering to arrange drawing files. It is nearly impossible 
+				to track changes and collect all required drawing files without consolidating all equipment, building or item drawings into a separate area.
+			</p>
+			<img class="img-thumbnail" src="~/Assets/Solutions_automation.svg"/>
 		</div>
 	</div>
 </div>
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard4" aria-labelledby="offcanvasCard4Label">
 	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasCard4Label">OffCanvas</h5>
+		<h5 class="offcanvas-title text-primary" id="offcanvasCard4Label">ReadMe</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
 		<div>
-			text
+			TODO
 		</div>
-	</div>
-</div>
-
-<div class="offcanvas offcanvas-bottom" tabindex="-1" id="offcanvasCard5" aria-labelledby="offcanvasCard5Label" style="height:80vh">
-	<div class="offcanvas-header">
-		<h5 class="offcanvas-title" id="offcanvasCard5Label">Drawing Register SQL Diagram</h5>
-		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-	</div>
-	<div class="offcanvas-body">
-		<iframe 
-			width="100%" 
-			height="100%" 
-			style="box-shadow: 0 2px 8px 0 rgba(63,69,81,0.16); border-radius:15px;" 
-			allowtransparency="true" 
-			allowfullscreen="true" 
-			scrolling="no"
-			frameborder="0" 
-			src="https://drawsql.app/teams/solo-project/diagrams/drawing-register-v2/embed">
-		</iframe>
 	</div>
 </div>
 
@@ -124,5 +212,8 @@
 			homeIntroduction.style.display = "block";
 		}
 		
+		function sqlDiagram(){
+			window.location.href = "https://drawsql.app/teams/solo-project/diagrams/drawing-register-v2";
+		}
 	</script>
 }
