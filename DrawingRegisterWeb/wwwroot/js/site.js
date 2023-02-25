@@ -92,9 +92,14 @@ function turnOffStateAlert() {
 
 
 /*
-	SORT TALBE ONLY FOR DOCUMENTATION TOGLE TAB !!!
+		SORT TALBE ONLY FOR DOCUMENTATION TOGLE TAB
 
-	TODO: select table not from id...
+		TODO: select table not from id...
+
+		Table sorting by <th> elelemnts in ascending and descending 
+	order, once clicked on <th> - shows arrow icon near <th> element.
+	Icons implamented from https://icons.getbootstrap.com/. This 
+	sorting works only on string values only.
 */
 
 function sortTableDoc(n) {
@@ -151,9 +156,14 @@ function sortTableDoc(n) {
 
 
 /*
-	SORT TALBE ONLY FOR LAYOUTS TOGLE TAB !!!
+		SORT TALBE ONLY FOR LAYOUTS TOGLE TAB
 
-	TODO: select table not from id...
+		TODO: select table not from id...
+
+		Table sorting by <th> elelemnts in ascending and descending 
+	order, once clicked on <th> - shows arrow icon near <th> element.
+	Icons implamented from https://icons.getbootstrap.com/. This 
+	sorting works only on string values only.
 */
 
 function sortTableLay(n) {

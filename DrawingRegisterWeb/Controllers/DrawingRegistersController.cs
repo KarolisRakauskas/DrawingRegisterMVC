@@ -4,6 +4,7 @@ using DrawingRegisterWeb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DrawingRegisterWeb
@@ -14,6 +15,15 @@ namespace DrawingRegisterWeb
 
 	// Invitations - Enable AspNetUsers to join DrawingRegisterUsers by mutual agreement between two or more users
 
+	// ProjectState - Defines states for projects, creates a relationship with projects and DrawingRegisters,
+	//				  restricts access to DrawingRegisterUsers that share the same DrawingRegister as the current user
+
+	// Project - Holds main data about user project. Seperates and group drawings, documentation.
+	//			 Creates the relationship for drawings, documentation and layouts to ProjectStates
+
+	// Drawings - One of the building blocks of the project.
+	//			  Holds main data about drawing files that belong to area/equipment/construction and so on.
+	//			  Creates the relationship between DrawingFiles and project
 	[Authorize]
 	public class DrawingRegistersController : Controller
 	{
@@ -61,6 +71,28 @@ namespace DrawingRegisterWeb
 				.Include(s => s.Status)
 				.Include(u => u.IdentityUser)
 				.Where(i => i.DrawingRegisterId == userRegister.DrawingRegisterId).ToListAsync();
+
+			// DashBoard SelectList
+			IQueryable<string> ProjectsQuery;
+
+			// If user is not administrator - eleminate drawings with ProjectState defined
+			if (userRegister!.Role != ConstData.Role_Admin_Name)
+			{
+				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
+								where p.ProjectState.DrawingRegisterId == userRegister!.DrawingRegisterId &&
+								p.ProjectState.Name != ConstData.State_Defined
+								orderby p.ProjectNubmer
+								select p.ProjectNubmer;
+			}
+			else
+			{
+				ProjectsQuery = from p in _context.Project.Include(s => s.ProjectState)
+								where p.ProjectState.DrawingRegisterId == userRegister!.DrawingRegisterId
+								orderby p.ProjectNubmer
+								select p.ProjectNubmer;
+			}
+
+			registerVM.ProjectSelectList = new SelectList(await ProjectsQuery.Distinct().ToListAsync());
 
 			return View(registerVM);
 		}
@@ -544,5 +576,104 @@ namespace DrawingRegisterWeb
 
 			return View(invitation);
 		}
+
+
+
+
+		// Get Data For DashBoard
+		#region API CALL
+		[HttpGet]
+		public async Task<IActionResult> GetData()
+		{
+			var user = await _userManager.GetUserAsync(User);
+			var drawingRegisterUser = await _context.DrawingRegisterUsers.FirstOrDefaultAsync(dr => dr.UserId == user.Id);
+			var projects = await _context.Project
+				.Include(s => s.ProjectState)
+				.Where(p => p.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.ToListAsync();
+			var drawings = await _context.Drawing
+				.Include(p => p.Project)
+				.Include(s => s.Project.ProjectState)
+				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
+				.ToListAsync();
+
+			// Load DashBoard Canvas if User has Register
+			bool drawingRegisterExsist = drawingRegisterUser != null;
+
+			// Create Data for Bar Chart
+			var barChartList = new List<BarChart>();
+
+			foreach (var project in projects)
+			{
+				var projectDrawings = drawings.Where(d => d.ProjectId == project.Id);
+				var drawingList = new List<string>();
+				var drawingFileCountList = new List<int>();
+
+				foreach (var drawing in projectDrawings)
+				{
+					var drawingFilesCount = _context.DrawingFile.Where(d => d.DrawingId == drawing.Id).Count();
+					drawingList.Add(drawing.DrawingNumber);
+					drawingFileCountList.Add(drawingFilesCount);
+				}
+
+
+				// Get Project number, Drawing numbers and DrawingFiles count
+				barChartList.Add(new BarChart() 
+				{ 
+					ProjectNumber = project.ProjectNubmer, DrawingNumber = drawingList, DrawingFilesCount = drawingFileCountList 
+				});
+			}
+
+			// Create Data for Doughnut Chart
+			var projectsUpcomingCount = projects.Where(p => p.ProjectState.Name == ConstData.State_Defined).Count();
+			var projectsCanceledCount = projects.Where(p => p.ProjectState.Name == ConstData.State_Canceled).Count();
+			var projectsCompletedCount = projects.Where(p => p.ProjectState.Name == ConstData.State_Completed).Count();
+			var projectsRunningCount = projects.Where(p => p.ProjectState.Name != ConstData.State_Defined &&
+											p.ProjectState.Name != ConstData.State_Canceled &&
+											p.ProjectState.Name != ConstData.State_Completed).Count();
+
+			var doughnutChartList = new List<DoughnutChart>()
+			{
+				new DoughnutChart()
+				{
+					Config = "Upcoming & Running",
+					States = new List<string>() { "Upcoming", ConstData.State_Running },
+					ProjectsCount = new List<int>() { projectsUpcomingCount, projectsRunningCount },
+					color = new List<string>() { "#0dcaf0", "#0d6efd" }
+				},
+				new DoughnutChart()
+				{
+					Config = "Running & Completed",
+					States = new List<string>() { ConstData.State_Running, ConstData.State_Completed },
+					ProjectsCount = new List<int>() { projectsRunningCount, projectsCompletedCount },
+					color = new List<string>() { "#0d6efd", "#198754" }
+				},
+				new DoughnutChart()
+				{
+					Config = "Canceled & Completed",
+					States = new List<string>() { ConstData.State_Canceled, ConstData.State_Completed },
+					ProjectsCount = new List<int>() { projectsCanceledCount, projectsCompletedCount },
+					color = new List<string>() { "#dc3545", "#198754" }
+
+				},
+				new DoughnutChart()
+				{
+					Config = "All",
+					States = new List<string>() { "Upcoming", ConstData.State_Running, 
+						ConstData.State_Canceled, ConstData.State_Completed },
+					ProjectsCount = new List<int>() { projectsUpcomingCount, projectsRunningCount, 
+						projectsCanceledCount, projectsCompletedCount },
+					color = new List<string>() { "#0dcaf0", "#0d6efd", "#dc3545", "#198754" }
+				}
+			};
+
+			return Json(new 
+			{ 
+				register = drawingRegisterExsist, 
+				myBarChartList = barChartList, 
+				myDoughnutChartList = doughnutChartList 
+			});
+		}
+		#endregion
 	}
 }

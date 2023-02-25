@@ -330,8 +330,58 @@ else
 	</div>
 
 	<hr class="mt-5"/>
-@*		<h3 class="text-primary display-6">TODO: Progress</h3>
-	<hr/>*@
+
+	<h3 class="text-primary">Dashboard</h3>
+
+	<div class="row">
+		<div class="col-lg-6 mt-3">
+			<div class="card h-100">
+				<div class="card-header">
+					<div class="row row-cols-2">
+						<h6 class="col-4 h-100 my-auto">Bar Chart</h6>
+						<div class="col-8 form-group">
+							<div class="form-floating">
+								<select asp-items="Model.ProjectSelectList" 
+									class="form-select" 
+									id="floatingSelectProject" 
+									aria-label="Floating label select"></select>
+								<label for="floatingSelectProject">Project Number:</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-body" id="barContainer" style="position:relative">
+					<canvas id="bar" ></canvas>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-6 mt-3">
+			<div class="card h-100">
+				<div class="card-header">
+					<div class="row">
+						<h6 class="col-4 h-100 my-auto">Doughnut</h6>
+						<div class="col-8 form-group">
+							<div class="form-floating">
+								<select class="form-select" id="floatingSelectStates">
+									<option selected>Upcoming & Running</option>
+									<option>Running & Completed</option>
+									<option>Canceled & Completed</option>
+									<option>All</option>
+								</select>
+								<label for="floatingSelectStates">Status of Project:</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="card-body" id="doughnutContainer" style="position:relative">
+					<canvas id="doughnut" ></canvas>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<hr/>
 
 	@if (User.IsInRole(ConstData.Role_Admin_Name))
 	{
@@ -364,4 +414,9 @@ else
 			<button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-person-dash"></i>&emsp;Leave Register</button>
 		</form>		
 	}
+}
+
+@section Scripts{
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@4.2.1/dist/chart.umd.min.js"></script>
+	<script src="~/js/drawingRegister.js"></script>
 }
