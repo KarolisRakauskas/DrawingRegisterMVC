@@ -18,16 +18,15 @@ Practice project for ASP.NET Core (Model-View-Controller) with C# and Razor Page
 
 Web based software to store, manage, change electronic drawing and documentation files
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+SQL Diagram: [https://drawsql.app/teams/solo-project/diagrams/drawing-register-v2](https://drawsql.app/teams/solo-project/diagrams/drawing-register-v2)
 
-Built With :
+![Product Name Screen Shot][product-screenshot]
+
 
 ![.Net](https://img.shields.io/badge/.NET-5C2D91?style=for-the-badge&logo=.net&logoColor=white)
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=for-the-badge&logo=c-sharp&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![MicrosoftSQLServer](https://img.shields.io/badge/Microsoft%20SQL%20Server-CC2927?style=for-the-badge&logo=microsoft%20sql%20server&logoColor=white)
 [![Bootstrap][Bootstrap.com]][Bootstrap-url]
-![Azure](https://img.shields.io/badge/azure-%230072C6.svg?style=for-the-badge&logo=microsoftazure&logoColor=white)
 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
