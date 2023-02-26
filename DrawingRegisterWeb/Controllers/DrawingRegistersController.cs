@@ -391,6 +391,16 @@ namespace DrawingRegisterWeb
 					"There is no such user. Please verify that the user's e-mail is correct.");
 			}
 
+			// Restrict from sending invitations to built it app accounts
+			if(registerUser!.NormalizedEmail == "Spectator@mail.com".ToUpper() ||
+				registerUser!.NormalizedEmail == "Admin@mail.com".ToUpper() ||
+				registerUser!.NormalizedEmail == "Engineer@mail.com".ToUpper() ||
+				registerUser!.NormalizedEmail == "Mechanic@mail.com".ToUpper())
+			{
+				ModelState.AddModelError("SpectatorRegister",
+						"This user is in spectator drawing register. You can't join spectator's register");
+			}
+
 			if (ModelState.IsValid)
 			{
 				_context.Add(invitation);

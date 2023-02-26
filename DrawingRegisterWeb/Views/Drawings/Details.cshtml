@@ -93,7 +93,7 @@
 				<input name="drawingId" value="@Model.Drawing!.Id" hidden/>
 				<input id="inputFile" type="file" name="files" class="form-control" multiple/>
 			</div> 
-			<button id="submitFile" type="submit" class="btn btn-primary col-4" disabled>Upload</button >
+			<button id="submitFile" type="submit" class="btn btn-primary col-4" onclick="load()" disabled>Upload</button >
 		</div>
 	</form>
 }
@@ -129,12 +129,13 @@ else if (User.IsInRole(ConstData.Role_Engr_Name) &&
 				<input type="text" name="drawingId" value="@Model.Drawing!.Id" hidden/>
 				<input id="inputFile" type="file" name="files" class="form-control" multiple/>
 			</div> 
-			<button id="submitFile" type="submit" class="btn btn-primary col-4" disabled>Upload</button >
+			<button id="submitFile" type="submit" class="btn btn-primary col-4" onclick="load()" disabled>Upload</button >
 		</div>
 	</form>
 }
 
 <span class="text-danger">@Html.TempData["NoUpload"]</span>
+<span class="text-danger">@Html.TempData["Size"]</span>
 
 <h2 class="mt-5">Drawing Files:</h2>
 

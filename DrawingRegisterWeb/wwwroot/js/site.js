@@ -84,8 +84,41 @@ const getLocalAlert = localStorage.getItem('alertNone');
 const alert = document.getElementById("alertState");
 
 function turnOffStateAlert() {
-	localStorage.setItem("alertNone", "off")
-	alert.style.display = "none";
+	Swal.fire({
+		title: 'Do you want to save the changes?',
+		showDenyButton: true,
+		showCancelButton: true,
+		confirmButtonText: 'Save',
+		confirmButtonColor: '#dc3545',
+		denyButtonText: `Don't save`,
+		denyButtonColor: '#0d6efd'
+	}).then((result) => {
+		if (result.isConfirmed) {
+			Swal.fire('Saved!', '', 'success')
+			localStorage.setItem("alertNone", "off")
+			alert.style.display = "none";
+		} else if (result.isDenied) {
+			Swal.fire('Changes are not saved', '', 'info')
+		}
+	})
+}
+
+
+
+
+/*
+		sweetalert2 upload load screen
+*/
+function load() {
+	Swal.fire({
+		title: 'Uploading...',
+		html: 'Please wait...',
+		allowEscapeKey: false,
+		allowOutsideClick: false,
+		didOpen: () => {
+			Swal.showLoading()
+		}
+	});
 }
 
 

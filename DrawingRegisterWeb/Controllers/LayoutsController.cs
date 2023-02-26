@@ -122,6 +122,19 @@ namespace DrawingRegisterWeb.Controllers
 				return NotFound();
 			}
 
+			// Check if file size is less then 10 MB
+			if (files != null)
+			{
+				foreach (var file in files)
+				{
+					if (file.Length > 10 * 1024 * 1024)
+					{
+						TempData["Size"] = $"The maximum filesize is limited to 10 MB.";
+						return RedirectToAction("Details", "Projects", new { id = projectId });
+					}
+				}
+			}
+
 			// Make sure that only administrator can create layout files if ProjectState is Defined, Completed or Canceled
 			if (drawingRegisterUser!.Role != ConstData.Role_Admin_Name)
 			{
@@ -136,7 +149,7 @@ namespace DrawingRegisterWeb.Controllers
 				}
 			}
 
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && files != null)
 			{
 				foreach (var file in files)
 				{

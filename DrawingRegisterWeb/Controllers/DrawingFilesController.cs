@@ -56,6 +56,19 @@ namespace DrawingRegisterWeb.Controllers
 				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(d => d.Id == drawingId);
 
+			// Check if file size is less then 10 MB
+			if(files != null)
+			{
+				foreach(var file in files)
+				{
+					if(file.Length > 10 * 1024 * 1024)
+					{
+						TempData["Size"] = $"The maximum filesize is limited to 10 MB.";
+						return RedirectToAction("Details", "Drawings", new { id = drawingId });
+					}
+				}
+			}
+
 			// Check if drawing exists and ensure that user access to drawing that is only in his DrawingRegister
 			if (drawing == null)
 			{
@@ -76,7 +89,7 @@ namespace DrawingRegisterWeb.Controllers
 				}
 			}
 
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && files != null)
 			{
 				foreach (var file in files)
 				{

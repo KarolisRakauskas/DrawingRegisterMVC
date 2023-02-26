@@ -3,7 +3,22 @@ const submitDocumentation = document.getElementById('submitDocumentationFile');
 const documentationFile = document.getElementById('inputDocumentationFile');
 
 submitDocumentation.disabled = true;
-documentationFile.addEventListener("change", function () {
+documentationFile.addEventListener("change", function (event) {
+    const target = event.target
+
+    // Restrict from uploading files begger then 10 MB
+    if (target.files && target.files[0]) {
+        const maxAllowedSize = 10 * 1024 * 1024;
+        if (target.files[0].size > maxAllowedSize) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'The maximum filesize is limited to 10 MB...'
+            });
+            target.value = '';
+        }
+    }
+
     if (documentationFile.value == "") {
         submitDocumentation.disabled = true;
     }
@@ -20,7 +35,22 @@ const submitLayout = document.getElementById('submitLayoutFile');
 const layoutFile = document.getElementById('inputLayoutFile');
 
 submitLayout.disabled = true;
-layoutFile.addEventListener("change", function () {
+layoutFile.addEventListener("change", function (event) {
+    const target = event.target
+
+    // Restrict from uploading files begger then 10 MB
+    if (target.files && target.files[0]) {
+        const maxAllowedSize = 10 * 1024 * 1024;
+        if (target.files[0].size > maxAllowedSize) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'The maximum filesize is limited to 10 MB...'
+            });
+            target.value = '';
+        }
+    }
+
     if (layoutFile.value == "") {
         submitLayout.disabled = true;
     }

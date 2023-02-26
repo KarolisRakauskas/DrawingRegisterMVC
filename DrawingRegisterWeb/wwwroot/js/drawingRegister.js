@@ -5,13 +5,13 @@
 
 const url = "/DrawingRegisters/GetData";
 const barCharSelect = document.getElementById("floatingSelectProject");
-const DoughnutSelect = document.getElementById("floatingSelectStates");
+const doughnutSelect = document.getElementById("floatingSelectStates");
 
 barCharSelect.addEventListener("change", (event) => {
     refreshCharts();
     getFromAPI(url, createChartsFromData);
 });
-DoughnutSelect.addEventListener("change", (event) => {
+doughnutSelect.addEventListener("change", (event) => {
     refreshCharts();
     getFromAPI(url, createChartsFromData);
 });
@@ -76,11 +76,8 @@ function createChartsFromData(data) {
         }
     }
 
-    console.log(barDataSum);
-    console.log(dougnutDataSum);
-
     // Bar Chart
-    if (drawingRegister) {
+    if (drawingRegister && barDataSum != 0 && selectedBar != "") {
         let barchart = document.getElementById("bar").getContext("2d");
 
         new Chart(barchart, {
@@ -123,7 +120,14 @@ function createChartsFromData(data) {
     if (barDataSum == 0) {
         const newPara = document.createElement("p");
 
-        newPara.innerText = "This project has no Drawing files...";
+        newPara.innerText = "This project has no drawing files...";
+        newPara.className = "text-center text-secondary position-absolute top-50 start-50 translate-middle";
+        barContainer.appendChild(newPara);
+    } else if (selectedBar == "") {
+        // Add aditional message if selectlist is empty
+        const newPara = document.createElement("p");
+
+        newPara.innerText = "This register has no projects...";
         newPara.className = "text-center text-secondary position-absolute top-50 start-50 translate-middle";
         barContainer.appendChild(newPara);
     }

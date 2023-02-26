@@ -153,7 +153,7 @@
 					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputDocumentationFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
-			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
+			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4" onclick="load()">Upload</button >
 			</form>
 		}
 		else if (User.IsInRole(ConstData.Role_Engr_Name) && 
@@ -165,11 +165,12 @@
 					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputDocumentationFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
-			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4">Upload</button >
+			   <button id="submitDocumentationFile" type="submit" class="btn btn-primary col-4" onclick="load()">Upload</button >
 			</form>
 		}
 
 		<span class="text-danger">@Html.TempData["NoUploadDocument"]</span>
+		<span class="text-danger">@Html.TempData["Size"]</span>
 
 		<div class="table-responsive mt-3">
 			<table class="table table-striped" id="sortTableDoc" style="vertical-align: middle">
@@ -300,7 +301,7 @@
 					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputLayoutFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
-			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
+			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4" onclick="load()">Upload</button >
 			</form>
 		}
 		else if (User.IsInRole(ConstData.Role_Engr_Name) &&
@@ -312,11 +313,12 @@
 					<input name="projectId" value="@Model.Project!.Id" hidden/>
 					<input id="inputLayoutFile" type="file" name="files" class="form-control" multiple/>
 			   </div> 
-			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4">Upload</button >
+			   <button id="submitLayoutFile" type="submit" class="btn btn-primary col-4" onclick="load()">Upload</button >
 			</form>
 		}
 
 		<span class="text-danger">@Html.TempData["NoUploadLayout"]</span>
+		<span class="text-danger">@Html.TempData["Size"]</span>
 
 		<div class="table-responsive mt-3">
 			<table class="table table-striped" id="sortTableLay" style="vertical-align: middle">

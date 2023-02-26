@@ -3,7 +3,22 @@ const submitfile = document.getElementById('submitFile');
 const inputFile = document.getElementById('inputFile');
 
 if (inputFile != null) {
-	inputFile.addEventListener("change", function () {
+	inputFile.addEventListener("change", function (event) {
+		const target = event.target
+
+		// Restrict from uploading files begger then 10 MB
+		if (target.files && target.files[0]) {
+			const maxAllowedSize = 10 * 1024 * 1024;
+			if (target.files[0].size > maxAllowedSize) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Oops...',
+					text: 'The maximum filesize is limited to 10 MB...'
+				});
+				target.value = '';
+			}
+		}
+
 		if (inputFile.value == "") {
 			submitfile.disabled = true;
 		}
