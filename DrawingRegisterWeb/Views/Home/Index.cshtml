@@ -173,14 +173,109 @@
 	</div>
 </div>
 
-<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard4" aria-labelledby="offcanvasCard4Label">
+@{
+	// Snipitest Strings
+	string roleCSHTML = "@if (User.IsInRole(ConstData.Role_Admin_Name))\r\n{\r\n	<a asp-action='Invitation'>Send an invitation</a>\r\n}";
+	string role1Csharp = "[Authorize(Roles = ConstData.Role_Admin_Name)]\r\npublic IActionResult Invitation()\r\n{\r\n	return View();\r\n}";
+	string role2Csharp = "var user = await _userManager.GetUserAsync(User);\r\nawait _userManager.AddToRoleAsync(user, ConstData.Role_Admin_Name);" +
+	"\r\nawait _context.SaveChangesAsync();\r\nawait _signInManager.RefreshSignInAsync(user);";
+	string role3Csharp = "public static class ConstData\r\n{\r\n	public const string Role_Admin_Name = 'Administrator';\r\n	public const string Role_Engr_Name = 'Engineer';" +
+	"\r\n	public const string Role_Mech_Name = 'Mechanic';\r\n	public const string Role_Spect_Name = 'Spectator';\r\n	public const string Role_Norml_Name = 'NormalUser';\r\n}";
+	string role4Csharp = "// Restrict from sending invitations to built in app accounts\r\nif (registerUser!.NormalizedEmail == 'Spectator@mail.com'.ToUpper())\r\n{\r\n" +
+	"	ModelState.AddModelError('SpectatorRegister',\r\n		'This user is in spectator drawing register. You cant join spectators register');\r\n}";
+}
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasCard4" aria-labelledby="offcanvasCard4Label" style="width:100vw">
 	<div class="offcanvas-header">
 		<h5 class="offcanvas-title text-primary" id="offcanvasCard4Label">ReadMe</h5>
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
-	<div class="offcanvas-body">
-		<div>
-			TODO
+	<div class="offcanvas-body container">
+		<h5 id="top" class="offcanvas-title text-primary mb-3">Table of Content</h5>
+		<div class="list-group mb-3">
+			<a href="#register" class="list-group-item list-group-item-action text-primary">Drawing register - relevant idea?</a>
+			<a href="#roles" class="list-group-item list-group-item-action text-primary">Roles</a>
+			<a href="#fileUpload" class="list-group-item list-group-item-action text-primary">Files upload and accessibility</a>
+			<a href="#projects" class="list-group-item list-group-item-action text-primary">Project feature</a>
+		</div>
+		<p class="text-secondary">Source Code: <a href="https://github.com/KarolisRakauskas/DrawingRegisterMVC">https://github.com/KarolisRakauskas/DrawingRegisterMVC</a></p>
+		<hr />
+		<div id="register" class="mt-3">
+			<h5 class="offcanvas-title text-primary">Drawing register - relevant idea?</h5>
+			<p class="text-secondary">
+				&emsp;Do industrial companies need an app like this? The answer should be yes and no. The idea of storing all 
+				your drawings on the web seems exciting and frightening. From my 10 years of experience as a design engineer, 
+				<strong>I could highly suggest using some king of drawing register</strong>. Working with drawing files scattered in 
+				your business server is a very bad idea. Nobody knows where the most recent drawing revision is or where the 
+				drawings are at all. Usually, engineers try to store files in their own pattern and according to their own habits, 
+				and that's what confuses the whole company.
+			</p>
+		</div>
+		<div id="roles" class="mt-3">
+			<h5 class="offcanvas-title text-primary">Roles</h5>
+			<hr />
+			<p class="text-secondary">
+				&emsp;Drawing register relies on Identity Roles. Just simple implementation drew me in.<br /> 
+				From razor pages was easy to toggle features for different users on the same page:
+			</p>
+			<pre><label>CSHTML</label><code>@roleCSHTML</code></pre>
+			<p class="text-secondary">
+				&emsp;Also intuitive about controllers:
+			</p>
+			<pre><label>C#</label><code>@role1Csharp</code></pre>
+			<p class="text-secondary">
+				&emsp;That was a time-saving decision...<br />&emsp;But never less I over did it by changing roles on creating, 
+				deleting and leaving register and by allowing the admin to change roles of other users. This complicity has created 
+				a bug, which users must log out and log in again to update claims.
+			</p>
+			<p class="text-secondary">
+				&emsp;I was forced to update the user connection more than once. I don't know if this is a good 
+				practice for production, but it's working smoothly so far:
+			</p>
+			<pre><label>C#</label><code>@role2Csharp</code></pre>
+
+			<div class="row">
+				<p class="text-secondary col">
+					&emsp;The register has three principal roles: <strong>administrator, engineer and mechanic</strong>.
+				</p>
+				<div class="col my-auto text-end">
+					<img style="height:2em" src="~/Assets/owner.png" />
+					<img style="height:2em" src="~/Assets/engineer.png" />
+					<img style="height:2em" src="~/Assets/mechanic.png" />
+				</div>
+			</div>
+
+			<div class="row">
+				<p class="text-secondary col">
+					&emsp;As this is a good example to avoid forcing registration, I added to the spectator account 'feature'. Since users 
+					can change the password or delete their own account, I created two more roles to prevent users from messing up spectator account: 
+					<strong>Spectator and NormalUser</strong>.
+				</p>
+				<div class="col my-auto text-end">
+					<img style="height:2em" src="~/Assets/spectator.png" />
+					<img style="height:2em" src="~/Assets/user.png" />
+				</div>
+			</div>
+			<pre><label>C#</label><code>@role3Csharp</code></pre>
+			<p class="text-secondary col">
+				&emsp;The regular NormalUser role is assigned to everyone during registration, with the exception of the Spectator user.
+			</p>
+			<p class="text-secondary">
+				&emsp;The Spectator 'feature' made me add more validations like this:
+			</p>
+			<pre><label>C#</label><code>@role4Csharp</code></pre>
+			<div class="mt-2 mb-2 text-end">
+				<a href="#top" class="text-primary">(back to top)</a>
+			</div>
+		</div>
+		<div id="fileUpload" class="mt-3">
+			<h5 class="offcanvas-title text-primary">Files upload and accessibility</h5>
+			<hr />
+
+
+			<div class="mt-2 mb-2 text-end">
+				<a href="#top" class="text-primary">(back to top)</a>
+			</div>
 		</div>
 	</div>
 </div>
@@ -190,4 +285,6 @@
 
 @section Scripts{
 	<script src="~/js/home.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+	<script>hljs.highlightAll();</script>
 }
