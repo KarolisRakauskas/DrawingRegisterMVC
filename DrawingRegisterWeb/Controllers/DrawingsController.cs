@@ -113,9 +113,9 @@ namespace DrawingRegisterWeb.Controllers
 				.Include(d => d.Project.ProjectState)
 				.Where(d => d.Project.ProjectState.DrawingRegisterId == drawingRegisterUser!.DrawingRegisterId)
 				.FirstOrDefaultAsync(p => p.Id == id);
-			
 
-			// Check if drawing exists and ensure that user access to drawing that is only in his DrawingRegister
+
+			// Check if the drawing exists and ensure that the user accesses only the drawings that belong to his drawing register.
 			if (drawing == null)
 			{
 				return NotFound();

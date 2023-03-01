@@ -186,6 +186,8 @@
 					<a href="#roles" class="list-group-item list-group-item-action px-3 border-0 rounded-3 text-secondary" style="width: 20rem;">Roles</a>
 					<a href="#files" class="list-group-item list-group-item-action px-3 border-0 rounded-3 text-secondary" style="width: 20rem;">Files</a>
 					<a href="#validations" class="list-group-item list-group-item-action px-3 border-0 rounded-3 text-secondary" style="width: 20rem;">Validations</a>
+					<a href="#dependencies" class="list-group-item list-group-item-action px-3 border-0 rounded-3 text-secondary" style="width: 20rem;">Dependencies</a>
+					<a href="#usage" class="list-group-item list-group-item-action px-3 border-0 rounded-3 text-secondary" style="width: 20rem;">Usage</a>
 				</div>
 			</div>
 
@@ -217,13 +219,14 @@
 				<h5 class="offcanvas-title text-primary">Roles</h5>
 				<br />
 				<p class="text-secondary">
-					&emsp;Drawing register relies on Microsoft Identity Roles. Simple implementation drew me in. This simple aplication references roles nearly 200 times:
+					&emsp;Drawing register relies on Microsoft Identity Roles. Straightforward implementation drew me in. 
+					In this simple application, roles have been referenced almost 200 times:
 				</p>
 				<pre><label>CSHTML</label><code>@HomeCodeSnipits.roleCSHTML</code></pre>
 				<pre><label>C#</label><code>@HomeCodeSnipits.role1Csharp</code></pre>
 				<p class="text-secondary">
-					&emsp;It is a time-saving solution that is easy to over complicate: changing roles while user is logged in makes 
-					its claims out of date. Controllers constantly must update user claims. I don't know if this is a good practice, 
+					&emsp;It is a time-saving solution that is easy to over complicate: changing roles while user is logged in, makes 
+					it's claims out of date. Controllers constantly must update user claims. I don't know if this is a good practice, 
 					but it's working smoothly so far:
 				</p>
 				<pre><label>C#</label><code>@HomeCodeSnipits.role2Csharp</code></pre>
@@ -282,10 +285,17 @@
 					drawings or projects:
 				</p>
 				<pre><label>C#</label><code>@HomeCodeSnipits.role4Csharp</code></pre>
+				<p class="text-secondary">
+					&emsp;For every PDF file, controller creates first page thumbnail:
+				</p>
+				<pre><label>C#</label><code>@HomeCodeSnipits.role7Csharp</code></pre>
+				<p class="text-secondary">
+					&emsp;If the auto-revision attribute is checked, the controller adds revision from the filename while creating new model class:
+				</p>
+				<pre><label>C#</label><code>@HomeCodeSnipits.role8Csharp</code></pre>
 				<div class="mt-2 mb-2 text-end">
 					<a href="#top" class="text-primary">(back to top)</a>
 				</div>
-
 			</div>
 			<br />
 			<div id="validations" class="mt-3">
@@ -296,12 +306,70 @@
 					&emsp;The Spectator 'feature' requires adding NormalUser role for all users and additional validations:
 				</p>
 				<pre><label>C#</label><code>@HomeCodeSnipits.role3Csharp</code></pre>
-
+				<p class="text-secondary">
+					&emsp;Validations in controller ensures projects, drawings, layouts and documentation confidentiality. 
+					Even when the user attempts to type the router identifier manually:
+				</p>
+				<pre><label>C#</label><code>@HomeCodeSnipits.role5Csharp</code></pre>
+				<p class="text-secondary">
+					&emsp;Validations of files size to avoid misuse of app or reach "maxAllowedContentLength":
+				</p>
+				<pre><label>C#</label><code>@HomeCodeSnipits.role6Csharp</code></pre>
+				<p class="text-secondary">
+					&emsp;Project States control the availability of the entire project and define CRUD operations:
+				</p>
+				<pre><label>CSHTML</label><code>@HomeCodeSnipits.role2CSHTML</code></pre>
+				<pre><label>C#</label><code>@HomeCodeSnipits.role9Csharp</code></pre>
 				<div class="mt-2 mb-2 text-end">
 					<a href="#top" class="text-primary">(back to top)</a>
 				</div>
 
 			</div>
+
+			<div id="dependencies" class="mt-3">
+				<h5 class="offcanvas-title text-primary">Dependencies</h5>
+				<br />
+				<ul class="text-secondary" style="word-wrap: break-word">
+					<lh class="fw-bold">ASP.NET Core 6 + Packages:</lh>
+					<li>Microsoft.EntityFrameworkCore (7.0.0)</li>
+					<li>Microsoft.EntityFrameworkCore.SqlServer (7.0.0)</li>
+					<li>Microsoft.EntityFrameworkCore.Tools (7.0.0)</li>
+					<li>Microsoft.EntityFrameworkCore.Identity (2.2.0)</li>
+					<li>Microsoft.EntityFrameworkCore.Identity.EntityFrameworkCore (6.0.12)</li>
+					<li>Microsoft.EntityFrameworkCore.Identity.UI (6.0.12)</li>
+					<li>MailKit (3.5.0)</li>
+					<li>MimeKit (3.5.0)</li>
+					<li>Aspose.PDF (22.12.0)</li>
+				</ul>
+				<div class="mt-2 mb-2 text-end">
+					<a href="#top" class="text-primary">(back to top)</a>
+				</div>
+			</div>
+
+			<div id="usage" class="mt-3">
+				<h5 class="offcanvas-title text-primary">Usage</h5>
+				<br />
+				<p class="text-secondary">
+					&emsp;1. Clone my repository from GitHub.
+				</p>
+				<a href="https://github.com/KarolisRakauskas/DrawingRegisterMVC" style="word-wrap: break-word">https://github.com/KarolisRakauskas/DrawingRegisterMVC.git</a>
+				<br /><br />
+				<p class="text-secondary">
+					&emsp;2. Change Server name at Connection Strings in <span class="badge bg-secondary">appsettings.json</span>.
+				</p>
+				<pre><label>JSON</label><code>&quot;DefaultConnection&quot;:&nbsp;&quot;Server=(localdb)\\{YOUR&nbsp;LOCAL&nbsp;MSSQL&nbsp;DATABASE&nbsp;NAME};Database=DrawingRegisterMVC;Trusted_Connection=True;MultipleActiveResultSets=true&quot;</code></pre>
+				<p class="text-secondary">
+					&emsp;3. No need for <span class="badge bg-secondary">Add-Migrations</span> or <span class="badge bg-secondary">Update-Database</span>. Everything is handled automatically by <span class="badge bg-secondary">DbInitializer.cs</span>.
+				</p>
+				<p class="text-secondary">
+					&emsp;4. Enter your generic gmail email address and app password in <span class="badge bg-secondary">EmailSender.cs</span>.
+				</p>
+				<pre><label>C#</label><code>emailClient.Authenticate(&quot;EnterYourEmail&quot;,&nbsp;&quot;EnterYourAppPassword&quot;);</code></pre>
+				<div class="mt-2 mb-2 text-end">
+					<a href="#top" class="text-primary">(back to top)</a>
+				</div>
+			</div>
+
 		</div>
 	</div>
 </div>
