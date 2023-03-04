@@ -8,8 +8,8 @@
 
 <h4>Documentation</h4>
 <hr />
-<div class="row">
-    <div class="col-6 min-vh-100">
+<div class="d-flex flex-wrap justify-content-between">
+    <div class="col-6 mt-3" style="min-width: 360px">
         @if (Model.FileType == "pdf")
         {
             <embed class="shadow-sm w-100" src="@Model.FileUrl" style="height:70%"/>
@@ -21,7 +21,7 @@
             </a>   
         }
     </div>
-    <div class="col-6">
+    <div class="col-5 mt-3" style="min-width: 360px">
         <form asp-action="Edit">
             <span class="text-danger">@Html.ValidationMessage("WhiteSpaces")</span>
             <span class="text-danger">@Html.ValidationMessage("NoEdit")</span>

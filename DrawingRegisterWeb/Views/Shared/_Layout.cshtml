@@ -35,11 +35,20 @@
 					</button>
 
 					<div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-						<ul class="navbar-nav flex-grow-1">
+						<ul class="nav navbar-nav flex-grow-1">
 
 							<li class="nav-item">
 								<a 
-									class="nav-link text-dark" 
+									class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active fw-bold" : "")" 
+									asp-controller="Home" 
+									asp-action="Index">
+										Home
+								</a>
+							</li>
+
+							<li class="nav-item">
+								<a 
+									class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "DrawingRegisters" ? "active fw-bold" : "")" 
 									asp-controller="DrawingRegisters" 
 									asp-action="Index">
 										Manager
@@ -56,7 +65,7 @@
 								{
 									<li class="nav-item">
 										<a 
-											class="nav-link text-dark" 
+											class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "ProjectStates" ? "active fw-bold" : "")" 
 											asp-controller="ProjectStates" 
 											asp-action="Index">
 												States
@@ -66,7 +75,7 @@
 
 								<li class="nav-item">
 									<a 
-										class="nav-link text-dark" 
+										class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Projects" ? "active fw-bold" : "")" 
 										asp-controller="Projects" 
 										asp-action="Index">
 											Projects
@@ -75,7 +84,7 @@
 
 								<li class="nav-item">
 									<a 
-										class="nav-link text-dark" 
+										class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Drawings" ? "active fw-bold" : "")" 
 										asp-controller="Drawings" 
 										asp-action="Index">
 											Drawings
@@ -84,7 +93,7 @@
 
 								<li class="nav-item">
 									<a 
-										class="nav-link text-dark" 
+										class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Documentations" ? "active fw-bold" : "")" 
 										asp-controller="Documentations" 
 										asp-action="Index">
 											Documentation
@@ -93,7 +102,7 @@
 
 								<li class="nav-item">
 									<a 
-										class="nav-link text-dark" 
+										class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Layouts" ? "active fw-bold" : "")" 
 										asp-controller="Layouts" 
 										asp-action="Index">
 											Layouts

@@ -2,9 +2,7 @@
 	ViewData["Title"] = "Home Page";
 }
 
-<h1 class="lead text-center">Practice project for ASP.NET Core (Model-View-Controller) with C# and Razor Pages.</h1>
-
-<h2 class="text-center text-primary mt-5">What is Drawing Register?</h2>
+<h1 class="text-center text-primary mt-5">What is Drawing Register?</h1>
 
 <div class="row mt-1">
 	<div class="col-lg-6 p-3">
@@ -16,17 +14,17 @@
 	<div class="col-lg-6 p-3">
 		<div class="cardHome card-2 h-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCard2" aria-controls="offcanvasCard2">
 			<h3>App Workflow</h3>
-			<p>Manage Files by Register, States, Projects, Drawings, Documents and Layouts</p>
+			<p>Manage files through an integrated framework</p>
 		</div>
 	</div>
 </div>
 
-<h3 class="text-center text-primary mt-5">ASP.NET core MVC learning curve</h3>
+<!--<h2 class="text-center text-primary mt-5">ASP.NET core MVC</h2>-->
 
 <div id="marginForHomeIntroduction" class="row mt-1">
 	<div class="col-lg-6 p-3">
 		<div class="cardHome card-4 h-100" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCard4" aria-controls="offcanvasCard4">
-			<h3>Application</h3>
+			<h3>About The Project</h3>
 			<p>README and Source Code</p>
 		</div>
 	</div>
@@ -48,40 +46,26 @@
 		<button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 	</div>
 	<div class="offcanvas-body">
-		<div>
-			<p>
-				&emsp;A drawing register is a controlled list of drawings that also provides a standardised way of tracking the 
-				addition of revisions and changes to an existing document. The list usually includes information such as 
-				drawing number, title, revision, author and date.
-			</p>
-		</div>
-		<div class="card mt-3">
-			<div class="card-body">
-				<h4 class="card-title text-primary">Upload Your Files</h4>
-				<h6 class="card-subtitle mb-2 text-muted">Upload and download Drawings, Documents, Layouts</h6>
-				<img class="img-thumbnail" src="~/Assets/Upload-your-files.svg"/>
-				<p class="card-text">&emsp;Easy way to upload all your drawings and documents into the already constructed template. 
-					All drawings will have its own project and master drawing set. Quick to examine the PDF file thanks to automatically generated thumbnails.</p>
-			</div>
-		</div>
-		<div class="card mt-3">
-			<div class="card-body">
-				<h4 class="card-title text-primary">Share files securely</h4>
-				<h6 class="card-subtitle mb-2 text-muted">Control who and when access or modify your files</h6>
-				<img class="img-thumbnail" src="~/Assets/Transferring-files-securely.svg"/>
-				<p class="card-text">&emsp;From the manager, you can control who can access your drawing register. Without your permission, 
-					no one else can get to your files. The project states specifies the control when drawings can be edited, and when they are locked only for review.</p>
-			</div>
-		</div>
-		<div class="card mt-3">
-			<div class="card-body">
-				<h4 class="card-title text-primary">Responsive user interface</h4>
-				<h6 class="card-subtitle mb-2 text-muted">Share files in various ways</h6>
-				<img class="img-thumbnail" src="~/Assets/Share-files-in-various-ways.svg"/>
-				<p class="card-text">&emsp;Access your Drawing Register from everywhere. Thanks to a reactive user interface, you can easily review your 
-					drawings and documents from a phone, tablet or laptop.</p>
-			</div>
-		</div>
+		<h4 class="text-primary text-center">Upload Your Files</h4>
+		<p>
+			&emsp;Simple way to upload all your drawings and documents into the already constructed template. 
+			All drawings will have their own project and master drawing set. Automatic thumbnails makes it easy to review PDF files.
+		</p>
+		<img class="img-thumbnail border-0" src="~/Assets/Upload-your-files.svg"/>
+
+		<h4 class="text-primary text-center mt-3">Share files securely</h4>
+		<p>
+			&emsp;Total control of who is able to access your drawing register. No one can get to your files without your 
+			permission.
+		</p>
+		<img class="img-thumbnail border-0" src="~/Assets/Transferring-files-securely.svg"/>
+
+		<h4 class="text-primary text-center mt-3">Responsive user interface</h4>
+		<p>
+			&emsp;Access your Drawing Register from everywhere. Thanks to a reactive user interface, you can easily 
+			review your drawings and documents from phone, tablet or laptop.
+		</p>
+		<img class="img-thumbnail border-0" src="~/Assets/Share-files-in-various-ways.svg"/>
 	</div>
 </div>
 
@@ -94,23 +78,21 @@
 		<div>
 			<h4 class="text-primary text-center">Manager</h4>
 			<p>
-				&emsp;In Manager, you can create your own Drawing Register and send or receive invites. To receive your 
-				invite or send you a request, the user must create an account on the app. Once the invite/request is approved, 
-				that's it! The user is on your staff! Only now they have access to your drawings.
+				&emsp;Create your own Drawing Register in Manager. Users should create an account on 
+				the application in order to obtain your invitations. Once the invite is approved, that's it! 
+				Users is on your staff! Only now they have access to your drawings.
 			</p>
-			<img class="img-thumbnail" src="~/Assets/Register-Users.svg"/>
 
 			<h4 class="text-primary text-center mt-3">Project States</h4>
 			<p>
-				&emsp;You can control how accessible the project is for team members. Each project state will 
-				have different functions to create, read, update and delete drawings, documentation and layouts.
+				&emsp;Change availability of the project. Every project state will have different functions:
 			</p>
 
 			<div class="accordion" id="accordionExample">
 				<div class="accordion-item">
 					<h5 class="accordion-header" id="headingOne">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-						<p class="text-info fw-bold">Defined</p>
+						<p class="text-dark my-auto">Defined</p>
 						</button>
 					</h5>
 					<div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="">
@@ -122,7 +104,7 @@
 				<div class="accordion-item">
 					<h5 class="accordion-header" id="heading2">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2" aria-expanded="false" aria-controls="collapse2">
-						<p class="text-primary fw-bold">Running</p>
+						<p class="text-dark my-auto">Running</p>
 						</button>
 					</h5>
 					<div id="collapse2" class="accordion-collapse collapse" aria-labelledby="heading2" data-bs-parent="#accordionExample" style="">
@@ -134,7 +116,7 @@
 				<div class="accordion-item">
 					<h5 class="accordion-header" id="heading3">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
-						<p class="text-danger fw-bold">Canceled</p>
+						<p class="text-dark my-auto">Canceled</p>
 						</button>
 					</h5>
 					<div id="collapse3" class="accordion-collapse collapse" aria-labelledby="heading3" data-bs-parent="#accordionExample" style="">
@@ -146,7 +128,7 @@
 				<div class="accordion-item">
 					<h5 class="accordion-header" id="heading4">
 						<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
-						<p class="text-success fw-bold">Completed</p>
+						<p class="text-dark my-auto">Completed</p>
 						</button>
 					</h5>
 					<div id="collapse4" class="accordion-collapse collapse" aria-labelledby="heading4" data-bs-parent="#accordionExample" style="">
@@ -159,16 +141,9 @@
 
 			<h4 class="text-primary text-center mt-3">Project</h4>
 			<p>
-				&emsp;The project groups drawings, documents and layouts into one unit. It helps organise the company's documentation and monitor progress.
+				&emsp;The project brings together all the files in a single unit. It helps organise the company's documentation and track changes.
 			</p>
-			<img class="img-thumbnail" src="~/Assets/Project.svg"/>
-
-			<h4 class="text-primary text-center mt-3">Drawing and Drawing Files</h4>
-			<p>
-				&emsp;The drawing catalogue named after the main assembly is a common practice in engineering to arrange drawing files. It is nearly impossible 
-				to track changes and collect all required drawing files without consolidating all equipment, building or item drawings into a separate area.
-			</p>
-			<img class="img-thumbnail" src="~/Assets/Solutions_automation.svg"/>
+			<img class="img-thumbnail border-0" src="~/Assets/Project.svg"/>
 		</div>
 	</div>
 </div>
@@ -197,30 +172,13 @@
 			</div>
 
 			<br />
-			<div class="mt-3">
-				<h5 class="offcanvas-title text-primary">Drawing register - relevant idea?</h5>
-				<br />
-				<p class="text-secondary">
-					&emsp;Do industrial companies need an app like this? The answer should be yes and no. The idea of storing all 
-					your drawings on the web seems exciting and frightening. From my 10 years of experience as a design engineer, 
-					<strong>I could highly suggest using some king of drawing register</strong>.<br />&emsp;Working with drawing files scattered in 
-					your business server is a very bad idea - nobody knows where the most recent drawing revision is or where the 
-					drawings are at all. Usually, engineers try to store files in their own pattern and according to their own habits, 
-					and that's what confuses the whole company.
-				</p>
-				<div class="mt-2 mb-2 text-end">
-					<a href="#top" class="text-primary">(back to top)</a>
-				</div>
-			</div>
-
-			<br />
 			<div id="roles" class="mt-3">
 
 				<h5 class="offcanvas-title text-primary">Roles</h5>
 				<br />
 				<p class="text-secondary">
 					&emsp;Drawing register relies on Microsoft Identity Roles. Straightforward implementation drew me in. 
-					In this simple application, roles have been referenced almost 200 times:
+					Roles have been referenced almost 200 times, even in this simple application:
 				</p>
 				<pre><label>CSHTML</label><code>@HomeCodeSnipits.roleCSHTML</code></pre>
 				<pre><label>C#</label><code>@HomeCodeSnipits.role1Csharp</code></pre>
